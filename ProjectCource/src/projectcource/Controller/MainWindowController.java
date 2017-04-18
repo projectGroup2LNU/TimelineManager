@@ -65,6 +65,13 @@ public class MainWindowController {
     	currentDate = LocalDate.now();
     }
    
+    /*to be connected to the choicebox where the user chooses the year, month, day.
+     *  By doing so the current date will become the one he chose.
+     */
+    public void setDate(int year, int month, int day){
+    	currentDate= LocalDate.of(year, month, day);
+    }
+    
     
     
 }
