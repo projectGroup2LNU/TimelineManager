@@ -50,16 +50,24 @@ public class MainWindowController {
     //to be connected to the right button, changing the date to a week ahead
     public void goRight(){
     	currentDate = currentDate.plus(7,ChronoUnit.DAYS);
+    	
+    	//Should be deleted later
+    	System.out.println(currentDate.toString());
     }
     
     //to be connected to the left button, changing the date to a week back
     public void goLeft(){
     	currentDate = currentDate.minus(7, ChronoUnit.DAYS);
-    }
+    	
+    	//Should be deleted later
+    	System.out.println(currentDate.toString());    }
     
     //to be connected to a reset button, that will change the date back to the actual date of the day
     public void resetDate(){
     	currentDate = LocalDate.now();
+    	
+    	//Should be deleted later
+    	System.out.println(currentDate.toString());
     }
    
     /*to be connected to the choicebox where the user chooses the year, month, day.
@@ -67,6 +75,9 @@ public class MainWindowController {
      */
     public void setDate(int year, int month, int day){
     	currentDate= LocalDate.of(year, month, day);
+    	
+    	//Should be deleted later
+    	System.out.println(currentDate.toString());
     }
  
 }
