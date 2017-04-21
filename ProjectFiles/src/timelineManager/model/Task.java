@@ -1,7 +1,7 @@
 package timelineManager.model;
 
 import java.time.LocalDateTime;
-import java.awt.Color;
+import javafx.scene.paint.Color;
 import java.time.Duration;
 
 public class Task {
