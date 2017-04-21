@@ -18,7 +18,7 @@ import timelineManager.view.ViewFactory;
 public class MainWindowController {
     
     @FXML
-    private JFXDatePicker MainWindowDatePicker;
+    private JFXDatePicker mainWindowDatePicker;
 
     @FXML
     private JFXButton todaysDateButton;
@@ -27,7 +27,7 @@ public class MainWindowController {
     private JFXButton addTimelineButton;
 
     @FXML
-    private JFXButton AddTaskButton;
+    private JFXButton addTaskButton;
 
     @FXML
     private JFXButton goLeftButton;
@@ -74,7 +74,7 @@ public class MainWindowController {
      *  By doing so the current date will become the one he chose.
      */
     public void setDate(){
-    	currentDate= MainWindowDatePicker.getValue();
+    	currentDate= mainWindowDatePicker.getValue();
     	
     	//Should be deleted later
     	System.out.println(currentDate.toString());
