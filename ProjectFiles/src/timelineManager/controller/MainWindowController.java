@@ -73,8 +73,8 @@ public class MainWindowController {
     /*to be connected to the choicebox where the user chooses the year, month, day.
      *  By doing so the current date will become the one he chose.
      */
-    public void setDate(int year, int month, int day){
-    	currentDate= LocalDate.of(year, month, day);
+    public void setDate(){
+    	currentDate= MainWindowDatePicker.getValue();
     	
     	//Should be deleted later
     	System.out.println(currentDate.toString());
