@@ -21,9 +21,11 @@ public class TimelineManagerMain extends Application {
         //Parent root = FXMLLoader.load(getClass().getResource("/timelineManager/view/MainView.fxml"));
         
         //Scene scene = new Scene(root);
-        
+    	
         ViewFactory viewFactory=new ViewFactory();
         Scene scene = viewFactory.getMainScene();
+        stage.setResizable(false);
+        stage.setTitle("Group 2 Timeline Manager Project");
         stage.setScene(scene);
         stage.show();
     }
