@@ -1,6 +1,6 @@
 package timelineManager.unitTests;
 
-import static org.junit.Assert.assertEquals; // Make static Assert methods available
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import timelineManager.model.Timeline;
