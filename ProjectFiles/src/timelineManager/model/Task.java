@@ -11,7 +11,7 @@ public class Task {
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
 	private Color color;
-	private int Priority;
+	private String Priority;
 	private static long counter = 1;
 	
 	/**
@@ -63,10 +63,10 @@ public class Task {
 	public Color getColor(){
 		return color;}
 	
-    public void setPriority(int Priority){
+    public void setPriority(String Priority){
     	this.Priority = Priority;}
     
-    public int getPriority(){
+    public String getPriority(){
     	return Priority;}
 	
     
