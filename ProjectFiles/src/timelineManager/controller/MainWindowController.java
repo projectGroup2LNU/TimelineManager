@@ -91,7 +91,14 @@ public class MainWindowController {
     
     
     public void datePickerUpdate(LocalDate inputDate){
-        mainWindowDatePicker.setValue(inputDate);
+    	// Null check is needed to be able to run JUnit tests
+    	if(mainWindowDatePicker != null) {
+    		mainWindowDatePicker.setValue(inputDate);
+    	}
+    }
+    
+    public LocalDate getCurrentDate() {
+    	return currentDate;
     }
  
 }
