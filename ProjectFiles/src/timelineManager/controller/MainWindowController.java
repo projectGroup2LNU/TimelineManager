@@ -91,7 +91,7 @@ public class MainWindowController {
     
     
     public void datePickerUpdate(LocalDate inputDate){
-        mainWindowDatePicker.setValue(currentDate);
+        mainWindowDatePicker.setValue(inputDate);
     }
  
 }
