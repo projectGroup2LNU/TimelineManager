@@ -28,6 +28,9 @@ public class MainWindowController {
 
     @FXML
     private JFXButton addTaskButton;
+    
+    @FXML
+    private JFXButton addTaskPlusButton;
 
     @FXML
     private JFXButton goLeftButton;
@@ -46,6 +49,17 @@ public class MainWindowController {
         Stage stage=new Stage();
         stage.setResizable(false);
         stage.setTitle("Adding a new Timeline");
+        stage.setScene(scene);
+        stage.show();
+    
+    }
+    
+    public void openAddTaskWindow(ActionEvent e){
+        ViewFactory viewFactory=new ViewFactory();
+        Scene scene = viewFactory. getAddTaskScene();
+        Stage stage=new Stage();
+        stage.setResizable(false);
+        stage.setTitle("Adding a new Task");
         stage.setScene(scene);
         stage.show();
     
