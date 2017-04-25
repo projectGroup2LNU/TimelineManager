@@ -11,7 +11,7 @@ public class Task {
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
 	private Color color;
-	private int Priority;
+	private String priority;
 	private static long counter = 1;
 	
 	/**
@@ -20,7 +20,16 @@ public class Task {
     public Task(){
 		this.id = counter++;
 	}
-	
+    
+    public Task(String title, String description, LocalDateTime startTime, LocalDateTime endTime, Color color, int priority) {
+    	this.id = counter++;
+		this.title = title;
+		this.description = description;
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.color = color;
+		this.Priority = priority;
+    }
 	
 	public Duration getDuration(LocalDateTime startTime , LocalDateTime endTime){
 		Duration Duration = java.time.Duration.between(startTime, endTime);
@@ -63,11 +72,11 @@ public class Task {
 	public Color getColor(){
 		return color;}
 	
-    public void setPriority(int Priority){
-    	this.Priority = Priority;}
+    public void setPriority(String priority){
+    	this.priority = priority;}
     
-    public int getPriority(){
-    	return Priority;}
+    public String getPriority(){
+    	return priority;}
 	
     
 }

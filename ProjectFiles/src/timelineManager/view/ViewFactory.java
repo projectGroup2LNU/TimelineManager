@@ -39,5 +39,20 @@ public class ViewFactory {
      
      
      }
+	
+	 public Scene getAddTaskScene(){
+         Pane pane;		
+		try {
+			pane = FXMLLoader.load(getClass().getResource("/timelineManager/view/AddTaskView.fxml"));
+		} catch (IOException e) {
+                    System.out.println("AddTaskView couldn't be loaded: " + e);
+			pane = null;
+		}
+		Scene scene = new Scene(pane);
+		//scene.getStylesheets().add(getClass().getResource("emaildetails.css").toExternalForm());
+		return scene;
+     
+     
+     }
     
 }
