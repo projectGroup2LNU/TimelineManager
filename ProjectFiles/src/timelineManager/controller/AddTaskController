@@ -1,0 +1,42 @@
+package timelineManager.controller;
+
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXDatePicker;
+import com.jfoenix.controls.JFXTextArea;
+import com.jfoenix.controls.JFXTextField;
+import javafx.fxml.FXML;
+
+/**
+ * This is a controller class for the AddTaskView.
+ * it holds the variables and logics needed to create a new Task from GUI.
+ * @author Ahmadreza Vakilalroayayi and beysimeryalmaz
+ */
+
+public class AddTaskController {
+
+	
+	@FXML
+    private JFXTextField titleField;
+
+    @FXML
+    private JFXDatePicker startDate;
+
+    @FXML
+    private JFXDatePicker endDate;
+
+    @FXML
+    private JFXTextArea descriptionField;
+
+    @FXML
+    private JFXButton saveButton;
+    
+  //Just propose: New boolean method for having or not having duration, it can also return true or false depending on a check box. (Just a propose by Ahmad Vakil)
+  	private boolean hasDuration(){
+  		if (startDate !=null && endDate!=null){
+  			return true;
+  		}else{
+  		return false;
+  		}
+  	}
+
+}
