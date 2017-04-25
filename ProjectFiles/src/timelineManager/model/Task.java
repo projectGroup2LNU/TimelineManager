@@ -20,7 +20,16 @@ public class Task {
     public Task(){
 		this.id = counter++;
 	}
-	
+    
+    public Task(String title, String description, LocalDateTime startTime, LocalDateTime endTime, Color color, int priority) {
+    	this.id = counter++;
+		this.title = title;
+		this.description = description;
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.color = color;
+		this.Priority = priority;
+    }
 	
 	public Duration getDuration(LocalDateTime startTime , LocalDateTime endTime){
 		Duration Duration = java.time.Duration.between(startTime, endTime);

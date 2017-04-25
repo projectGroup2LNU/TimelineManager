@@ -23,6 +23,15 @@ public class Timeline {
 		this.id = counter++;
 	}
 	
+	public Timeline(String title, String description, LocalDate startTime, LocalDate endTime, Color color) {
+		this.id = counter++;
+		this.title = title;
+		this.description = description;
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.color = color;
+	}
+	
 	/*timelineManager.model.Task*/
 	public void addTask(Task t){
 		task.add(t);
