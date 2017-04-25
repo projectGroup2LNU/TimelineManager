@@ -22,14 +22,14 @@ public class TUTask02_EditTaskJUnitTest {
 		tasks.get(0).setStartTime(LocalDateTime.now());
 		tasks.get(0).setEndTime(LocalDateTime.now().plusDays(1));
 		tasks.get(0).setColor(Color.rgb(0, 0, 0));
-		tasks.get(0).setPriority(0);
+		tasks.get(0).setPriority("0");
 		
 		assertEquals("TestTitle0", tasks.get(0).getTitle());
 		assertEquals("TestDescription0", tasks.get(0).getDescription());
 		assertEquals(LocalDate.now(), tasks.get(0).getStartTime().toLocalDate());
 		assertEquals(LocalDate.now().plusDays(1), tasks.get(0).getEndTime().toLocalDate());
 		assertEquals(Color.rgb(0, 0, 0), tasks.get(0).getColor());
-		assertEquals(0, tasks.get(0).getPriority());
+		assertEquals("0", tasks.get(0).getPriority());
 		
 		// Test middle task
 		tasks.get(50).setTitle("TestTitle50");
@@ -37,14 +37,14 @@ public class TUTask02_EditTaskJUnitTest {
 		tasks.get(50).setStartTime(LocalDateTime.now().plusDays(50));
 		tasks.get(50).setEndTime(LocalDateTime.now().plusDays(51));
 		tasks.get(50).setColor(Color.rgb(50, 0, 0));
-		tasks.get(50).setPriority(50);
+		tasks.get(50).setPriority("50");
 		
 		assertEquals("TestTitle50", tasks.get(50).getTitle());
 		assertEquals("TestDescription50", tasks.get(50).getDescription());
 		assertEquals(LocalDate.now().plusDays(50), tasks.get(50).getStartTime().toLocalDate());
 		assertEquals(LocalDate.now().plusDays(51), tasks.get(50).getEndTime().toLocalDate());
 		assertEquals(Color.rgb(50, 0, 0), tasks.get(50).getColor());
-		assertEquals(50, tasks.get(50).getPriority());
+		assertEquals("50", tasks.get(50).getPriority());
 		
 		// Test last task
 		tasks.get(100).setTitle("TestTitle100");
@@ -52,14 +52,14 @@ public class TUTask02_EditTaskJUnitTest {
 		tasks.get(100).setStartTime(LocalDateTime.now().plusDays(100));
 		tasks.get(100).setEndTime(LocalDateTime.now().plusDays(101));
 		tasks.get(100).setColor(Color.rgb(100, 0, 0));
-		tasks.get(100).setPriority(100);
+		tasks.get(100).setPriority("100");
 		
 		assertEquals("TestTitle100", tasks.get(100).getTitle());
 		assertEquals("TestDescription100", tasks.get(100).getDescription());
 		assertEquals(LocalDate.now().plusDays(100), tasks.get(100).getStartTime().toLocalDate());
 		assertEquals(LocalDate.now().plusDays(101), tasks.get(100).getEndTime().toLocalDate());
 		assertEquals(Color.rgb(100, 0, 0), tasks.get(100).getColor());
-		assertEquals(100, tasks.get(100).getPriority());
+		assertEquals("100", tasks.get(100).getPriority());
 		
 		// Test first task again
 		assertEquals("TestTitle0", tasks.get(0).getTitle());
@@ -67,7 +67,7 @@ public class TUTask02_EditTaskJUnitTest {
 		assertEquals(LocalDate.now(), tasks.get(0).getStartTime().toLocalDate());
 		assertEquals(LocalDate.now().plusDays(1), tasks.get(0).getEndTime().toLocalDate());
 		assertEquals(Color.rgb(0, 0, 0), tasks.get(0).getColor());
-		assertEquals(0, tasks.get(0).getPriority());
+		assertEquals("0", tasks.get(0).getPriority());
 	}
 	
 	@Test
@@ -79,7 +79,7 @@ public class TUTask02_EditTaskJUnitTest {
 		tasks.get(0).setStartTime(LocalDateTime.now());
 		tasks.get(0).setEndTime(LocalDateTime.now().plusDays(1));
 		tasks.get(0).setColor(Color.rgb(0, 0, 0));
-		tasks.get(0).setPriority(0);
+		tasks.get(0).setPriority("0");
 		
 		// Edits the same task again
 		tasks.get(0).setTitle("TestTitle100");
@@ -87,14 +87,14 @@ public class TUTask02_EditTaskJUnitTest {
 		tasks.get(0).setStartTime(LocalDateTime.now().plusDays(100));
 		tasks.get(0).setEndTime(LocalDateTime.now().plusDays(101));
 		tasks.get(0).setColor(Color.rgb(100, 0, 0));
-		tasks.get(0).setPriority(100);
+		tasks.get(0).setPriority("100");
 		
 		assertEquals("TestTitle100", tasks.get(0).getTitle());
 		assertEquals("TestDescription100", tasks.get(0).getDescription());
 		assertEquals(LocalDate.now().plusDays(100), tasks.get(0).getStartTime().toLocalDate());
 		assertEquals(LocalDate.now().plusDays(101), tasks.get(0).getEndTime().toLocalDate());
 		assertEquals(Color.rgb(100, 0, 0), tasks.get(0).getColor());
-		assertEquals(100, tasks.get(0).getPriority());
+		assertEquals("100", tasks.get(0).getPriority());
 	}
 	
 	private void addTasks(int amount) {

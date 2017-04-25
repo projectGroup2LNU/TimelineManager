@@ -21,14 +21,14 @@ public class Task {
 		this.id = counter++;
 	}
     
-    public Task(String title, String description, LocalDateTime startTime, LocalDateTime endTime, Color color, int priority) {
+    public Task(String title, String description, LocalDateTime startTime, LocalDateTime endTime, Color color, String priority) {
     	this.id = counter++;
 		this.title = title;
 		this.description = description;
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.color = color;
-		this.Priority = priority;
+		this.priority = priority;
     }
 	
 	public Duration getDuration(LocalDateTime startTime , LocalDateTime endTime){
