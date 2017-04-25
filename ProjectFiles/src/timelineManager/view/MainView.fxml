@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXDatePicker?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="1200.0" style="-fx-background-color: #bdede7;" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="timelineManager.controller.MainWindowController">
+   <children>
+      <AnchorPane prefHeight="600.0" prefWidth="200.0" style="-fx-background-color: #b2c7e8;" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <JFXDatePicker fx:id="mainWindowDatePicker" editable="false" layoutX="20.0" layoutY="95.0" onAction="#setDate" prefHeight="33.0" prefWidth="177.0" promptText="Go to Date" showWeekNumbers="true" />
+            <JFXButton fx:id="todaysDateButton" buttonType="RAISED" layoutX="14.0" layoutY="30.0" onAction="#resetDate" prefHeight="27.0" prefWidth="164.0" style="-fx-background-color: #edc6bd;" text="Go to today's date" />
+            <JFXButton fx:id="addTimelineButton" buttonType="RAISED" layoutX="14.0" layoutY="294.0" onAction="#openAddTimelineWindow" prefHeight="27.0" prefWidth="164.0" style="-fx-background-color: #edc6bd;" text="Add Timeline" />
+              <JFXButton fx:id="addTaskButton" buttonType="RAISED" layoutX="14.0" layoutY="350.0" onAction="#openAddTaskWindow" prefHeight="27.0" prefWidth="164.0" style="-fx-background-color: #edc6bd;" text="Add Task" />
+
+
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="200.0" prefHeight="600.0" prefWidth="1001.0">
+         <children>
+           <JFXButton fx:id="addTaskPlusButton" buttonType="RAISED" layoutX="39.0" layoutY="500.0" onAction="#openAddTaskWindow" prefHeight="65.0" prefWidth="59.0" style="-fx-background-color: edc6bd;" text="+" />
+            <JFXButton fx:id="goLeftButton" buttonType="RAISED" layoutX="39.0" layoutY="287.0" onAction="#goLeft" style="-fx-background-color: edc6bd;" text="&lt;" AnchorPane.bottomAnchor="286.0" AnchorPane.rightAnchor="935.0" AnchorPane.topAnchor="287.0" />
+            <JFXButton fx:id="goRightButton" buttonType="RAISED" layoutX="934.0" layoutY="301.0" onAction="#goRight" style="-fx-background-color: edc6bd;" text="&gt;" AnchorPane.bottomAnchor="272.0" AnchorPane.leftAnchor="934.0" AnchorPane.topAnchor="301.0" />
+
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>
