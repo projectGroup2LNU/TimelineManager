@@ -91,5 +91,4 @@ public class TUTimeline02_EditTimelineJUnitTest {
 			timelines.add(new Timeline());
 		}
 	}
-
 }
