@@ -8,7 +8,6 @@ import javafx.scene.paint.Color;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-
 public class TUTimeline01_AddTimelineJUnitTest {
 	private ArrayList<Timeline> timelines = new ArrayList<Timeline>();
 	
