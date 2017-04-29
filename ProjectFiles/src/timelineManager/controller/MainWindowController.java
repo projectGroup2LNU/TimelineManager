@@ -2,22 +2,32 @@ package timelineManager.controller;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDatePicker;
+import com.jfoenix.controls.JFXListView;
 
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.Iterator;
 import java.util.ResourceBundle;
+import javafx.beans.binding.Bindings;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
 import timelineManager.helpClasses.DateViewer;
+import timelineManager.model.Task;
+import timelineManager.model.Timeline;
 import timelineManager.view.ViewFactory;
 
 /**
@@ -25,7 +35,12 @@ import timelineManager.view.ViewFactory;
  * It holds all logics for user interface such as on screen buttons.
  * @author beysimeryalmaz
  */
-public class MainWindowController implements Initializable{
+public class MainWindowController extends AbstractController implements Initializable{
+    @FXML
+    private TableView<Timeline> timelineTable;
+
+    @FXML
+    private TableColumn<Timeline, String> titleOfTable;
     
     @FXML
     private JFXDatePicker mainWindowDatePicker;
@@ -57,17 +72,25 @@ public class MainWindowController implements Initializable{
     @FXML
     private GridPane timelineGrid;
     
+    private MenuItem showDetails = new MenuItem("show details");
+    
     
     private final int DAY_PIXEL_SIZE = 59;
     
     DateViewer dateViewer;
     
+     ViewFactory viewFactory=ViewFactory.defaultFactory;
+    
     
     //date of the day
     private LocalDate currentDate = LocalDate.now();
+
+    public MainWindowController(ModelAccess modelAccess) {
+        super(modelAccess);
+    }
     
     public void openAddTimelineWindow(ActionEvent e){
-        ViewFactory viewFactory=new ViewFactory();
+       
         Scene scene = viewFactory. getAddTimelineScene();
         Stage stage=new Stage();
         stage.setResizable(false);
@@ -78,7 +101,7 @@ public class MainWindowController implements Initializable{
     }
     
     public void openAddTaskWindow(ActionEvent e){
-        ViewFactory viewFactory=new ViewFactory();
+        
         Scene scene = viewFactory. getAddTaskScene();
         Stage stage=new Stage();
         stage.setResizable(false);
@@ -147,6 +170,51 @@ public class MainWindowController implements Initializable{
         dateGrid.getColumnConstraints().setAll(new ColumnConstraints(DAY_PIXEL_SIZE,DAY_PIXEL_SIZE,DAY_PIXEL_SIZE));
         dateGrid.getRowConstraints().setAll(new RowConstraints(20,20,20));
         dateGrid.getRowConstraints().add(0, new RowConstraints(40,40,40));
+       
         
-    }
-}
+       
+       titleOfTable.setCellValueFactory(new PropertyValueFactory<Timeline, String>("title"));
+
+       
+       timelineTable.setItems(getModelAccess().timelineModel.timelineList);
+       
+       timelineTable.setContextMenu(new ContextMenu(showDetails));
+       
+       // When a timeline selected from the list its enables to click addTask buttons
+       //Otherwise they are disabled
+       addTaskButton.disableProperty().bind(Bindings.isEmpty(timelineTable.getSelectionModel().getSelectedItems()));
+       addTaskPlusButton.disableProperty().bind(Bindings.isEmpty(timelineTable.getSelectionModel().getSelectedItems()));
+        
+       
+       //Button sets which timeline are we trying to add A Task
+       addTaskButton.setOnMouseClicked(e->{
+          Timeline selectedTimeline=timelineTable.getSelectionModel().getSelectedItem();
+          if(selectedTimeline!=null){
+              
+              getModelAccess().setSelectedTimeline(selectedTimeline);}
+           
+       });
+       
+       
+       addTaskPlusButton.setOnMouseClicked(e->{
+          Timeline selectedTimeline=timelineTable.getSelectionModel().getSelectedItem();
+          if(selectedTimeline!=null){
+              
+              getModelAccess().setSelectedTimeline(selectedTimeline);}
+           
+       });
+       
+       
+       
+       showDetails.setOnAction(e->{
+                    Timeline timeline=timelineTable.getSelectionModel().getSelectedItem();
+                    Iterator iter=timeline.taskList.iterator();
+                    while(iter.hasNext()){
+                    Task task=(Task) iter.next();
+                    System.out.println("Title of the task "+ task.getTitle());
+                    }
+                        
+			
+		});	
+      
+}}
