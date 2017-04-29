@@ -2,18 +2,19 @@ package timelineManager.model;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import javafx.beans.property.SimpleStringProperty;
 
 import javafx.scene.paint.Color;
 
 
 public class Timeline {
 	private long id;
-	private String title = "";
-	private String description = "";
+	private SimpleStringProperty title;
+	private SimpleStringProperty description;
 	private LocalDate startTime;
 	private LocalDate endTime;
 	private Color color;
-	private ArrayList<Task> task;
+	public ArrayList<Task> taskList=new ArrayList<Task>();;
 	private static long counter = 1;
 	
 	/**
@@ -21,26 +22,30 @@ public class Timeline {
 	 */
 	public Timeline(){
 		this.id = counter++;
+                
 	}
 	
-	public Timeline(String title, String description, LocalDate startTime, LocalDate endTime, Color color) {
+	public Timeline(String title, String description, LocalDate startTime, LocalDate endTime) {
 		this.id = counter++;
-		this.title = title;
-		this.description = description;
+		this.title = new SimpleStringProperty(title);
+		this.description =  new SimpleStringProperty(description);
 		this.startTime = startTime;
 		this.endTime = endTime;
-		this.color = color;
+		
 	}
 	
 	/*timelineManager.model.Task*/
 	public void addTask(Task t){
-		task.add(t);
+                if(t!=null)
+                    taskList.add(t);
+                
+		
 	}
 	public void editTask(Task t){
 		
 	}
 	public void deleteTask(Task t){
-		task.remove(t);
+		taskList.remove(t);
 	}
 	/*
 			Getters & Setters
@@ -49,16 +54,16 @@ public class Timeline {
 		return id;
 	}
 	public void setTitle(String title){
-		this.title = title;
+		this.title.set(title); 
 	}
 	public String getTitle(){
-		return title;
+		return title.get();
 	}
 	public void setDescription(String description){
-		this.description = description;
+		this.description.set(description);
 	}
 	public String getDescription(){
-		return description;
+		return description.get();
 	}
 	public void setStartTime(LocalDate startTime){
 		this.startTime = startTime;
