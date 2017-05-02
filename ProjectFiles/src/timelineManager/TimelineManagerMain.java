@@ -23,7 +23,7 @@ public class TimelineManagerMain extends Application {
         
         //Scene scene = new Scene(root);
     	
-        ViewFactory viewFactory=new ViewFactory();
+        ViewFactory viewFactory=ViewFactory.defaultFactory;
         Scene scene = viewFactory.getMainScene();
         stage.setResizable(false);
         stage.setTitle("Group 2 Timeline Manager Project");

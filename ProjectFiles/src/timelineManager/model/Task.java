@@ -3,13 +3,14 @@ package timelineManager.model;
 import java.time.LocalDateTime;
 import javafx.scene.paint.Color;
 import java.time.Duration;
+import java.time.LocalDate;
 
 public class Task {
 	private long id;
 	private String title = "";
 	private String description = "";
-	private LocalDateTime startTime;
-	private LocalDateTime endTime;
+	private LocalDate startTime;
+	private LocalDate endTime;
 	private Color color;
 	private String priority;
 	private static long counter = 1;
@@ -21,18 +22,18 @@ public class Task {
 		this.id = counter++;
 	}
     
-    public Task(String title, String description, LocalDateTime startTime, LocalDateTime endTime, Color color, String priority) {
-    	this.id = counter++;
+    public Task(String title, String description, LocalDate startTime, LocalDate endTime) {
+                this.id = counter++;
 		this.title = title;
 		this.description = description;
 		this.startTime = startTime;
 		this.endTime = endTime;
-		this.color = color;
-		this.priority = priority;
+		
     }
 	
-	public Duration getDuration(LocalDateTime startTime , LocalDateTime endTime){
+	public Duration getDuration(LocalDate startTime , LocalDate endTime){
 		Duration Duration = java.time.Duration.between(startTime, endTime);
+             
 		return Duration;
 	}
 	
@@ -54,16 +55,16 @@ public class Task {
 	public String getDescription(){
 		return description;}
 	
-	public void setStartTime(LocalDateTime startTime){
+	public void setStartTime(LocalDate startTime){
 		this.startTime = startTime;}
 	
-	public LocalDateTime getStartTime(){
+	public LocalDate getStartTime(){
 		return startTime;}
 	
-	public void setEndTime(LocalDateTime endTime){
+	public void setEndTime(LocalDate endTime){
 		this.endTime = endTime;}
 	
-	public LocalDateTime getEndTime(){
+	public LocalDate getEndTime(){
 		return endTime;}
 	
 	public void setColor(Color color){

@@ -3,6 +3,8 @@
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXDatePicker?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -10,14 +12,19 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="1200.0" style="-fx-background-color: #bdede7;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="timelineManager.controller.MainWindowController">
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="1200.0" style="-fx-background-color: #bdede7;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <AnchorPane prefHeight="600.0" prefWidth="200.0" style="-fx-background-color: #b2c7e8;" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <JFXDatePicker fx:id="mainWindowDatePicker" editable="false" layoutX="20.0" layoutY="95.0" onAction="#setDate" prefHeight="33.0" prefWidth="177.0" promptText="Go to Date" showWeekNumbers="true" />
             <JFXButton fx:id="todaysDateButton" buttonType="RAISED" layoutX="14.0" layoutY="30.0" onAction="#resetDate" prefHeight="27.0" prefWidth="164.0" style="-fx-background-color: #edc6bd;" text="Go to today's date" />
-            <JFXButton fx:id="addTimelineButton" buttonType="RAISED" layoutX="14.0" layoutY="294.0" onAction="#openAddTimelineWindow" prefHeight="27.0" prefWidth="164.0" style="-fx-background-color: #edc6bd;" text="Add Timeline" />
-              <JFXButton fx:id="addTaskButton" buttonType="RAISED" layoutX="14.0" layoutY="350.0" onAction="#openAddTaskWindow" prefHeight="27.0" prefWidth="164.0" style="-fx-background-color: #edc6bd;" text="Add Task" />
+            <JFXButton fx:id="addTimelineButton" buttonType="RAISED" layoutX="14.0" layoutY="239.0" onAction="#openAddTimelineWindow" prefHeight="27.0" prefWidth="164.0" style="-fx-background-color: #edc6bd;" text="Add Timeline" />
+              <JFXButton fx:id="addTaskButton" buttonType="RAISED" layoutX="14.0" layoutY="292.0" onAction="#openAddTaskWindow" prefHeight="27.0" prefWidth="164.0" style="-fx-background-color: #edc6bd;" text="Add Task" />
+            <TableView fx:id="timelineTable" layoutY="379.0" prefHeight="201.0" prefWidth="200.0">
+              <columns>
+                <TableColumn fx:id="titleOfTable" prefWidth="199.0" text="C1" />
+              </columns>
+            </TableView>
 
 
          </children>
@@ -26,13 +33,6 @@
          <children>
             <StackPane prefHeight="600.0" prefWidth="1001.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                     <children>
-                       <JFXButton fx:id="addTaskPlusButton" buttonType="RAISED" layoutX="24.0" layoutY="511.0" onAction="#openAddTaskWindow" prefHeight="65.0" prefWidth="59.0" style="-fx-background-color: edc6bd;" text="+" />
-                        <JFXButton fx:id="goLeftButton" buttonType="RAISED" onAction="#goLeft" style="-fx-background-color: edc6bd;" text="&lt;" AnchorPane.bottomAnchor="286.0" AnchorPane.rightAnchor="935.0" AnchorPane.topAnchor="287.0" />
-                        <JFXButton fx:id="goRightButton" buttonType="RAISED" onAction="#goRight" style="-fx-background-color: edc6bd;" text="&gt;" AnchorPane.bottomAnchor="272.0" AnchorPane.leftAnchor="934.0" AnchorPane.topAnchor="301.0" />
-                     </children>
-                  </AnchorPane>
                   <VBox prefHeight="200.0" prefWidth="100.0">
                      <children>
                         <GridPane fx:id="dateGrid">
@@ -63,6 +63,13 @@
                         </ScrollPane>
                      </children>
                   </VBox>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                       <JFXButton fx:id="addTaskPlusButton" buttonType="RAISED" layoutX="24.0" layoutY="511.0" onAction="#openAddTaskWindow" prefHeight="65.0" prefWidth="59.0" style="-fx-background-color: edc6bd;" text="+" />
+                        <JFXButton fx:id="goLeftButton" buttonType="RAISED" onAction="#goLeft" style="-fx-background-color: edc6bd;" text="&lt;" AnchorPane.bottomAnchor="286.0" AnchorPane.rightAnchor="935.0" AnchorPane.topAnchor="287.0" />
+                        <JFXButton fx:id="goRightButton" buttonType="RAISED" onAction="#goRight" style="-fx-background-color: edc6bd;" text="&gt;" AnchorPane.bottomAnchor="272.0" AnchorPane.leftAnchor="934.0" AnchorPane.topAnchor="301.0" />
+                     </children>
+                  </AnchorPane>
                </children>
             </StackPane>
 
