@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import javafx.application.Platform;
 
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
@@ -59,10 +60,14 @@ public class AddTimelineController extends AbstractController{
             
             Timeline timeline=new Timeline(title,desc,start,end);
             getModelAccess().timelineModel.addTimelineToList(timeline);
-            //It closes itself after user clicked Save button
-            final Node source = (Node) e.getSource();
-            final Stage stage = (Stage) source.getScene().getWindow();
-            stage.close();
+            
+            // If check is needed for JUnit tests
+            if(e.getSource() != Event.NULL_SOURCE_TARGET) {
+	            //It closes itself after user clicked Save button
+	            final Node source = (Node) e.getSource();
+	            final Stage stage = (Stage) source.getScene().getWindow();
+	            stage.close();
+            }
         }
         else{
             Alert alert = new Alert(AlertType.WARNING);
@@ -73,9 +78,22 @@ public class AddTimelineController extends AbstractController{
             alert.showAndWait();
         
         }
-            
+    }
     
+    public void setTitle(String title) {
+    	titleField.setText(title);
+    }
     
+    public void setStartDate(LocalDate startDate) {
+    	this.startDate.setValue(startDate);
+    }
+    
+    public void setEndDate(LocalDate endDate) {
+    	this.endDate.setValue(endDate);
+    }
+    
+    public void setDescription(String description) {
+    	descriptionField.setText(description);
     }
     
 }
