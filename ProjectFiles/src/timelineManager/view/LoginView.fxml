@@ -5,10 +5,10 @@
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="315.0" prefWidth="273.0" style="-fx-background-color: #708090;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="315.0" prefWidth="273.0" styleClass="background" stylesheets="@../css/stylesheet.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <JFXTextField fx:id="usernameField" alignment="CENTER" focusColor="#d85d24" labelFloat="true" layoutX="51.0" layoutY="88.0" prefHeight="43.0" prefWidth="168.0" promptText="username" unFocusColor="#88d1e3" />
-      <JFXPasswordField fx:id="passwordField" alignment="CENTER" focusColor="#d85d24" labelFloat="true" layoutX="50.0" layoutY="184.0" prefHeight="0.0" prefWidth="168.0" promptText="password" unFocusColor="#88d1e3" />
+      <JFXTextField fx:id="usernameField" alignment="CENTER" focusColor="#d85d24" labelFloat="true" layoutX="51.0" layoutY="88.0" prefHeight="43.0" prefWidth="168.0" promptText="username" styleClass="text-field-login" unFocusColor="#88d1e3" />
+      <JFXPasswordField fx:id="passwordField" alignment="CENTER" focusColor="#d85d24" labelFloat="true" layoutX="50.0" layoutY="184.0" prefHeight="0.0" prefWidth="168.0" promptText="password" styleClass="text-field-login" unFocusColor="#88d1e3" />
       <JFXButton fx:id="loginButton" buttonType="RAISED" contentDisplay="CENTER" layoutX="108.0" layoutY="231.0" ripplerFill="#5be9dd" style="-fx-background-color: #ff7f50;" text="Log in" textAlignment="CENTER" textFill="#fdfef8" wrapText="true" />
    </children>
 </AnchorPane>
