@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
@@ -57,18 +58,21 @@ public class AddTaskController extends AbstractController{
         start=startDate.getValue();
         end=endDate.getValue();
        
-        //This ugly if checks if if the duration of task equal or smaller than duration o ftimeline
-        //also validetes the input
+        //This ugly if checks if if the duration of task equal or smaller than duration of timeline
+        //also validates the input
         if(!title.isEmpty() && !desc.isEmpty()  && start!=null && end!=null && end.isAfter(start) && ((getModelAccess().getSelectedTimeline().getStartTime().isBefore(start) ||getModelAccess().getSelectedTimeline().getStartTime().isEqual(start)) && (getModelAccess().getSelectedTimeline().getEndTime().isAfter(end) || getModelAccess().getSelectedTimeline().getEndTime().isEqual(end) )) ) {
             
             Task task=new Task(title, desc, start, end);
            
             getModelAccess().getSelectedTimeline().addTask(task);
             
-            //It closes itself after user clicked Save button
-            final Node source = (Node) e.getSource();
-            final Stage stage = (Stage) source.getScene().getWindow();
-            stage.close();
+            // If check is needed for JUnit tests
+            if(e.getSource() != Event.NULL_SOURCE_TARGET) {
+            	  //It closes itself after user clicked Save button
+                final Node source = (Node) e.getSource();
+                final Stage stage = (Stage) source.getScene().getWindow();
+                stage.close();
+            }
         }
         else{
             Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -79,10 +83,22 @@ public class AddTaskController extends AbstractController{
             alert.showAndWait();
         
         }
-            
-    
-    
     }
-	    
+        
+        public void setTitle(String title) {
+        	titleField.setText(title);
+        }
+        
+        public void setStartDate(LocalDate startDate) {
+        	this.startDate.setValue(startDate);
+        }
+        
+        public void setEndDate(LocalDate endDate) {
+        	this.endDate.setValue(endDate);
+        }
+        
+        public void setDescription(String description) {
+        	descriptionField.setText(description);
+        }
 	}
 
