@@ -1,4 +1,4 @@
-.background {
+.datebar {
     -fx-background-color: black;
     -fx-text-fill: white;
 }
@@ -6,17 +6,36 @@
 .background-left {
     -fx-background-color: #7B7B7B;
 }
+ .background {
+    -fx-background-color: #D9D9D9;;
+}
  
-.background-right {
+.text-c1 {
     -fx-background-color: #D9D9D9;
 }
-
-.text-field {
+ .text-field-date {
     -fx-font-size: 13pt;
     -fx-font-family: "Tw Cen MT";
- 
+    -jfx-default-color: #F28026;
 }
-
+.text-field-title {
+    -fx-font-size: 18pt;
+    -fx-font-family: "Tw Cen MT";
+    -jfx-focus-color: #F28026;
+    -jfx-unfocus-color: black;
+}
+.text-field-description {
+    -fx-font-size: 14pt;
+    -fx-font-family: "Tw Cen MT";
+    -jfx-focus-color: #F28026;
+    -jfx-unfocus-color: black;
+}
+.text-field-login {
+    -fx-font-size: 12pt;
+    -fx-font-family: "Tw Cen MT";
+    -jfx-focus-color: #F28026;
+    -jfx-unfocus-color: black;
+}
 /* 
  * TIME AND DATE ICON image galleries
  * imageKB.com Java Program 

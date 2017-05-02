@@ -6,12 +6,12 @@
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="465.0" prefWidth="352.0" style="-fx-background-color: #7fffd4;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" prefHeight="465.0" prefWidth="352.0" styleClass="background" stylesheets="@../css/stylesheet.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <JFXTextField fx:id="titleField" labelFloat="true" layoutX="37.0" layoutY="22.0" prefHeight="29.0" prefWidth="284.0" promptText="Title" />
-      <JFXDatePicker fx:id="startDate" editable="false" layoutX="37.0" layoutY="250.0" prefHeight="29.0" prefWidth="292.0" promptText="Start Date" />
-      <JFXDatePicker fx:id="endDate" editable="false" layoutX="37.0" layoutY="288.0" prefHeight="29.0" prefWidth="292.0" promptText="End Date" />
-      <JFXTextArea fx:id="descriptionField" labelFloat="true" layoutX="37.0" layoutY="86.0" prefHeight="126.0" prefWidth="284.0" promptText="Description" />
-      <JFXButton fx:id="saveButton" buttonType="RAISED" layoutX="104.0" layoutY="413.0" onAction="#addTheTask" prefHeight="27.0" prefWidth="144.0" style="-fx-background-color: edc6bd;" text="Save" />
+      <JFXTextField fx:id="titleField" labelFloat="true" layoutX="37.0" layoutY="22.0" prefHeight="29.0" prefWidth="284.0" promptText="Title" styleClass="text-field-title" />
+      <JFXDatePicker fx:id="startDate" defaultColor="#000706" editable="false" layoutX="37.0" layoutY="250.0" prefHeight="29.0" prefWidth="292.0" promptText="Start Date" styleClass="text-field-date" />
+      <JFXDatePicker fx:id="endDate" defaultColor="BLACK" editable="false" layoutX="37.0" layoutY="288.0" prefHeight="29.0" prefWidth="292.0" promptText="End Date" styleClass="text-field-date" />
+      <JFXTextArea fx:id="descriptionField" labelFloat="true" layoutX="37.0" layoutY="86.0" prefHeight="126.0" prefWidth="284.0" promptText="Description" styleClass="text-field-description" />
+      <JFXButton fx:id="saveButton" buttonType="RAISED" layoutX="104.0" layoutY="413.0" onAction="#addTheTask" prefHeight="27.0" prefWidth="144.0" text="Save" />
    </children>
 </AnchorPane>
