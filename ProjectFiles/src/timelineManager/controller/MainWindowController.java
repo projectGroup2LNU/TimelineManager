@@ -95,6 +95,7 @@ public class MainWindowController extends AbstractController implements Initiali
         Stage stage=new Stage();
         stage.setResizable(false);
         stage.setTitle("Adding a new Timeline");
+	stage.getIcons().add(new Image("file:../TimelineManager/ProjectFiles/src/timelineManager/resource/image/icon.png"));
         stage.setScene(scene);
         stage.show();
         
@@ -106,6 +107,7 @@ public class MainWindowController extends AbstractController implements Initiali
         Stage stage=new Stage();
         stage.setResizable(false);
         stage.setTitle("Adding a new Task");
+	stage.getIcons().add(new Image("file:../TimelineManager/ProjectFiles/src/timelineManager/resource/image/icon.png"));
         stage.setScene(scene);
         stage.show();
         
