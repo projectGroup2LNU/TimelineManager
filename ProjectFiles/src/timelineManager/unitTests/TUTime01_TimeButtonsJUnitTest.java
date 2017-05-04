@@ -1,40 +1,16 @@
 package timelineManager.unitTests;
 
 import static org.junit.Assert.assertEquals;
-
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
-import javafx.application.Platform;
-import javafx.embed.swing.JFXPanel;
-import javafx.fxml.FXMLLoader;
 import timelineManager.controller.MainWindowController;
 import timelineManager.controller.ModelAccess;
 
-import java.io.IOException;
 import java.time.LocalDate;
 
 public class TUTime01_TimeButtonsJUnitTest {
-	private ModelAccess modelAccess = new ModelAccess();
-	private MainWindowController time = new MainWindowController(modelAccess);
-	private String fxmlPath = "/timelineManager/view/MainView.fxml";
+	MainWindowController time = new MainWindowController(new ModelAccess());
 	
-	@Before
-	public void setUp() {
-		// Initializes JavaFX
-		new JFXPanel();
-
-		// Loads the FXML file
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-			loader.setController(time);
-			loader.load();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
 	@Test
 	public void testCurrentDate() {
 		assertEquals(time.getCurrentDate(), LocalDate.now());
