@@ -12,6 +12,7 @@ import java.util.ResourceBundle;
 import javafx.beans.binding.Bindings;
 
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
@@ -21,10 +22,14 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import timelineManager.helpClasses.DateViewer;
 import timelineManager.model.Task;
 import timelineManager.model.Timeline;
@@ -93,10 +98,18 @@ public class MainWindowController extends AbstractController implements Initiali
        
         Scene scene = viewFactory. getAddTimelineScene();
         Stage stage=new Stage();
+        stage.centerOnScreen();
         stage.setResizable(false);
         stage.setTitle("Adding a new Timeline");
         stage.setScene(scene);
+        stage.initModality(Modality.APPLICATION_MODAL);
         stage.show();
+        stage.addEventHandler(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
+            if (KeyCode.ESCAPE == event.getCode() && stage.isFocused()==true) {
+                stage.close();
+            }
+            
+        });
         
     }
     
@@ -104,10 +117,18 @@ public class MainWindowController extends AbstractController implements Initiali
         
         Scene scene = viewFactory. getAddTaskScene();
         Stage stage=new Stage();
+        stage.centerOnScreen();
         stage.setResizable(false);
         stage.setTitle("Adding a new Task");
         stage.setScene(scene);
+        stage.initModality(Modality.APPLICATION_MODAL);
         stage.show();
+        stage.addEventHandler(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
+            if (KeyCode.ESCAPE == event.getCode() && stage.isFocused()==true) {
+                stage.close();
+            }
+            
+        });
         
     }
     
