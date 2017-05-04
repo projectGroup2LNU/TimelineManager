@@ -14,6 +14,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import timelineManager.model.Timeline;
 
@@ -74,7 +75,7 @@ public class AddTimelineController extends AbstractController{
             alert.setTitle("Warning ");
             alert.setHeaderText("Invalid or missing value");
             alert.setContentText("Please fill all areas!!\nStart date should be before end date");
-
+            alert.initModality(Modality.APPLICATION_MODAL);
             alert.showAndWait();
         
         }
