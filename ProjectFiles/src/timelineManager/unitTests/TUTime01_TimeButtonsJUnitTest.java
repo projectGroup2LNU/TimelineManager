@@ -1,5 +1,5 @@
 package timelineManager.unitTests;
-/*
+
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
@@ -47,4 +47,3 @@ public class TUTime01_TimeButtonsJUnitTest {
 		}
 	}
 }
-*/
