@@ -43,7 +43,7 @@ public class TimelineViewer
         // Filler for first row to make grid correct size
         for(int i = 0; i < 16; i++)
         {
-            Rectangle rect = new Rectangle(DAY_PIXEL_SIZE-1, 20);
+            Rectangle rect = new Rectangle(DAY_PIXEL_SIZE, 20);
             rect.setVisible(false);
             grid.add(rect, i, 0, 1, 1);
         }
