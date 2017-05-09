@@ -1,20 +1,21 @@
 package timelineManager.model;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import javafx.beans.property.SimpleStringProperty;
-
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.paint.Color;
 
 
-public class Timeline {
+public class Timeline{
 	private long id;
 	private SimpleStringProperty title;
+
 	private SimpleStringProperty description;
 	private LocalDate startTime;
 	private LocalDate endTime;
 	private Color color;
-	public ArrayList<Task> taskList=new ArrayList<Task>();;
+	public ObservableList<Task> taskList= FXCollections.observableArrayList();
 	private static long counter = 1;
 	
 	/**
@@ -22,7 +23,6 @@ public class Timeline {
 	 */
 	public Timeline(){
 		this.id = counter++;
-                
 	}
 	
 	public Timeline(String title, String description, LocalDate startTime, LocalDate endTime) {
@@ -32,6 +32,8 @@ public class Timeline {
 		this.startTime = startTime;
 		this.endTime = endTime;
 		
+		// Temp color
+		color = Color.rgb(200,175,160);
 	}
 	
 	/*timelineManager.model.Task*/
@@ -59,6 +61,8 @@ public class Timeline {
 	public String getTitle(){
 		return title.get();
 	}
+	
+	
 	public void setDescription(String description){
 		this.description.set(description);
 	}

@@ -1,7 +1,5 @@
 package timelineManager.helpClasses;
 
-
-import javafx.geometry.Pos;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -12,7 +10,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 import java.time.LocalDate;
-
 
 /**
  * Created by joakimbergqvist on 2017-04-26.
@@ -45,20 +42,15 @@ public class DateViewer
     {
         this.currentDate = currentDate;
         grid = inGrid;
-        //grid.setAlignment(Pos.TOP_CENTER);
-    
         grid.getColumnConstraints().setAll(new ColumnConstraints(DAY_PIXEL_SIZE,DAY_PIXEL_SIZE,DAY_PIXEL_SIZE));
         grid.getRowConstraints().setAll(new RowConstraints(20,20,20));
         
-        
         initializeCalendarView();
-
         
     }
     
     public void initializeCalendarView()
     {
-       
         
         dateClaendarText = new Text[daysInView];
         dayOfWeek = new Text[daysInView];
@@ -86,14 +78,10 @@ public class DateViewer
             dayOfWeek[i] = dayName;
             dayRectangles[i] = dateRect;
             grid.add(pane, i, 1);
-         
-            
         }
         
         monthPane1 = new Pane();
         monthPane2 = new Pane();
-        
-       
         
         monthRect1 = new Rectangle(DAY_PIXEL_SIZE, 40);
         monthRect2 = new Rectangle(DAY_PIXEL_SIZE, 40);
@@ -127,13 +115,6 @@ public class DateViewer
         monthRect2.setFill(Color.rgb(210,210,255));
         monthRect2.setStroke(Color.rgb(130,130,130));
         
-       /* monthPane1.setMaxWidth(monthRect1.getWidth());
-        monthPane1.setMaxHeight(monthRect1.getHeight());
-        monthPane2.setMaxWidth(monthRect2.getWidth());
-        monthPane2.setMaxHeight(monthRect2.getHeight());
-        
-        */
-
         grid.add(monthPane1, 0,0, 1,1);
         grid.add(monthPane2, 1, 0, 1,1 );
         showDates(currentDate);
@@ -189,8 +170,6 @@ public class DateViewer
             grid.getChildren().remove(monthPane2);
             grid.add(monthPane2,month1Width,0,month2Width,1);
         }
-        
-        
     }
     private int  yearPlacementRetriver(LocalDate currentDate)
     {

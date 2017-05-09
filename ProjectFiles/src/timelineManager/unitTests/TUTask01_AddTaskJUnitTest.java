@@ -2,6 +2,7 @@ package timelineManager.unitTests;
 
 import static org.junit.Assert.assertEquals;
 
+import javafx.collections.ObservableList;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,7 +25,7 @@ public class TUTask01_AddTaskJUnitTest {
 	private ModelAccess modelAccess = new ModelAccess();
 	private AddTaskController controller = new AddTaskController(modelAccess);
 	private String fxmlPath = "/timelineManager/view/AddTaskView.fxml";
-	private ArrayList<Task> tasks;
+	private ObservableList<Task> tasks;
 
 	@Before
 	public void setUp() {
@@ -33,7 +34,9 @@ public class TUTask01_AddTaskJUnitTest {
 		
 		// Creates a Timeline that we can add tasks to
 		modelAccess.setSelectedTimeline(new Timeline("Title", "Description", LocalDate.now().minusDays(1), LocalDate.now().plusDays(300)));
-		tasks = modelAccess.getSelectedTimeline().taskList;
+		
+		
+		tasks = modelAccess.getSelectedTimeline().taskList;  // (commented out this line after changing to observable list<Task> in Timeline class
 
 		// Loads the FXML file so that we can modify the text areas in the controller
 		try {

@@ -2,7 +2,6 @@ package timelineManager.controller;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDatePicker;
-import com.jfoenix.controls.JFXListView;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -12,7 +11,6 @@ import java.util.ResourceBundle;
 import javafx.beans.binding.Bindings;
 
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
@@ -29,10 +27,12 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.Window;
+import javafx.scene.layout.AnchorPane;
 import timelineManager.helpClasses.DateViewer;
+import timelineManager.helpClasses.TimelineViewer;
 import timelineManager.model.Task;
 import timelineManager.model.Timeline;
+import timelineManager.model.TimelineModel;
 import timelineManager.view.ViewFactory;
 
 /**
@@ -77,14 +77,22 @@ public class MainWindowController extends AbstractController implements Initiali
     @FXML
     private GridPane timelineGrid;
     
+    @FXML
+    private AnchorPane buttonAnchorPane;
+    
+    @FXML
+    private AnchorPane gridAnchor;
+    
     private MenuItem showDetails = new MenuItem("show details");
     
-    
-    private final int DAY_PIXEL_SIZE = 59;
+    private TimelineViewer tm;
+    public static final int DAY_PIXEL_SIZE = 59;  // this is the width for a day in the the grids
     
     DateViewer dateViewer;
     
-     ViewFactory viewFactory=ViewFactory.defaultFactory;
+    ViewFactory viewFactory=ViewFactory.defaultFactory;
+    
+    //TimelineModel timelineModel = new TimelineModel();
     
     
     //date of the day
@@ -127,9 +135,7 @@ public class MainWindowController extends AbstractController implements Initiali
             if (KeyCode.ESCAPE == event.getCode() && stage.isFocused()==true) {
                 stage.close();
             }
-            
         });
-        
     }
     
     
@@ -138,7 +144,7 @@ public class MainWindowController extends AbstractController implements Initiali
         currentDate = currentDate.plus(7,ChronoUnit.DAYS);
         datePickerUpdate(currentDate);
         dateViewer.showDates(currentDate);
-        
+        tm.update(currentDate, super.getModelAccess().timelineModel);
     }
     
     //to be connected to the left button, changing the date to a week back
@@ -146,6 +152,7 @@ public class MainWindowController extends AbstractController implements Initiali
         currentDate = currentDate.minus(7, ChronoUnit.DAYS);
         datePickerUpdate(currentDate);
         dateViewer.showDates(currentDate);
+        tm.update(currentDate, super.getModelAccess().timelineModel);
     }
     
     //to be connected to a reset button, that will change the date back to the actual date of the day
@@ -154,8 +161,8 @@ public class MainWindowController extends AbstractController implements Initiali
         datePickerUpdate(currentDate);
         
         dateViewer.showDates(currentDate);
-        //Should be deleted later
-        System.out.println(currentDate.toString());
+        tm.update(currentDate, super.getModelAccess().timelineModel);
+        
     }
     
     /* to be connected to the choicebox where the user chooses the year, month, day.
@@ -165,9 +172,7 @@ public class MainWindowController extends AbstractController implements Initiali
         currentDate= mainWindowDatePicker.getValue();
         datePickerUpdate(currentDate);
         dateViewer.showDates(currentDate);
-        //showDates(currentDate);
-        //I have disabled this because it will print twice when value of date picker is set
-        //System.out.println(currentDate.toString());
+        tm.update(currentDate, super.getModelAccess().timelineModel);
     }
     
     
@@ -186,13 +191,16 @@ public class MainWindowController extends AbstractController implements Initiali
     public void initialize(URL location, ResourceBundle resources)
     {
         
+        timelineScrollPane.setFitToWidth(true);
+        timelineScrollPane.setFitToHeight(true);
         datePickerUpdate(currentDate);
         dateViewer = new DateViewer(currentDate, dateGrid);
         dateGrid.getColumnConstraints().setAll(new ColumnConstraints(DAY_PIXEL_SIZE,DAY_PIXEL_SIZE,DAY_PIXEL_SIZE));
         dateGrid.getRowConstraints().setAll(new RowConstraints(20,20,20));
         dateGrid.getRowConstraints().add(0, new RowConstraints(40,40,40));
-       
         
+        timelineGrid.getRowConstraints().setAll(new RowConstraints(20,20,20));
+        timelineGrid.getColumnConstraints().setAll(new ColumnConstraints(DAY_PIXEL_SIZE,DAY_PIXEL_SIZE,DAY_PIXEL_SIZE));
        
        titleOfTable.setCellValueFactory(new PropertyValueFactory<Timeline, String>("title"));
 
@@ -201,22 +209,20 @@ public class MainWindowController extends AbstractController implements Initiali
        
        timelineTable.setContextMenu(new ContextMenu(showDetails));
        
-       // When a timeline selected from the list its enables to click addTask buttons
-       //Otherwise they are disabled
-       addTaskButton.disableProperty().bind(Bindings.isEmpty(timelineTable.getSelectionModel().getSelectedItems()));
-       addTaskPlusButton.disableProperty().bind(Bindings.isEmpty(timelineTable.getSelectionModel().getSelectedItems()));
-        
+       // disables the add task button if there is no timeline
+       addTaskButton.disableProperty().bind(Bindings.isEmpty(getModelAccess().getTimelineModel().timelineList));
+       addTaskPlusButton.disableProperty().bind(Bindings.isEmpty(getModelAccess().getTimelineModel().timelineList));
        
        //Button sets which timeline are we trying to add A Task
-       addTaskButton.setOnMouseClicked(e->{
+       /*
+        addTaskButton.setOnMouseClicked(e->{
           Timeline selectedTimeline=timelineTable.getSelectionModel().getSelectedItem();
           if(selectedTimeline!=null){
               
               getModelAccess().setSelectedTimeline(selectedTimeline);}
-           
        });
-       
-       
+        
+        
        addTaskPlusButton.setOnMouseClicked(e->{
           Timeline selectedTimeline=timelineTable.getSelectionModel().getSelectedItem();
           if(selectedTimeline!=null){
@@ -224,9 +230,9 @@ public class MainWindowController extends AbstractController implements Initiali
               getModelAccess().setSelectedTimeline(selectedTimeline);}
            
        });
-       
-       
-       
+        
+        */
+        
        showDetails.setOnAction(e->{
                     Timeline timeline=timelineTable.getSelectionModel().getSelectedItem();
                     Iterator iter=timeline.taskList.iterator();
@@ -234,8 +240,22 @@ public class MainWindowController extends AbstractController implements Initiali
                     Task task=(Task) iter.next();
                     System.out.println("Title of the task "+ task.getTitle());
                     }
-                        
-			
 		});	
+        
+        tm = new TimelineViewer(currentDate, timelineGrid, super.getModelAccess());
       
-}}
+        goLeft();  // this solves a bug with dates showing a small space if
+        goLeft();   // not a view with to dates has been visible
+        goLeft();
+        goRight();
+        goRight();
+        goRight();
+    }
+    
+    // getter for PixelWidth
+    public int getPixelDayWidth()
+    {
+        return DAY_PIXEL_SIZE;
+    }
+}
+

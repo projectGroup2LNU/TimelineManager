@@ -15,7 +15,8 @@ import timelineManager.model.TimelineModel;
  * This class is a common reference between controllers 
  * to enable communication between controllers
  */
-public class ModelAccess {
+public class ModelAccess
+{
     
     private Timeline selectedTimeline;
     public TimelineModel timelineModel=new TimelineModel();
