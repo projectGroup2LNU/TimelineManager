@@ -177,10 +177,7 @@ public class MainWindowController extends AbstractController implements Initiali
     
     
     public void datePickerUpdate(LocalDate inputDate){
-        // Null check is needed to be able to run JUnit tests
-        if(mainWindowDatePicker != null) {
-            mainWindowDatePicker.setValue(inputDate);
-        }
+    	mainWindowDatePicker.setValue(inputDate);
     }
     
     public LocalDate getCurrentDate() {
