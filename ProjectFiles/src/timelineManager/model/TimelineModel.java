@@ -3,6 +3,8 @@ package timelineManager.model;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -28,16 +30,31 @@ public class TimelineModel{
    public ArrayList<Timeline> getTimelinesToDisplay(LocalDate start, LocalDate end) {
        Iterator iter=timelineList.iterator();
        ArrayList<Timeline> list=new ArrayList();
+       
        Timeline timeline;
        while(iter.hasNext()){
            timeline=(Timeline) iter.next();
-       if(!start.isAfter(timeline.getEndTime()) && !timeline.getStartTime().isAfter(end)){
-           list.add(timeline);
+            if(!start.isAfter(timeline.getEndTime()) && !timeline.getStartTime().isAfter(end)){
+                list.add(timeline);
+            }
        }
-       }
-   
+       list.sort(new Comparator<Timeline>()
+       {
+           @Override
+           public int compare(Timeline t1, Timeline t2)
+           {
+               if(t1.getEndTime().equals(t2.getEndTime()))
+               {
+                   return t1.getStartTime().compareTo(t2.getStartTime());
+               }
+               else
+               {
+                   return t1.getEndTime().compareTo(t2.getEndTime());  // end time is primarty for sort
+               }
+    
+           }
+       });
        return list;
-   
    }
 
    /*
@@ -54,11 +71,26 @@ public class TimelineModel{
                 list.add(task);
             }
         }
+       list.sort(new Comparator<Task>()
+       {
+           @Override
+           public int compare(Task t1, Task t2)
+           {
+               if(t1.getEndTime().equals(t2.getEndTime()))
+               {
+                   
+                   return t1.getStartTime().compareTo(t2.getStartTime());
+               }
+               else
+               {
+                   return t1.getEndTime().compareTo(t2.getEndTime());  // end time is primarty for sort
+               }
+            
+           }
+       });
         return list;
    }
-
-
-
+    
 }
 
 

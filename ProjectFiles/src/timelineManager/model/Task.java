@@ -28,7 +28,9 @@ public class Task {
 		this.description = description;
 		this.startTime = startTime;
 		this.endTime = endTime;
-		
+	
+		// Temp color
+		color = Color.rgb(200,175,160);
     }
 	
 	public Duration getDuration(LocalDate startTime , LocalDate endTime){

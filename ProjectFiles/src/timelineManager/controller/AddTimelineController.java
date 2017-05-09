@@ -60,6 +60,7 @@ public class AddTimelineController extends AbstractController{
         if(!title.isEmpty() && !desc.isEmpty()  && start!=null && end!=null && end.isAfter(start)){
             
             Timeline timeline=new Timeline(title,desc,start,end);
+            getModelAccess().setSelectedTimeline(timeline);
             getModelAccess().timelineModel.addTimelineToList(timeline);
             
             // If check is needed for JUnit tests

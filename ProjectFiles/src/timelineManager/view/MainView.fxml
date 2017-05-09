@@ -9,10 +9,9 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="1200.0" stylesheets="@../css/stylesheet.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" prefHeight="620.0" prefWidth="120.0" stylesheets="@../css/stylesheet.css" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <AnchorPane prefHeight="600.0" prefWidth="200.0" styleClass="background-left" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -29,13 +28,13 @@
 
          </children>
       </AnchorPane>
-      <AnchorPane layoutX="200.0" prefHeight="600.0" prefWidth="1001.0">
+      <AnchorPane layoutX="200.0" prefHeight="200.0" prefWidth="1004.0">
          <children>
-            <StackPane prefHeight="600.0" prefWidth="1001.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <AnchorPane fx:id="buttonAnchorPane" prefHeight="200.0" prefWidth="1004.0" styleClass="background">
                <children>
-                  <VBox prefHeight="200.0" prefWidth="100.0" styleClass="background">
+                  <VBox prefHeight="620.0" prefWidth="1004.0" styleClass="background">
                      <children>
-                        <GridPane fx:id="dateGrid" styleClass="datebar">
+                        <GridPane fx:id="dateGrid" prefHeight="30.0" prefWidth="1004" styleClass="datebar">
                           <columnConstraints>
                             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -46,7 +45,7 @@
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                         </GridPane>
-                        <ScrollPane fx:id="timelineScrollPane" hbarPolicy="NEVER" pannable="true" prefHeight="514.0" prefWidth="634.0" styleClass="background" vbarPolicy="ALWAYS" VBox.vgrow="ALWAYS">
+                        <ScrollPane fx:id="timelineScrollPane" hbarPolicy="NEVER" pannable="true" prefHeight="1000.0" prefWidth="1004" styleClass="background" VBox.vgrow="ALWAYS">
                            <content>
                               <GridPane fx:id="timelineGrid">
                                 <columnConstraints>
@@ -63,16 +62,11 @@
                         </ScrollPane>
                      </children>
                   </VBox>
-                  <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                     <children>
-                       <JFXButton fx:id="addTaskPlusButton" buttonType="RAISED" layoutX="24.0" layoutY="511.0" onAction="#openAddTaskWindow" prefHeight="65.0" prefWidth="59.0" styleClass="button-round" text="+" />
-                        <JFXButton fx:id="goLeftButton" buttonType="RAISED" onAction="#goLeft" styleClass="button-chooser" text="&lt;" AnchorPane.bottomAnchor="286.0" AnchorPane.rightAnchor="935.0" AnchorPane.topAnchor="287.0" />
-                        <JFXButton fx:id="goRightButton" buttonType="RAISED" onAction="#goRight" styleClass="button-chooser" text="&gt;" AnchorPane.bottomAnchor="272.0" AnchorPane.leftAnchor="934.0" AnchorPane.topAnchor="301.0" />
-                     </children>
-                  </AnchorPane>
+                 <JFXButton fx:id="addTaskPlusButton" buttonType="RAISED" layoutX="24.0" layoutY="511.0" onAction="#openAddTaskWindow" prefHeight="65.0" prefWidth="59.0" styleClass="button-round" text="+" />
+                  <JFXButton fx:id="goLeftButton" buttonType="RAISED" onAction="#goLeft" styleClass="button-chooser" text="&lt;" AnchorPane.bottomAnchor="286.0" AnchorPane.rightAnchor="935.0" AnchorPane.topAnchor="287.0" />
+                  <JFXButton fx:id="goRightButton" buttonType="RAISED" onAction="#goRight" styleClass="button-chooser" text="&gt;" AnchorPane.bottomAnchor="272.0" AnchorPane.leftAnchor="934.0" AnchorPane.topAnchor="301.0" />
                </children>
-            </StackPane>
-
+            </AnchorPane>
          </children>
       </AnchorPane>
    </children>
