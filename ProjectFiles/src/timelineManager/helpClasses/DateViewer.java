@@ -170,6 +170,12 @@ public class DateViewer
             grid.getChildren().remove(monthPane2);
             grid.add(monthPane2,month1Width,0,month2Width,1);
         }
+        
+        // A filler to fill a otherwise black hole right corner of the date rectangles
+        Rectangle rightFiller = new Rectangle(2,60);
+        rightFiller.setFill(Color.rgb(210, 210, 255));
+        grid.add(rightFiller,17,0,1,2);
+        
     }
     private int  yearPlacementRetriver(LocalDate currentDate)
     {
