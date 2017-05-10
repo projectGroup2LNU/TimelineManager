@@ -12,6 +12,7 @@
       <JFXDatePicker fx:id="startDate" defaultColor="#000706" editable="false" layoutX="37.0" layoutY="250.0" prefHeight="29.0" prefWidth="292.0" promptText="Start Date" styleClass="text-field-date" />
       <JFXDatePicker fx:id="endDate" defaultColor="BLACK" editable="false" layoutX="37.0" layoutY="288.0" prefHeight="29.0" prefWidth="292.0" promptText="End Date" styleClass="text-field-date" />
       <JFXTextArea fx:id="descriptionField" labelFloat="true" layoutX="37.0" layoutY="86.0" prefHeight="126.0" prefWidth="284.0" promptText="Description" styleClass="text-field-description" />
-      <JFXButton fx:id="saveButton" buttonType="RAISED" layoutX="104.0" layoutY="413.0" onAction="#addTheTask" prefHeight="27.0" prefWidth="144.0" text="Save" />
+     <JFXButton fx:id="saveButton" buttonType="RAISED" layoutX="37.0" layoutY="378.0" onAction="#addTheTask" prefHeight="23.0" prefWidth="125.0" text="Save" />
+      <JFXButton fx:id="cancelButton" buttonType="RAISED" layoutX="196.0" layoutY="378.0" onAction="#cancelTask" prefHeight="23.0" prefWidth="125.0" text="Cancel" />
    </children>
 </AnchorPane>
