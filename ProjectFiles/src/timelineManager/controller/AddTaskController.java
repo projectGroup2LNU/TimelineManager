@@ -40,6 +40,9 @@ public class AddTaskController extends AbstractController{
 
 	    @FXML
 	    private JFXButton saveButton;
+	
+	    @FXML
+	    private JFXButton cancelButton;
 	    
 	   
             
@@ -61,8 +64,7 @@ public class AddTaskController extends AbstractController{
        
         //This ugly if checks if if the duration of task equal or smaller than duration of timeline
         //also validates the input
-        if(!title.isEmpty() && !desc.isEmpty()  && start!=null && end!=null && end.isAfter(start) && ((getModelAccess().getSelectedTimeline().getStartTime().isBefore(start) ||getModelAccess().getSelectedTimeline().getStartTime().isEqual(start)) && (getModelAccess().getSelectedTimeline().getEndTime().isAfter(end) || getModelAccess().getSelectedTimeline().getEndTime().isEqual(end) )) ) {
-            
+         if(!title.isEmpty() && start!=null && end!=null && (end.isAfter(start) || end.isEqual(start)) && ((getModelAccess().getSelectedTimeline().getStartTime().isBefore(start) ||getModelAccess().getSelectedTimeline().getStartTime().isEqual(start)) && (getModelAccess().getSelectedTimeline().getEndTime().isAfter(end) || getModelAccess().getSelectedTimeline().getEndTime().isEqual(end) )) ){
             Task task=new Task(title, desc, start, end);
            
             getModelAccess().getSelectedTimeline().addTask(task);
@@ -75,6 +77,43 @@ public class AddTaskController extends AbstractController{
                 stage.close();
             }
         }
+	
+	else if (title.isEmpty()){
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning ");
+            alert.setHeaderText("Please select a title");
+            alert.initModality(Modality.APPLICATION_MODAL);
+            alert.showAndWait();
+        
+        }
+        
+        else if (start==null){
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning ");
+            alert.setHeaderText("Please select start date ");
+            alert.initModality(Modality.APPLICATION_MODAL);
+            alert.showAndWait();
+        
+        }
+        
+        else if (end==null){
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning ");
+            alert.setHeaderText("Please select end date ");
+            alert.initModality(Modality.APPLICATION_MODAL);
+            alert.showAndWait();
+        
+        }
+        
+        else if (!(end.isAfter(start)|| end.isEqual(start))){
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning ");
+            alert.setHeaderText("End date cannot be before start date ");
+            alert.initModality(Modality.APPLICATION_MODAL);
+            alert.showAndWait();
+        
+        }
+		
         else{
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Warning ");
@@ -100,6 +139,11 @@ public class AddTaskController extends AbstractController{
         
         public void setDescription(String description) {
         	descriptionField.setText(description);
+        }
+	
+	public void cancelTask(){
+        	Stage stage = (Stage) cancelButton.getScene().getWindow();
+        	stage.close();
         }
 	}
 
