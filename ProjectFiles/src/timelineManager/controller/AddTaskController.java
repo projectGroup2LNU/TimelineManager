@@ -5,18 +5,25 @@ import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
+
+import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.DateCell;
+import javafx.scene.control.DatePicker;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import timelineManager.model.Task;
 import timelineManager.model.Timeline;
 
@@ -25,7 +32,7 @@ import timelineManager.model.Timeline;
  * it holds the variables and logics needed to create a new timeline from GUI
  */
 
-public class AddTaskController extends AbstractController{
+public class AddTaskController extends AbstractController implements Initializable{   
     
     
     @FXML
@@ -45,6 +52,8 @@ public class AddTaskController extends AbstractController{
     
     @FXML
     private JFXButton cancelButton;
+    
+    private Callback<DatePicker, DateCell> dayCellFactory;
     
     String title,desc,priority;
     LocalDate start,end;
@@ -179,5 +188,26 @@ public class AddTaskController extends AbstractController{
     public void setDescription(String description) {
         descriptionField.setText(description);
     }
-    
+
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		Timeline currentTimeline = getModelAccess().getSelectedTimeline();
+    	
+        dayCellFactory = new Callback<DatePicker, DateCell>() {
+        	public DateCell call(final DatePicker datePicker) {
+        		return new DateCell() {
+        			@Override public void updateItem(LocalDate item, boolean empty) {
+        				super.updateItem(item, empty);
+        				
+        				if(item.isBefore(currentTimeline.getStartTime()) || item.isAfter(currentTimeline.getEndTime())) {
+        					setDisable(true);
+        				}
+        			}
+        		};
+        	}
+        };
+        	
+	 	startDate.setDayCellFactory(dayCellFactory);
+		endDate.setDayCellFactory(dayCellFactory);
+	}
 }
