@@ -195,10 +195,10 @@ public class MainWindowController extends AbstractController implements Initiali
         dateGrid.getColumnConstraints().setAll(new ColumnConstraints(DAY_PIXEL_SIZE,DAY_PIXEL_SIZE,DAY_PIXEL_SIZE));
         dateGrid.getRowConstraints().setAll(new RowConstraints(20,20,20));
         dateGrid.getRowConstraints().add(0, new RowConstraints(40,40,40));
-        timelineGrid.setMaxWidth(950);
-        timelineGrid.setMinWidth(950);
-        timelineScrollPane.setMaxWidth(1005);
-        timelineScrollPane.setMinWidth(1005);
+        timelineGrid.setMaxWidth(1100);
+        timelineGrid.setMinWidth(900);
+        timelineScrollPane.setMaxWidth(1500);
+        timelineScrollPane.setMinWidth(1000);
         timelineGrid.getRowConstraints().setAll(new RowConstraints(20,20,20));
         timelineGrid.getColumnConstraints().setAll(new ColumnConstraints(DAY_PIXEL_SIZE,DAY_PIXEL_SIZE,DAY_PIXEL_SIZE));
        
