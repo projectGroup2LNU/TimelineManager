@@ -182,7 +182,7 @@ public class TimelineViewer
                 String tooltipTaskString = "Title       : " + task.getTitle() +
                         "\nStartDate   : " + task.getStartTime() +
                         "\nEnd Date    : " + task.getEndTime() +
-                        "\n\nDescription : \n\n" + task.getDescription();
+                        "\nDescription : " + task.getDescription();
                                 
                 taskList.add(taskRectangle);
                 
