@@ -1,9 +1,11 @@
 package timelineManager.helpClasses;
 
 import javafx.collections.ListChangeListener;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import timelineManager.controller.MainWindowController;
 import timelineManager.controller.ModelAccess;
 import timelineManager.model.Task;
@@ -89,7 +91,18 @@ public class TimelineViewer
             LocalDate timelineStart = null;
             LocalDate timelineEnd = null;
             TimelineRectangle timelineRectangle = new TimelineRectangle(timeline);
-            
+            String tooltipTimelineString = "Title       : " + timeline.getTitle() +
+                    "\nStartDate   : " + timeline.getStartTime() +
+                    "\nEnd Date    : " + timeline.getEndTime() +
+                    "\nDescription : " + timeline.getDescription();
+            final Tooltip timelineTooltip = new Tooltip();
+            timelineTooltip.setFont(new Font("Courier new", 10));
+            timelineTooltip.setWrapText(true);
+            timelineTooltip.setMaxWidth(400);
+            timelineTooltip.setText(tooltipTimelineString);
+    
+            Tooltip.install(
+                    timelineRectangle, timelineTooltip);
             if(timelineRectangle.getTimeline().getStartTime().compareTo(startDate) < 0)
             {
                 timelineStart = startDate;
@@ -166,12 +179,23 @@ public class TimelineViewer
                 }
                 int taskDuration = taskStart.until(taskEnd).getDays() + 1;
                 taskRectangle.getRectangle().setWidth(taskDuration * DAY_PIXEL_SIZE);
-            
+                String tooltipTaskString = "Title       : " + task.getTitle() +
+                        "\nStartDate   : " + task.getStartTime() +
+                        "\nEnd Date    : " + task.getEndTime() +
+                        "\nDescription : " + task.getDescription();
+                                
                 taskList.add(taskRectangle);
-            
+                
+                final Tooltip taskTooltip = new Tooltip();
+                taskTooltip.setFont(new Font("Courier new", 10));
+                taskTooltip.setMaxWidth(400);
+                taskTooltip.setText(tooltipTaskString);
+                taskTooltip.setWrapText(true);
+                Tooltip.install(
+                        taskRectangle, taskTooltip);
                 taskRectangle.setOnMouseClicked(event ->
                 {
-                    System.out.println(taskRectangle.getTask().getTitle());
+                    
                 });
                 grid.add(taskRectangle, startDate.until(taskStart).getDays(), hPos++, taskDuration, 1);
                 
@@ -182,14 +206,13 @@ public class TimelineViewer
         // a filler to get space between last task and the bottom
         Rectangle filler = new Rectangle(DAY_PIXEL_SIZE,20);
         filler.setOpacity(0);
-        grid.add(filler,0,hPos );
+        grid.add(filler,0,hPos);
         
         // adds a listener for task list in each timeline
         for(Timeline timeline : modelAccess.getTimelineModel().timelineList)
             timeline.taskList.addListener((ListChangeListener)( c -> {
                 update(currentDate, modelAccess.timelineModel);
             }));
-        
     }
     
 }
