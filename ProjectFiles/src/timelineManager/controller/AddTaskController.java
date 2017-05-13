@@ -1,18 +1,14 @@
 package timelineManager.controller;
 
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -73,94 +69,29 @@ public class AddTaskController extends AbstractController implements Initializab
      * @param e an ActionEvent
      */
     public void addTheTask(ActionEvent e){
-        title=titleField.getText();
-        desc=descriptionField.getText();
-        start=startDate.getValue();
-        end=endDate.getValue();
+        title = titleField.getText();
+        desc = descriptionField.getText();
+        start = startDate.getValue();
+        end = endDate.getValue();
         
-        //This checks if the task is within the timespan on the selected timeline,
-        //also validates the input
-        if(!title.isEmpty() && start!=null && end!=null && (end.isAfter(start) || end.isEqual(start)) && ((getModelAccess().getSelectedTimeline().getStartTime().isBefore(start) ||getModelAccess().getSelectedTimeline().getStartTime().isEqual(start)) && (getModelAccess().getSelectedTimeline().getEndTime().isAfter(end) || getModelAccess().getSelectedTimeline().getEndTime().isEqual(end) )) ){
-            Task task=new Task(title, desc, start, end);
-            
-            getModelAccess().getSelectedTimeline().addTask(task);
-            
-            // If check is needed for JUnit tests
+        // Tries to add the Task to the selected timeline
+        try {
+        	errorCheck(); // Throws exception if there's any invalid or missing information
+        	
+        	Task task = new Task(title, desc, start, end);
+        	getModelAccess().getSelectedTimeline().addTask(task);
+        	
+        	// If check is needed for JUnit tests
             if(e.getSource() != Event.NULL_SOURCE_TARGET) {
-                //It closes itself after user clicked Save button
+                // Window closes itself after user clicks the Save button
                 final Node source = (Node) e.getSource();
                 final Stage stage = (Stage) source.getScene().getWindow();
                 stage.close();
-            }
-        }
-        
-        else if (title.isEmpty()){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
+            } 
+        } catch (RuntimeException exception) {
+        	Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Warning ");
-            alert.setHeaderText("Please select a title");
-            alert.initModality(Modality.APPLICATION_MODAL);
-            alert.showAndWait();
-        }
-        
-        else if (start==null){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Warning ");
-            alert.setHeaderText("Please select start date ");
-            alert.initModality(Modality.APPLICATION_MODAL);
-            alert.showAndWait();
-        }
-        
-        else if (end==null){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Warning ");
-            alert.setHeaderText("Please select end date ");
-            alert.initModality(Modality.APPLICATION_MODAL);
-            alert.showAndWait();
-        }
-        
-        else if (!(end.isAfter(start)|| end.isEqual(start))){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Warning ");
-            alert.setHeaderText("End date cannot be before start date ");
-            alert.initModality(Modality.APPLICATION_MODAL);
-            alert.showAndWait();
-        }
-        else if (!(end.isAfter(start)|| end.isEqual(start))){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Warning ");
-            alert.setHeaderText("End date cannot be before start date ");
-            alert.initModality(Modality.APPLICATION_MODAL);
-            alert.showAndWait();
-        }
-        else if(!getModelAccess().getSelectedTimeline().getEndTime().isAfter(end))
-        {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Warning ");
-            alert.setHeaderText("Task end time cannot be after timeline end time");
-            alert.initModality(Modality.APPLICATION_MODAL);
-            alert.showAndWait();
-        }
-        else if(!getModelAccess().getSelectedTimeline().getEndTime().isAfter(end))
-        {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Warning ");
-            alert.setHeaderText("Task end time cannot be after timeline end time");
-            alert.initModality(Modality.APPLICATION_MODAL);
-            alert.showAndWait();
-        }
-        else if(!getModelAccess().getSelectedTimeline().getStartTime().isBefore(start))
-        {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Warning ");
-            alert.setHeaderText("Task start time cannot be before timeline start time");
-            alert.initModality(Modality.APPLICATION_MODAL);
-            alert.showAndWait();
-        }
-        else{
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Warning ");
-            alert.setHeaderText("Invalid or missing value");
-            alert.setContentText("Please fill all areas!!\nStart date should be before end date");
+            alert.setHeaderText(exception.getMessage());
             alert.initModality(Modality.APPLICATION_MODAL);
             alert.showAndWait();
         }
@@ -171,24 +102,7 @@ public class AddTaskController extends AbstractController implements Initializab
         stage.close();
     }
     
-    
-    // Setters
-    public void setTitle(String title) {
-        titleField.setText(title);
-    }
-    
-    public void setStartDate(LocalDate startDate) {
-        this.startDate.setValue(startDate);
-    }
-    
-    public void setEndDate(LocalDate endDate) {
-        this.endDate.setValue(endDate);
-    }
-    
-    public void setDescription(String description) {
-        descriptionField.setText(description);
-    }
-
+    // Disables the dates in the date pickers that are before or after the timeline dates.
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		Timeline currentTimeline = getModelAccess().getSelectedTimeline();
@@ -210,4 +124,48 @@ public class AddTaskController extends AbstractController implements Initializab
 	 	startDate.setDayCellFactory(dayCellFactory);
 		endDate.setDayCellFactory(dayCellFactory);
 	}
+	
+    // Setters
+    public void setTitle(String title) {
+        titleField.setText(title);
+    }
+    
+    public void setStartDate(LocalDate startDate) {
+        this.startDate.setValue(startDate);
+    }
+    
+    public void setEndDate(LocalDate endDate) {
+        this.endDate.setValue(endDate);
+    }
+    
+    public void setDescription(String description) {
+        descriptionField.setText(description);
+    }
+	
+    // Private methods
+	// Checks for any invalid or missing information and throws and exception if found
+    private void errorCheck() {
+    	boolean errorFound = true;
+    	String errorMessage = "";
+
+    	if(title.isEmpty()){
+    		errorMessage = "Please select a title";
+    	} else if(start == null){
+    		errorMessage = "Please select start date ";
+    	} else if(end == null) {
+    		errorMessage = "Please select end date ";
+    	} else if(end.isBefore(start)) {
+    		errorMessage = "End date cannot be before start date ";
+    	} else if(end.isAfter(getModelAccess().getSelectedTimeline().getEndTime())) {
+    		errorMessage = "Task end time cannot be after timeline end time";
+    	} else if(start.isBefore(getModelAccess().getSelectedTimeline().getStartTime())) {
+    		errorMessage = "Task start time cannot be before timeline start time";
+    	} else {
+    		errorFound = false;
+    	}
+
+    	if(errorFound) {
+    		throw new RuntimeException(errorMessage);
+    	}
+    }
 }
