@@ -50,6 +50,7 @@ public class AddTaskController extends AbstractController implements Initializab
     private JFXButton cancelButton;
     
     private Callback<DatePicker, DateCell> dayCellFactory;
+    private boolean isTestMode = false; // Used for JUnit tests
     
     String title,desc,priority;
     LocalDate start,end;
@@ -82,18 +83,22 @@ public class AddTaskController extends AbstractController implements Initializab
         	getModelAccess().getSelectedTimeline().addTask(task);
         	
         	// If check is needed for JUnit tests
-            if(e.getSource() != Event.NULL_SOURCE_TARGET) {
+            if(!isTestMode) {
                 // Window closes itself after user clicks the Save button
                 final Node source = (Node) e.getSource();
                 final Stage stage = (Stage) source.getScene().getWindow();
                 stage.close();
             } 
         } catch (RuntimeException exception) {
-        	Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Warning ");
-            alert.setHeaderText(exception.getMessage());
-            alert.initModality(Modality.APPLICATION_MODAL);
-            alert.showAndWait();
+        	if(!isTestMode) {
+        		Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning ");
+                alert.setHeaderText(exception.getMessage());
+                alert.initModality(Modality.APPLICATION_MODAL);
+                alert.showAndWait();
+        	} else {
+        		throw exception;
+        	}
         }
     }
     
@@ -141,6 +146,10 @@ public class AddTaskController extends AbstractController implements Initializab
     public void setDescription(String description) {
         descriptionField.setText(description);
     }
+    
+    public void setTestMode(boolean isTestMode){
+    	this.isTestMode = isTestMode;
+    }
 	
     // Private methods
 	// Checks for any invalid or missing information and throws and exception if found
@@ -151,15 +160,15 @@ public class AddTaskController extends AbstractController implements Initializab
     	if(title.isEmpty()){
     		errorMessage = "Please select a title";
     	} else if(start == null){
-    		errorMessage = "Please select start date ";
+    		errorMessage = "Please select start date";
     	} else if(end == null) {
-    		errorMessage = "Please select end date ";
+    		errorMessage = "Please select end date";
     	} else if(end.isBefore(start)) {
-    		errorMessage = "End date cannot be before start date ";
+    		errorMessage = "End date cannot be before start date";
     	} else if(end.isAfter(getModelAccess().getSelectedTimeline().getEndTime())) {
-    		errorMessage = "Task end time cannot be after timeline end time";
+    		errorMessage = "Task end date cannot be after timeline end date";
     	} else if(start.isBefore(getModelAccess().getSelectedTimeline().getStartTime())) {
-    		errorMessage = "Task start time cannot be before timeline start time";
+    		errorMessage = "Task start date cannot be before timeline start date";
     	} else {
     		errorFound = false;
     	}
