@@ -1,9 +1,9 @@
 package timelineManager.unitTests;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import javafx.collections.ObservableList;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,11 +15,9 @@ import timelineManager.controller.ModelAccess;
 import java.io.IOException;
 import java.time.LocalDate;
 
-import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
-import java.util.ArrayList;
 
 public class TUTask01_AddTaskJUnitTest {
 	private ModelAccess modelAccess = new ModelAccess();
@@ -29,13 +27,12 @@ public class TUTask01_AddTaskJUnitTest {
 
 	@Before
 	public void setUp() {
-		// Initializes JavaFX
+		//Initializes test mode and JavaFX
+		controller.setTestMode(true);
 		new JFXPanel();
-		
-		// Creates a Timeline that we can add tasks to
+
+		// Creates a Timeline that we can add tasks to and initializes tasks
 		modelAccess.setSelectedTimeline(new Timeline("Title", "Description", LocalDate.now().minusDays(1), LocalDate.now().plusDays(300)));
-		
-		
 		tasks = modelAccess.getSelectedTimeline().taskList;  // (commented out this line after changing to observable list<Task> in Timeline class
 
 		// Loads the FXML file so that we can modify the text areas in the controller
@@ -46,11 +43,6 @@ public class TUTask01_AddTaskJUnitTest {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	@After
-	public void tearDown() {
-		Platform.exit();
 	}
 
 	@Test
@@ -94,6 +86,78 @@ public class TUTask01_AddTaskJUnitTest {
 		//assertEquals(Color.rgb(100, 0, 0), tasks.get(100).getColor());	
 		//assertEquals(101, tasks.get(100).getId());
 		//assertEquals("100", tasks.get(100).getPriority());
+	}
+
+	@Test
+	public void testExceptions() {
+		// Tests empty title
+		try {
+			controller.setTitle("");
+			controller.setStartDate(LocalDate.now());
+			controller.setEndDate(LocalDate.now().plusDays(1));
+			controller.addTheTask(new ActionEvent());
+			fail("Expected RunTimeException: Please select a title");
+		} catch (RuntimeException e) {
+			assertEquals(e.getMessage(), "Please select a title");
+		}
+
+		// Tests empty start date
+		try {
+			controller.setTitle("TestTitle");
+			controller.setStartDate(null);
+			controller.setEndDate(LocalDate.now().plusDays(1));
+			controller.addTheTask(new ActionEvent());
+			fail("Expected RunTimeException: Please select start date");
+		} catch (RuntimeException e) {
+			assertEquals(e.getMessage(), "Please select start date");
+		}
+
+		// Tests empty end date
+		try {
+			controller.setTitle("TestTitle");
+			controller.setStartDate(LocalDate.now());
+			controller.setEndDate(null);
+			controller.addTheTask(new ActionEvent());
+			fail("Expected RunTimeException: Please select end date");
+		} catch (RuntimeException e) {
+			assertEquals(e.getMessage(), "Please select end date");
+		}
+
+		// Tests end date before start date
+		try {
+			controller.setTitle("TestTitle");
+			controller.setStartDate(LocalDate.now());
+			controller.setEndDate(LocalDate.now().minusDays(1));
+			controller.addTheTask(new ActionEvent());
+			fail("Expected RunTimeException: End date cannot be before start date");
+		} catch (RuntimeException e) {
+			assertEquals(e.getMessage(), "End date cannot be before start date");
+
+		}
+
+		// Tests end date before timeline end date
+		try {
+			controller.setTitle("TestTitle");
+			controller.setStartDate(LocalDate.now());
+			controller.setEndDate(LocalDate.now().plusDays(301));
+			controller.addTheTask(new ActionEvent());
+			fail("Expected RunTimeException: Task end date cannot be after timeline end date");
+		} catch (RuntimeException e) {
+			assertEquals(e.getMessage(), "Task end date cannot be after timeline end date");
+
+		}
+
+		// Tests end date before timeline end date
+		try {
+			controller.setTitle("TestTitle");
+			controller.setStartDate(LocalDate.now().minusDays(2));
+			controller.setEndDate(LocalDate.now().plusDays(1));
+			controller.addTheTask(new ActionEvent());
+			fail("Expected RunTimeException: Task start date cannot be before timeline start date");
+		} catch (RuntimeException e) {
+			assertEquals(e.getMessage(), "Task start date cannot be before timeline start date");
+
+		}
 	}
 
 	// Adds new tasks to the Timeline

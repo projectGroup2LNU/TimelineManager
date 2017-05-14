@@ -40,6 +40,8 @@ public class AddTimelineController extends AbstractController{
     @FXML
     private JFXButton cancelButton;
     
+    private boolean isTestMode = false; // Used for Junit tests
+    
     String title,desc;
     LocalDate start,end;
     
@@ -63,18 +65,22 @@ public class AddTimelineController extends AbstractController{
             getModelAccess().timelineModel.addTimelineToList(timeline);
             
             // If check is needed for JUnit tests
-            if(e.getSource() != Event.NULL_SOURCE_TARGET) {
+            if(!isTestMode) {
 	            // Window closes itself after user clicks the Save button
 	            final Node source = (Node) e.getSource();
 	            final Stage stage = (Stage) source.getScene().getWindow();
 	            stage.close();
             }
         } catch (RuntimeException exception) {
-        	Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Warning ");
-            alert.setHeaderText(exception.getMessage());
-            alert.initModality(Modality.APPLICATION_MODAL);
-            alert.showAndWait();
+        	if(!isTestMode) {
+        		Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning ");
+                alert.setHeaderText(exception.getMessage());
+                alert.initModality(Modality.APPLICATION_MODAL);
+                alert.showAndWait();
+        	} else {
+        		throw exception;
+        	}
         }
     }
     
@@ -99,6 +105,10 @@ public class AddTimelineController extends AbstractController{
     public void setDescription(String description) {
     	descriptionField.setText(description);
     }
+    
+    public void setTestMode(boolean isTestMode){
+    	this.isTestMode = isTestMode;
+    }
 	
 
     // Private methods
@@ -110,11 +120,11 @@ public class AddTimelineController extends AbstractController{
     	if(title.isEmpty()){
     		errorMessage = "Please select a title";
     	} else if(start == null){
-    		errorMessage = "Please select start date ";
+    		errorMessage = "Please select start date";
     	} else if(end == null) {
-    		errorMessage = "Please select end date ";
+    		errorMessage = "Please select end date";
     	} else if(end.isBefore(start)) {
-    		errorMessage = "End date cannot be before start date ";
+    		errorMessage = "End date cannot be before start date";
     	} else {
     		errorFound = false;
     	}
