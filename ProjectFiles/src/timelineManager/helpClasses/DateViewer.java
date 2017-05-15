@@ -49,7 +49,11 @@ public class DateViewer
         
     }
     
-    public void initializeCalendarView()
+    /**
+     * this method initialize the first time the class is constructed.
+     * it then calls the function showDates
+     */
+    private void initializeCalendarView()
     {
         
         dateClaendarText = new Text[daysInView];
@@ -120,6 +124,10 @@ public class DateViewer
         showDates(currentDate);
     }
     
+    /**
+     * This is used to
+     * @param inputDate
+     */
     public void showDates(LocalDate inputDate)
     {
         inputDate= inputDate.minusDays(4);
@@ -177,6 +185,12 @@ public class DateViewer
         grid.add(rightFiller,17,0,1,2);
         
     }
+    
+    /**
+     * Used to set the year in right pixelposition after the month
+     * @param currentDate input Date to get The month needed.
+     * @return int pixel length to put the year string in the layout X pos.
+     */
     private int  yearPlacementRetriver(LocalDate currentDate)
     {
         int month = currentDate.getMonthValue();

@@ -1,6 +1,7 @@
 package timelineManager.helpClasses;
 
 import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -20,7 +21,7 @@ public class TimelineRectangle extends StackPane
     
     private Timeline timeline;
     private Rectangle rectangle;
-    private Text text;
+    private Label text;
     private boolean leftCutoff = false;  // if timeline stretches outside the screen the cutoff booleans is true.
     private boolean rightCutoff = false;
     
@@ -29,17 +30,19 @@ public class TimelineRectangle extends StackPane
     {
         timeline = inputTimeline;
         rectangle = new Rectangle(200,10);
-        rectangle.setFill(timeline.getColor());
-        rectangle.setOpacity(0.5);
+        rectangle.setFill(Color.rgb(240,240,240));
+        rectangle.setOpacity(1);
         rectangle.setStroke(timeline.getColor());
         rectangle.setArcWidth(10);
         rectangle.setArcHeight(10);
-        text = new Text("");
+        text = new Label("");
         text.setFont(new Font(10));
         text.setText(timeline.getTitle());
-        text.setTextAlignment(TextAlignment.CENTER);
-        text.setFill(timeline.getColor());
+        //text.setTextAlignment(TextAlignment.CENTER);
+        text.setTextFill(timeline.getColor());
         setAlignment(Pos.TOP_CENTER);
+        text.setAlignment(Pos.TOP_CENTER);
+        
         text.setLayoutY(20);
         
         getChildren().add(rectangle);
@@ -47,7 +50,7 @@ public class TimelineRectangle extends StackPane
        
     }
     
-    public Text getText()
+    public Label getText()
     {
         return text;
     }

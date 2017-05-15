@@ -157,7 +157,7 @@ public class AddTaskController extends AbstractController implements Initializab
     	boolean errorFound = true;
     	String errorMessage = "";
 
-    	if(title.isEmpty()){
+    	if(title.trim().isEmpty()){
     		errorMessage = "Please select a title";
     	} else if(start == null){
     		errorMessage = "Please select start date";
