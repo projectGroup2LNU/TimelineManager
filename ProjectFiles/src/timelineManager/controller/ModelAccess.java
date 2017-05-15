@@ -5,6 +5,7 @@
  */
 package timelineManager.controller;
 
+import timelineManager.model.Task;
 import timelineManager.model.Timeline;
 import timelineManager.model.TimelineModel;
 
@@ -17,7 +18,7 @@ import timelineManager.model.TimelineModel;
  */
 public class ModelAccess
 {
-    
+    private Task selectedTask;
     private Timeline selectedTimeline;
     public TimelineModel timelineModel=new TimelineModel();
     
@@ -32,5 +33,15 @@ public class ModelAccess
     public TimelineModel getTimelineModel(){
         return timelineModel;
     }
+    
+     public Task getSelectedTask(){
+        return selectedTask;
+    }
+    
+    public void setSelectedTask(Task task){
+        selectedTask=task;
+        System.out.println("task selected!!"+ selectedTask.getTitle());
+    }
+    
     
 }

@@ -17,6 +17,17 @@ import timelineManager.model.Timeline;
 import timelineManager.model.TimelineModel;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import timelineManager.view.ViewFactory;
 
 /**
  * This class handles the logic for displaying the timelines and tasks in a gridpane.
@@ -35,6 +46,14 @@ public class TimelineViewer
     ArrayList<TaskRectangle> taskList = new ArrayList<>();
     TimelineModel tm;
     LocalDate currentDate;
+    ContextMenu contextMenuTimeline = new ContextMenu();
+    ContextMenu contextMenuTask = new ContextMenu();
+    ViewFactory viewFactory=ViewFactory.defaultFactory;
+ 
+    MenuItem editTimeline = new MenuItem("Edit Timeline");
+    MenuItem editTask = new MenuItem("Edit Task");
+    MenuItem deleteTimeline=new MenuItem("Delete Timeline");
+    MenuItem deleteTask=new MenuItem("Delete Task");
 
     private final int DAY_PIXEL_SIZE = MainWindowController.DAY_PIXEL_SIZE;
     
@@ -63,6 +82,65 @@ public class TimelineViewer
  
         update(currentDate, modelAccess.timelineModel);
         timelineListener();
+        
+        editTimeline.setOnAction(new EventHandler<ActionEvent>() {
+ 
+            @Override
+            public void handle(ActionEvent event) {
+                Scene scene = viewFactory.getEditTimelineScene();
+                Stage stage=new Stage();
+                stage.centerOnScreen();
+                stage.setResizable(false);
+                stage.setTitle("Edit Timeline");
+                stage.setScene(scene);
+                
+                stage.show();
+                
+        
+            }
+        });
+        
+        deleteTimeline.setOnAction(new EventHandler<ActionEvent>() {
+ 
+            @Override
+            public void handle(ActionEvent event) {
+                
+                int indexOfTimeline=modelAccess.timelineModel.timelineList.indexOf(modelAccess.getSelectedTimeline());
+                modelAccess.timelineModel.timelineList.remove(indexOfTimeline);
+                
+                 
+            }
+        });
+        
+        contextMenuTimeline.getItems().addAll(editTimeline,deleteTimeline);
+        
+        editTask.setOnAction(new EventHandler<ActionEvent>() {
+ 
+            @Override
+            public void handle(ActionEvent event) {
+                Scene scene = viewFactory.getEditTaskScene();
+                Stage stage=new Stage();
+                stage.centerOnScreen();
+                stage.setResizable(false);
+                stage.setTitle("Edit Task");
+                stage.setScene(scene);
+                
+                stage.show();
+        
+            }
+        });
+        
+        deleteTask.setOnAction(new EventHandler<ActionEvent>() {
+ 
+            @Override
+            public void handle(ActionEvent event) {
+                int indexOfTimeline=modelAccess.timelineModel.timelineList.indexOf(modelAccess.getSelectedTimeline());
+                modelAccess.timelineModel.timelineList.get(indexOfTimeline).taskList.remove(modelAccess.getSelectedTask());
+            }
+        });
+        
+        contextMenuTask.getItems().addAll(editTask,deleteTask);
+        
     }
     
     /**
@@ -172,7 +250,16 @@ public class TimelineViewer
                 timelineRectangle.getRectangle().setStroke(Color.rgb(0,0,0));
             }
             timelineList.add(timelineRectangle);
-            
+
+            timelineRectangle.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
+ 
+            @Override
+            public void handle(ContextMenuEvent event) {
+ 
+                contextMenuTimeline.show(timelineRectangle, event.getScreenX(), event.getScreenY());
+            }
+        });
+
             timelineRectangle.setOnMouseClicked(event ->
             {
                 modelAccess.setSelectedTimeline(timeline);
@@ -239,9 +326,20 @@ public class TimelineViewer
                         taskRectangle, taskTooltip);
                 taskRectangle.setOnMouseClicked(event ->
                 {
+                    modelAccess.setSelectedTask(task);
                     
                 });
-                grid.add(taskRectangle, startDate.until(taskStart).getDays(), hPos++, taskDuration, 1);
+                grid.add(taskRectangle, startDate.until(taskStart).getDays(), hPos++, taskDuration, 1);        
+                
+            taskRectangle.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
+ 
+            @Override
+            public void handle(ContextMenuEvent event) {
+ 
+                contextMenuTask.show(taskRectangle, event.getScreenX(), event.getScreenY());
+            }
+        });
+
             }
             hPos++;  // makes a space in Vertical space to next timeline
         }
