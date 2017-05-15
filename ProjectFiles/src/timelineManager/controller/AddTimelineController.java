@@ -70,7 +70,7 @@ public class AddTimelineController extends AbstractController{
             if(e.getSource() != Event.NULL_SOURCE_TARGET) {
 	            //It closes itself after user clicked Save button
 	            final Node source = (Node) e.getSource();
-	            final Stage stage = (Stage) source.getScene().getWindow();
+	            final Stage stage = (Stage) saveButton.getScene().getWindow();
 	            stage.close();
             }
         }

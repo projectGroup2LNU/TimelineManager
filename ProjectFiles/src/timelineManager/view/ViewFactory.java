@@ -8,6 +8,8 @@ import javafx.scene.layout.Pane;
 import timelineManager.controller.AbstractController;
 import timelineManager.controller.AddTaskController;
 import timelineManager.controller.AddTimelineController;
+import timelineManager.controller.EditTaskController;
+import timelineManager.controller.EditTimelineController;
 import timelineManager.controller.MainWindowController;
 import timelineManager.controller.ModelAccess;
 
@@ -24,10 +26,14 @@ public class ViewFactory {
     private AddTaskController addTaskController;
     private AddTimelineController addTimelineController;
     private MainWindowController mainWindowController;
+    private EditTimelineController editTimelineController;
+    private EditTaskController editTaskController;
     
     private final String MAIN_FXML="/timelineManager/view/MainView.fxml";
     private final String ADD_TIMELINE_FXML="/timelineManager/view/AddTimelineView.fxml";
     private final String ADD_TASK_FXML="/timelineManager/view/AddTaskView.fxml";
+    private final String EDIT_TIMELINE_FXML="/timelineManager/view/EditTimelineView.fxml";
+    private final String EDIT_TASK_FXML="/timelineManager/view/EditTaskView.fxml";
     
     
     
@@ -52,6 +58,20 @@ public class ViewFactory {
          
          
          
+    public Scene getEditTimelineScene(){
+	editTimelineController=new EditTimelineController(modelAccess);
+        return initilazeScene(EDIT_TIMELINE_FXML, editTimelineController);
+		
+	}
+    
+    
+    public Scene getEditTaskScene(){
+         editTaskController=new EditTaskController(modelAccess);
+         return initilazeScene(EDIT_TASK_FXML, editTaskController);
+    }
+        
+         
+         
          
          public Scene initilazeScene(String fxmlPath, AbstractController abstractController){
          FXMLLoader loader;
@@ -66,7 +86,7 @@ public class ViewFactory {
 		}
 		
 		scene = new Scene(parent);
-		//scene.getStylesheets().add(getClass().getResource(DEFAULT_CSS).toExternalForm());
+		scene.getStylesheets().add(getClass().getResource("/timelineManager/css/stylesheet.css").toExternalForm());
 		return scene;
          }
     

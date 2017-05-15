@@ -110,10 +110,10 @@ public class DateViewer
         year1Text.setLayoutY(30);
         year2Text.setLayoutX(95);
         year2Text.setLayoutY(30);
-        monthRect1.setFill(Color.rgb(210, 210, 255));
-        monthRect1.setStroke(Color.rgb(130,130,130));
-        monthRect2.setFill(Color.rgb(210,210,255));
-        monthRect2.setStroke(Color.rgb(130,130,130));
+        monthRect1.setFill(Color.rgb(112, 112, 112));
+        monthRect1.setStroke(Color.rgb(112, 112, 112));
+        monthRect2.setFill(Color.rgb(112, 112, 112));
+        monthRect2.setStroke(Color.rgb(112, 112, 112));
         
         grid.add(monthPane1, 0,0, 1,1);
         grid.add(monthPane2, 1, 0, 1,1 );
@@ -133,10 +133,10 @@ public class DateViewer
                 dayRectangles[i].setFill(Color.rgb(255, 180, 30));
             } else if(inputDate.plusDays(i).getDayOfWeek().getValue() >= 6)   // weekend
             {
-                dayRectangles[i].setFill(Color.rgb(235, 235, 255));
+                dayRectangles[i].setFill(Color.rgb(204, 201, 201));
             } else
             {
-                dayRectangles[i].setFill(Color.rgb(210, 210, 255));
+                dayRectangles[i].setFill(Color.rgb(127, 126, 126));
             }
             
         }
