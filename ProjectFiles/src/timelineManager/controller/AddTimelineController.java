@@ -48,6 +48,7 @@ public class AddTimelineController extends AbstractController{
 
     public AddTimelineController(ModelAccess modelAccess) {
         super(modelAccess);
+       
     }
     
     public void addTheTimeline(ActionEvent e){
@@ -110,14 +111,14 @@ public class AddTimelineController extends AbstractController{
     	this.isTestMode = isTestMode;
     }
 	
-
+    
     // Private methods
     // Checks for any invalid or missing information and throws and exception if found
     private void errorCheck() {
     	boolean errorFound = true;
     	String errorMessage = "";
 
-    	if(title.isEmpty()){
+    	if(title.trim().isEmpty()){
     		errorMessage = "Please select a title";
     	} else if(start == null){
     		errorMessage = "Please select start date";
@@ -133,4 +134,5 @@ public class AddTimelineController extends AbstractController{
     		throw new RuntimeException(errorMessage);
     	}
     } 
+
 }

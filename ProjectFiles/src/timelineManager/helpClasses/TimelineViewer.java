@@ -1,17 +1,20 @@
 package timelineManager.helpClasses;
 
 import javafx.collections.ListChangeListener;
+import javafx.geometry.Pos;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import timelineManager.controller.MainWindowController;
 import timelineManager.controller.ModelAccess;
 import timelineManager.model.Task;
 import timelineManager.model.Timeline;
 import timelineManager.model.TimelineModel;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -37,10 +40,12 @@ public class TimelineViewer
     
     public TimelineViewer(LocalDate currentDate, GridPane inGrid, ModelAccess inputModelAccess)
     {
+        
         modelAccess = inputModelAccess;
         tm = inputModelAccess.timelineModel;
         grid = inGrid;
         grid.setVgap(5);
+        
     
         // Filler for first row to make grid correct size
         for(int i = 0; i < 16; i++)
@@ -71,19 +76,20 @@ public class TimelineViewer
         }));
     
     }
-    
+    /**
+     * This function updates the screen by recalculate all positions for dates and rectangles and
+     * draw them to their grids.
+     */
     public void update(LocalDate inputDate, TimelineModel inputModel)
     {
         currentDate = inputDate;
         tm = inputModel;
-        LocalDate resetHPosDate = null;
         grid.getChildren().removeAll(timelineList);
         grid.getChildren().removeAll(taskList);
         hPos = 1;
         
-        
         startDate = inputDate.minusDays(4);
-        endDate = inputDate.plusDays(12);
+            endDate = inputDate.plusDays(12);
         ArrayList<Timeline> inputTimelines = inputModel.getTimelinesToDisplay(startDate,endDate);
         
         for(Timeline timeline : inputTimelines)
@@ -91,22 +97,56 @@ public class TimelineViewer
             LocalDate timelineStart = null;
             LocalDate timelineEnd = null;
             TimelineRectangle timelineRectangle = new TimelineRectangle(timeline);
-            String tooltipTimelineString = "Title       : " + timeline.getTitle() +
-                    "\nStartDate   : " + timeline.getStartTime() +
-                    "\nEnd Date    : " + timeline.getEndTime() +
-                    "\nDescription : " + timeline.getDescription();
+            String tooltipTimelineString = timeline.getTitle() +
+                    "\nfrom: " + timeline.getStartTime() +
+                    " to: " + timeline.getEndTime() +
+                    "\nDescription: " + timeline.getDescription();
+            
             final Tooltip timelineTooltip = new Tooltip();
-            timelineTooltip.setFont(new Font("Courier new", 10));
+            timelineTooltip.setFont(new Font(11));
             timelineTooltip.setWrapText(true);
             timelineTooltip.setMaxWidth(400);
             timelineTooltip.setText(tooltipTimelineString);
-    
+            
             Tooltip.install(
                     timelineRectangle, timelineTooltip);
+            
+            // (timeline streches outside the view
             if(timelineRectangle.getTimeline().getStartTime().compareTo(startDate) < 0)
             {
+                
                 timelineStart = startDate;
                 timelineRectangle.setLeftCutoff(true);
+                Rectangle startRect = new Rectangle(5,10);
+                startRect.setFill(timelineRectangle.getRectangle().getFill());
+                timelineRectangle.getChildren().add(startRect);
+                Line topLine = new Line();
+                topLine.setStartX(0);
+                topLine.setStartY(0);
+                topLine.setEndX(5);
+                topLine.setEndY(0);
+                
+                Line bottomLine = new Line();
+                bottomLine.setStartX(0);
+                bottomLine.setStartY(0);
+                bottomLine.setEndX(5);
+                bottomLine.setEndY(0);
+    
+                timelineRectangle.getChildren().add(topLine);
+                timelineRectangle.getChildren().add(bottomLine);
+    
+                timelineRectangle.setAlignment(topLine,Pos.TOP_LEFT);
+                timelineRectangle.setAlignment(bottomLine, Pos.CENTER_LEFT);
+                
+                if(!timeline.equals(modelAccess.getSelectedTimeline()))
+                {
+                    topLine.setStroke(timelineRectangle.getRectangle().getStroke());
+                    bottomLine.setStroke(timelineRectangle.getRectangle().getStroke());
+                }
+                
+                
+                timelineRectangle.setAlignment(startRect,Pos.TOP_LEFT);
+                
             }
             else
             {
@@ -123,35 +163,25 @@ public class TimelineViewer
             }
             int timelineDuration = timelineStart.until(timelineEnd).getDays() + 1;
             timelineRectangle.getRectangle().setWidth(timelineDuration * DAY_PIXEL_SIZE);
+            timelineRectangle.getText().setMaxWidth(timelineRectangle.getRectangle().getWidth()- 10);
+            timelineRectangle.setAlignment(timelineRectangle.getText(), Pos.TOP_CENTER);
+            
+    
             if(timeline == modelAccess.getSelectedTimeline())
             {
                 timelineRectangle.getRectangle().setStroke(Color.rgb(0,0,0));
             }
             timelineList.add(timelineRectangle);
             
-            if(resetHPosDate == null)
-            {
-                
-            }
-            else if(timelineRectangle.getTimeline().getStartTime().compareTo(resetHPosDate.plusDays(1)) > 0)
-            {
-                hPos = 1;
-            }
-            
             timelineRectangle.setOnMouseClicked(event ->
             {
-                
                 modelAccess.setSelectedTimeline(timeline);
                 update(inputDate,inputModel);
-                
             });
+            
             grid.add(timelineRectangle, startDate.until(timelineStart).getDays(), hPos++, timelineDuration, 1);
-            if(resetHPosDate == null || (resetHPosDate.compareTo(timelineRectangle.getTimeline().getEndTime()) < 0))
-            {
-                resetHPosDate = timelineRectangle.getTimeline().getEndTime();
-            }
-
             ArrayList<Task> tasksInView = inputModel.getTaskToDisplay(timeline,startDate,endDate);
+            
             for(Task task : tasksInView )
             {
                 LocalDate taskStart = null;
@@ -179,15 +209,29 @@ public class TimelineViewer
                 }
                 int taskDuration = taskStart.until(taskEnd).getDays() + 1;
                 taskRectangle.getRectangle().setWidth(taskDuration * DAY_PIXEL_SIZE);
-                String tooltipTaskString = "Title       : " + task.getTitle() +
-                        "\nStartDate   : " + task.getStartTime() +
-                        "\nEnd Date    : " + task.getEndTime() +
-                        "\nDescription : " + task.getDescription();
+                taskRectangle.getText().setMaxWidth(taskRectangle.getRectangle().getWidth()- 10);
+    
+               
+               
+                if(task.getStartTime().equals(task.getEndTime()))  // makes a non duration task
+                {
+                    taskRectangle.getRectangle().setWidth(20);
+                    
+                    taskRectangle.getRectangle().setRotate(45);
+                    taskRectangle.getText().setVisible(false);
+
+                    
+                    
+                }
+                String tooltipTaskString = task.getTitle() +
+                        "\nfrom: " + task.getStartTime() +
+                        " to: " + task.getEndTime() +
+                        "\nDescription: " + task.getDescription();
                                 
                 taskList.add(taskRectangle);
                 
                 final Tooltip taskTooltip = new Tooltip();
-                taskTooltip.setFont(new Font("Courier new", 10));
+                taskTooltip.setFont(new Font(11));
                 taskTooltip.setMaxWidth(400);
                 taskTooltip.setText(tooltipTaskString);
                 taskTooltip.setWrapText(true);
@@ -198,10 +242,8 @@ public class TimelineViewer
                     
                 });
                 grid.add(taskRectangle, startDate.until(taskStart).getDays(), hPos++, taskDuration, 1);
-                
             }
             hPos++;  // makes a space in Vertical space to next timeline
-            
         }
         // a filler to get space between last task and the bottom
         Rectangle filler = new Rectangle(DAY_PIXEL_SIZE,20);

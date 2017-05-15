@@ -1,6 +1,7 @@
 package timelineManager.helpClasses;
 
 import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -16,7 +17,7 @@ public class TaskRectangle extends StackPane
 {
     private Task task;
     private Rectangle rectangle;
-    private Text text;
+    private Label text;
     private boolean leftCutoff = false;
     private boolean rightCutoff = false;
     
@@ -27,18 +28,19 @@ public class TaskRectangle extends StackPane
         rectangle.setFill(task.getColor());
         rectangle.setArcWidth(10);
         rectangle.setArcHeight(10);
-        text = new Text("");
+        text = new Label("");
         text.setFont(new Font(10));
         text.setText(task.getTitle());
         text.setTextAlignment(TextAlignment.CENTER);
-        text.setFill(Color.rgb(255, 255, 255));
+        text.setTextFill(Color.rgb(255, 255, 255));
         setAlignment(Pos.CENTER);
+        text.setAlignment(Pos.TOP_CENTER);
         
         getChildren().add(rectangle);
         getChildren().add(text);
     }
     
-    public Text getText()
+    public Label getText()
     {
         return text;
     }
