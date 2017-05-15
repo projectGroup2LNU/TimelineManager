@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" prefHeight="620.0" prefWidth="120.0" styleClass="background" stylesheets="@../css/stylesheet.css" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" prefHeight="620.0" prefWidth="120.0" styleClass="background" stylesheets="@../css/stylesheet.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <AnchorPane prefHeight="600.0" prefWidth="200.0" styleClass="background-left" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -63,8 +63,8 @@
                      </children>
                   </VBox>
                  <JFXButton fx:id="addTaskPlusButton" buttonType="RAISED" layoutX="24.0" layoutY="511.0" onAction="#openAddTaskWindow" prefHeight="65.0" prefWidth="59.0" styleClass="button-round" text="+" />
-                  <JFXButton fx:id="goLeftButton" buttonType="RAISED" onAction="#goLeft" styleClass="button-chooser" text="&lt;" AnchorPane.bottomAnchor="286.0" AnchorPane.rightAnchor="935.0" AnchorPane.topAnchor="287.0" />
-                  <JFXButton fx:id="goRightButton" buttonType="RAISED" onAction="#goRight" styleClass="button-chooser" text="&gt;" AnchorPane.bottomAnchor="272.0" AnchorPane.leftAnchor="934.0" AnchorPane.topAnchor="301.0" />
+                  <JFXButton fx:id="goLeftButton" buttonType="RAISED" onAction="#goLeft" styleClass="button-chooser" text="&lt;" AnchorPane.bottomAnchor="286.0" AnchorPane.leftAnchor="29.0" AnchorPane.topAnchor="287.0" />
+                  <JFXButton fx:id="goRightButton" buttonType="RAISED" onAction="#goRight" styleClass="button-chooser" text="&gt;" AnchorPane.bottomAnchor="300.0" AnchorPane.rightAnchor="20.0" />
                </children>
             </AnchorPane>
          </children>
