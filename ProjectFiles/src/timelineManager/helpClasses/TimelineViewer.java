@@ -22,6 +22,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.image.Image;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -92,6 +93,7 @@ public class TimelineViewer
                 stage.centerOnScreen();
                 stage.setResizable(false);
                 stage.setTitle("Edit Timeline");
+                stage.getIcons().add(new Image("file:../TimelineManager/ProjectFiles/src/timelineManager/resource/image/icon.png"));
                 stage.setScene(scene);
                 
                 stage.show();
@@ -123,6 +125,7 @@ public class TimelineViewer
                 stage.centerOnScreen();
                 stage.setResizable(false);
                 stage.setTitle("Edit Task");
+                stage.getIcons().add(new Image("file:../TimelineManager/ProjectFiles/src/timelineManager/resource/image/icon.png"));
                 stage.setScene(scene);
                 
                 stage.show();
