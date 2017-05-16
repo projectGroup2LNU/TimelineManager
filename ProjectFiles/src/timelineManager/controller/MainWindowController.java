@@ -14,11 +14,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -83,6 +79,14 @@ public class MainWindowController extends AbstractController implements Initiali
     
     @FXML
     private AnchorPane gridAnchor;
+    
+    
+    
+    @FXML
+    private RadioButton radioButtonAllTimelines;
+    
+    @FXML
+    private RadioButton radioButtonSelectedTimeline;
     
     private MenuItem showDetails = new MenuItem("show details");
     
@@ -190,7 +194,6 @@ public class MainWindowController extends AbstractController implements Initiali
     @Override
     public void initialize(URL location, ResourceBundle resources)
     {
-        
         timelineScrollPane.setFitToWidth(true);
         timelineScrollPane.setFitToHeight(true);
         datePickerUpdate(currentDate);
@@ -245,7 +248,7 @@ public class MainWindowController extends AbstractController implements Initiali
                     }
 		});	
         
-        tm = new TimelineViewer(currentDate, timelineGrid, super.getModelAccess());
+        tm = new TimelineViewer(currentDate, timelineGrid, super.getModelAccess(), radioButtonAllTimelines, radioButtonSelectedTimeline);
       
         goLeft();  // this solves a bug with dates showing a small space if
         goLeft();   // not a view with to dates has been visible
@@ -259,6 +262,17 @@ public class MainWindowController extends AbstractController implements Initiali
     public int getPixelDayWidth()
     {
         return DAY_PIXEL_SIZE;
+    }
+    
+    // getters for radiobuttons
+    public RadioButton getRadioButtonAllTimelines()
+    {
+        return radioButtonAllTimelines;
+    }
+   
+    public RadioButton getRadioButtonSelectedTimeline()
+    {
+        return radioButtonSelectedTimeline;
     }
 }
 
