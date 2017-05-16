@@ -1,14 +1,32 @@
-
+/* 
+ * TIME AND DATE ICON image galleries
+ * imageKB.com Java Program 
+ * http://baccaymaryann.tk/calendar-icon-flat/
+ */
+/* #F28026:orange 
+ * #F6A668:light orange 
+ * #B6601D:dark orange 
+ * grey from dark to light:
+ * 0. #000 black
+ * 1. #555555
+ * 2. #7B7B7B
+ * 3. #B4B4B4
+ * 4. #D9D9D9
+ * 5. #FFF white
+ */
+/*
+ *updated by xingchenLu 2017-05-16.
+ */
 .datebar {
-    -fx-background-color: black;
-    -fx-text-fill: white;
+    -fx-background-color: #000;
+    -fx-text-fill: #FFF;
 }
 
 .background-left {
     -fx-background-color: #7B7B7B;
 }
  .background {
-    -fx-background-color: #D9D9D9;;
+    -fx-background-color: #D9D9D9;
 }
  
 .text-c1 {
@@ -23,43 +41,30 @@
     -fx-font-size: 18pt;
     -fx-font-family: "Tw Cen MT";
     -jfx-focus-color: #F28026;
-    -jfx-unfocus-color: black;
+    -jfx-unfocus-color: #000;
 }
 .text-field-description {
     -fx-font-size: 14pt;
     -fx-font-family: "Tw Cen MT";
     -jfx-focus-color: #F28026;
-    -jfx-unfocus-color: black;
+    -jfx-unfocus-color: #000;
 }
 .text-field-login {
     -fx-font-size: 12pt;
     -fx-font-family: "Tw Cen MT";
     -jfx-focus-color: #F28026;
-    -jfx-unfocus-color: black;
+    -jfx-unfocus-color: #000;
 }
-
-
-/* 
- * TIME AND DATE ICON image galleries
- * imageKB.com Java Program 
- * http://baccaymaryann.tk/calendar-icon-flat/
- */
-/* #F28026:orange 
- * #F6A668:light orange 
- * #B6601D:dark orange 
- * #7B7B7B:grey
- * #D9D9D9:light grey
- */
-
 .button {
-    -fx-padding: 2px;   
+    -fx-padding: 2px;
     -fx-border-width: 2;
-    -fx-background-radius: 0;
     -fx-background-color: #F28026;
     -fx-font-family: "Tw Cen MT";
     -fx-font-size: 16pt;
-    -fx-text-fill: white;
+    -fx-text-fill: #FFF;
     -fx-background-insets: 0 0 0 0, 0, 1, 2;
+    -jfx-button-type:flat;
+    -fx-position-shape: false;
 }
 
 .button:hover {
@@ -76,82 +81,64 @@
 }
 
 .button-round {
-    -fx-padding: 0px;   
-    -fx-background-radius: 60px;
-    -fx-background-color: #F28026;
+    -fx-padding:-10px;
+    -fx-background-radius: 85px;
+    -fx-background-color: #D9D9D9;
     -fx-font-family: "Tw Cen MT";
-    -fx-font-size: 40pt;
-    -fx-text-fill: white;
-    -fx-background-insets: 0 0 0 0, 0, 1, 2;
-    -fx-min-width:60px;
-    -fx-min-height:60px;
-    -fx-max-width:60px;
-    -fx-max-height:60px;
+    -fx-font-size: 85pt;
+    -fx-text-fill: #F28026;
+    -fx-text-weight:bold;
+    -fx-text-alignment: center;
+    -fx-min-width:100px;
+    -fx-min-height:100px;
+    -fx-max-width:100px;
+    -fx-max-height:100px;
+    -jfx-button-type:flat;
+    -fx-opacity: 0.7;
+    
 }
 .button-round:hover {
-    -fx-background-color: #F6A668;
+    -fx-background-color: #D9D9D9;
+    -fx-text-fill: #D9D9D9;
+    -fx-cursor:hand;
 }
-.button-round:pressed, .button-round:default:hover:pressed {
-  -fx-background-color: #B6601D;
-  -fx-text-fill: #555555;
+.button-round:pressed{
+    -fx-background-color: #D9D9D9;
+    -fx-text-fill: #B6601D;
+    -fx-cursor:CLOSED_hand;
+}
+.button-round:disabled{
+    -fx-opacity: 0.4;
+    -fx-background-color: #D9D9D9;
+    -fx-text-fill: #7B7B7B;
 }
 
 .button-chooser {
     -fx-padding: 0px;
-    -fx-min-width:40px;
-    -fx-min-height:40px;
-    -fx-max-width:40px;
-    -fx-max-height:40px;
-    -fx-font-size: 25pt;
-    -fx-text-fill: white;
-    -fx-background-radius: 40px;
-    -fx-background-color: #F28026;
-    -fx-background-insets: 0 0 0 0, 0, 1, 2;
+    -fx-min-width:90px;
+    -fx-min-height:250px;
+    -fx-max-width:90px;
+    -fx-max-height:250px;
+    -fx-font-size: 85pt;
+    -fx-text-fill: #FFF;
+    -fx-background-color: #D9D9D9;
+    -jfx-button-type:flat;
+    -fx-position-shape: false;
     -fx-opacity: .4;
 }
 .button-chooser:hover {
-    -fx-background-color: #F28026;
+    -fx-background-color: #D9D9D9;
+    -fx-text-fill: #D9D9D9;
     -fx-opacity: .8;
+    -fx-cursor:hand;
 }
-.button-chooser:pressed, .button-chooser:default:hover:pressed {
-    -fx-background-color: #B6601D;
-    -fx-opacity: 1;
+.button-chooser:pressed, .button-chooser:default:hover:pressed{
+    -fx-background-color: #D9D9D9;
+    -fx-text-fill: F28026;
+    -fx-opacity: .8;
+    -fx-cursor:CLOSED_hand;
 }
 .button-chooser:disabled, .button-chooser:default:disabled {
     -fx-opacity: 0.4;
     -fx-background-color: #1d1d1d;
 }
-
-
-.context-menu {
-  -fx-background-color: #1d1d1d;
-  -fx-text-fill: whitesmoke;
-}
-
-.menu-item .label {
-  -fx-text-fill: whitesmoke;
-}
-
-.menu-item:focused .label {
-  -fx-text-fill: #F28026;
-}
-
-.selection-bar{
-    -fx-background-color: #1d1d1d;
-}
-
-.menu-item:focused{
-    -fx-text-fill: #F28026;
-
-}
-
-.menu-item:focused {
-     
-     -fx-background-color: #1d1d1d;
-     -fx-text-fill: white;
-}
-
-
-
-
-

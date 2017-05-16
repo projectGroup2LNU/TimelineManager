@@ -2,6 +2,8 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXDatePicker?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -62,9 +64,21 @@
                         </ScrollPane>
                      </children>
                   </VBox>
-                 <JFXButton fx:id="addTaskPlusButton" buttonType="RAISED" layoutX="24.0" layoutY="511.0" onAction="#openAddTaskWindow" prefHeight="65.0" prefWidth="59.0" styleClass="button-round" text="+" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="24.0" />
-                  <JFXButton fx:id="goLeftButton" buttonType="RAISED" onAction="#goLeft" styleClass="button-chooser" text="&lt;" AnchorPane.bottomAnchor="286.0" AnchorPane.leftAnchor="29.0" />
-                  <JFXButton fx:id="goRightButton" buttonType="RAISED" onAction="#goRight" styleClass="button-chooser" text="&gt;" AnchorPane.bottomAnchor="286.0" AnchorPane.rightAnchor="29.0" />
+                 <JFXButton fx:id="addTaskPlusButton" buttonType="RAISED" layoutX="24.0" layoutY="511.0" onAction="#openAddTaskWindow" prefHeight="65.0" prefWidth="59.0" styleClass="button-round" text="+" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="24.0">
+                     <padding>
+                        <Insets top="-10.0" />
+                     </padding>
+                     <cursor>
+                        <Cursor fx:constant="DEFAULT" />
+                     </cursor></JFXButton>
+                  <JFXButton fx:id="goLeftButton" buttonType="RAISED" layoutX="8.0" layoutY="183.0" onAction="#goLeft" styleClass="button-chooser" text="&lt;" AnchorPane.bottomAnchor="187.0" AnchorPane.leftAnchor="8.0">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor></JFXButton>
+                  <JFXButton fx:id="goRightButton" buttonType="RAISED" layoutX="885.0" layoutY="182.0" onAction="#goRight" styleClass="button-chooser" text="&gt;" AnchorPane.bottomAnchor="188.0" AnchorPane.rightAnchor="29.0">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor></JFXButton>
                </children>
             </AnchorPane>
          </children>
