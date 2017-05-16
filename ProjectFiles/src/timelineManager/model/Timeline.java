@@ -22,6 +22,8 @@ public class Timeline{
 	 * The constructor adds a unique ID to each created object of the class.
 	 */
 	public Timeline(){
+		title = new SimpleStringProperty();
+		description = new SimpleStringProperty();
 		this.id = counter++;
 	}
 	
@@ -56,7 +58,7 @@ public class Timeline{
 		return id;
 	}
 	public void setTitle(String title){
-		this.title.set(title); 
+		this.title.set(title);
 	}
 	public String getTitle(){
 		return title.get();
@@ -89,4 +91,3 @@ public class Timeline{
 	}
 	
 }
-
