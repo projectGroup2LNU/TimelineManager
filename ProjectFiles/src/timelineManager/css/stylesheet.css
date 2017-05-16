@@ -63,7 +63,7 @@
     -fx-font-size: 16pt;
     -fx-text-fill: #FFF;
     -fx-background-insets: 0 0 0 0, 0, 1, 2;
-    -jfx-button-type:flat;
+    -jfx-button-type:FLAT;
     -fx-position-shape: false;
 }
 
@@ -93,7 +93,7 @@
     -fx-min-height:100px;
     -fx-max-width:100px;
     -fx-max-height:100px;
-    -jfx-button-type:flat;
+    -jfx-button-type:FLAT;
     -fx-opacity: 0.7;
     
 }
@@ -122,7 +122,7 @@
     -fx-font-size: 85pt;
     -fx-text-fill: #FFF;
     -fx-background-color: #D9D9D9;
-    -jfx-button-type:flat;
+    -jfx-button-type:FLAT;
     -fx-position-shape: false;
     -fx-opacity: .4;
 }
