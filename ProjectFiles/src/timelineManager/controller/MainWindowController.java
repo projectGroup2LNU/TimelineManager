@@ -20,6 +20,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.ColumnConstraints;
@@ -109,6 +110,7 @@ public class MainWindowController extends AbstractController implements Initiali
         stage.centerOnScreen();
         stage.setResizable(false);
         stage.setTitle("Adding a new Timeline");
+        stage.getIcons().add(new Image("file:../TimelineManager/ProjectFiles/src/timelineManager/resource/image/icon.png"));
         stage.setScene(scene);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.show();
@@ -128,6 +130,7 @@ public class MainWindowController extends AbstractController implements Initiali
         stage.centerOnScreen();
         stage.setResizable(false);
         stage.setTitle("Adding a new Task");
+        stage.getIcons().add(new Image("file:../TimelineManager/ProjectFiles/src/timelineManager/resource/image/icon.png"));
         stage.setScene(scene);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.show();

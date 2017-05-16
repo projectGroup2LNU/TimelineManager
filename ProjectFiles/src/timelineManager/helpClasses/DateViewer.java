@@ -13,6 +13,7 @@ import java.time.LocalDate;
 
 /**
  * Created by joakimbergqvist on 2017-04-26.
+ * Updated colors by xingchenLu on 2017-05-13.
  */
 public class DateViewer
 {
@@ -33,6 +34,12 @@ public class DateViewer
     private int daysInView = 17;
     private Text year1Text;
     private Text year2Text;
+    private Color backColor = Color.rgb(180, 180, 180);
+    private Color strokeColor = Color.rgb(123, 123, 123);
+    private Color todayColor = Color.rgb(242, 128, 38);
+    private Color dayColor = Color.rgb(123, 123, 123);
+    private Color weekendColor = Color.rgb(180,180,180);
+    private Color fontColor = Color.WHITE;
     /**
      * The constructor sets up the grid for viewing the monthes.
      * It instanciates all the object needed for later change the variables.
@@ -49,11 +56,7 @@ public class DateViewer
         
     }
     
-    /**
-     * this method initialize the first time the class is constructed.
-     * it then calls the function showDates
-     */
-    private void initializeCalendarView()
+    public void initializeCalendarView()
     {
         
         dateClaendarText = new Text[daysInView];
@@ -68,9 +71,10 @@ public class DateViewer
             Rectangle dateRect = new Rectangle(DAY_PIXEL_SIZE, 20);
             Text text = new Text("");
             Text dayName = new Text("");
-            dateRect.setStroke(Color.rgb(130, 130, 130));
+            dateRect.setStroke(strokeColor);
             text.setFont(Font.font(15));
             dayName.setFont(Font.font(8));
+            dayName.setFill(fontColor);
             pane.getChildren().add(dateRect);
             pane.getChildren().add(text);
             pane.getChildren().add(dayName);
@@ -114,37 +118,34 @@ public class DateViewer
         year1Text.setLayoutY(30);
         year2Text.setLayoutX(95);
         year2Text.setLayoutY(30);
-        monthRect1.setFill(Color.rgb(112, 112, 112));
-        monthRect1.setStroke(Color.rgb(112, 112, 112));
-        monthRect2.setFill(Color.rgb(112, 112, 112));
-        monthRect2.setStroke(Color.rgb(112, 112, 112));
+        monthRect1.setFill(backColor);
+        monthRect1.setStroke(backColor);
+        monthRect2.setFill(backColor);
+        monthRect2.setStroke(backColor);
         
         grid.add(monthPane1, 0,0, 1,1);
         grid.add(monthPane2, 1, 0, 1,1 );
         showDates(currentDate);
     }
     
-    /**
-     * This is used to
-     * @param inputDate
-     */
     public void showDates(LocalDate inputDate)
     {
         inputDate= inputDate.minusDays(4);
         for(int i = 0; i < 17; i++)
         {
             dateClaendarText[i].setText("" + inputDate.plusDays(i).getDayOfMonth());
+            dateClaendarText[i].setFill(fontColor);
             dayOfWeek[i].setText(inputDate.plusDays(i).getDayOfWeek().toString().substring(0, 3));
             
             if(inputDate.plusDays(i).isEqual(LocalDate.now()))              // today
             {
-                dayRectangles[i].setFill(Color.rgb(255, 180, 30));
+                dayRectangles[i].setFill(todayColor);//orange
             } else if(inputDate.plusDays(i).getDayOfWeek().getValue() >= 6)   // weekend
             {
-                dayRectangles[i].setFill(Color.rgb(204, 201, 201));
+                dayRectangles[i].setFill(weekendColor);//grey
             } else
             {
-                dayRectangles[i].setFill(Color.rgb(127, 126, 126));
+                dayRectangles[i].setFill(dayColor);//black
             }
             
         }
@@ -181,16 +182,10 @@ public class DateViewer
         
         // A filler to fill a otherwise black hole right corner of the date rectangles
         Rectangle rightFiller = new Rectangle(2,60);
-        rightFiller.setFill(Color.rgb(210, 210, 255));
+        rightFiller.setFill(backColor);
         grid.add(rightFiller,17,0,1,2);
         
     }
-    
-    /**
-     * Used to set the year in right pixelposition after the month
-     * @param currentDate input Date to get The month needed.
-     * @return int pixel length to put the year string in the layout X pos.
-     */
     private int  yearPlacementRetriver(LocalDate currentDate)
     {
         int month = currentDate.getMonthValue();
