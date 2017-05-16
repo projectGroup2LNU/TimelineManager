@@ -9,7 +9,6 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import org.junit.Test;
 import timelineManager.view.ViewFactory;
 
 /**
@@ -29,7 +28,7 @@ public class TimelineManagerMain extends Application {
         stage.setMaxWidth(1200);
         stage.setResizable(true);
         stage.setTitle("Group 2 Timeline Manager Project");
-       // "file:C:/Users/Lu xingchen/TimelineManager/ProjectFiles/src/timelineManager/resource/image/icon.png"
+       // "file:./TimelineManager/ProjectFiles/src/timelineManager/resource/image/icon.png"
         stage.getIcons().add(new Image("file:../TimelineManager/ProjectFiles/src/timelineManager/resource/image/icon.png"));
         stage.setScene(scene);
         stage.show();
