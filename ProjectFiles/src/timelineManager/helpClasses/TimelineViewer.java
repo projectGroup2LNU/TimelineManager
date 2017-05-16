@@ -2,31 +2,26 @@ package timelineManager.helpClasses;
 
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Pos;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import timelineManager.controller.MainWindowController;
 import timelineManager.controller.ModelAccess;
 import timelineManager.model.Task;
 import timelineManager.model.Timeline;
 import timelineManager.model.TimelineModel;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import timelineManager.view.ViewFactory;
 
@@ -55,17 +50,21 @@ public class TimelineViewer
     MenuItem editTask = new MenuItem("Edit Task");
     MenuItem deleteTimeline=new MenuItem("Delete Timeline");
     MenuItem deleteTask=new MenuItem("Delete Task");
-
+    RadioButton refRadioAllTimelines;
+    RadioButton refRadioSelectedTimeline;
+    
     private final int DAY_PIXEL_SIZE = MainWindowController.DAY_PIXEL_SIZE;
     
-    public TimelineViewer(LocalDate currentDate, GridPane inGrid, ModelAccess inputModelAccess)
+    public TimelineViewer(LocalDate currentDate, GridPane inGrid, ModelAccess inputModelAccess, RadioButton allTimelines, RadioButton selectedTimeline)
     {
-        
+    
         modelAccess = inputModelAccess;
         tm = inputModelAccess.timelineModel;
         grid = inGrid;
         grid.setVgap(5);
-        
+    
+        refRadioAllTimelines = allTimelines;
+        refRadioSelectedTimeline = selectedTimeline;
     
         // Filler for first row to make grid correct size
         for(int i = 0; i < 16; i++)
@@ -74,16 +73,16 @@ public class TimelineViewer
             rect.setVisible(false);
             grid.add(rect, i, 0, 1, 1);
         }
-        
+    
         grid.getColumnConstraints().setAll(new ColumnConstraints(DAY_PIXEL_SIZE, DAY_PIXEL_SIZE, DAY_PIXEL_SIZE));
         grid.getRowConstraints().set(0, new RowConstraints(5, 5, 5));
-        
+    
         startDate = currentDate.minusDays(4);
         endDate = currentDate.plusDays(12);
- 
-        update(currentDate, modelAccess.timelineModel);
-        timelineListener();
+    
         
+        timelineListener();
+    
         editTimeline.setOnAction(new EventHandler<ActionEvent>() {
  
             @Override
@@ -143,7 +142,16 @@ public class TimelineViewer
         });
         
         contextMenuTask.getItems().addAll(editTask,deleteTask);
-        
+        update(currentDate, modelAccess.timelineModel);
+    
+        refRadioAllTimelines.setOnAction(event ->
+        {
+            update(currentDate, modelAccess.timelineModel);
+        });
+        refRadioSelectedTimeline.setOnAction(event ->
+        {
+            update(currentDate, modelAccess.timelineModel);
+        });
     }
     
     /**
@@ -168,10 +176,20 @@ public class TimelineViewer
         grid.getChildren().removeAll(timelineList);
         grid.getChildren().removeAll(taskList);
         hPos = 1;
-        
+    
         startDate = inputDate.minusDays(4);
-            endDate = inputDate.plusDays(12);
-        ArrayList<Timeline> inputTimelines = inputModel.getTimelinesToDisplay(startDate,endDate);
+        endDate = inputDate.plusDays(12);
+        ArrayList<Timeline> inputTimelines;
+    
+        if(refRadioSelectedTimeline.isSelected())
+        {
+            inputTimelines = new ArrayList<Timeline>();
+            inputTimelines.add(modelAccess.getSelectedTimeline());
+        }
+        else
+        {
+            inputTimelines = inputModel.getTimelinesToDisplay(startDate, endDate);
+        }
         
         for(Timeline timeline : inputTimelines)
         {
