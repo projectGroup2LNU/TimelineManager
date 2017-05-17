@@ -34,8 +34,8 @@ public class TimelineViewer
     ModelAccess modelAccess;
     private GridPane grid;
     private int hPos = 1;
-    private final int timelineHeight = 20;
-    private final int taskHeight = 40;
+    private final int timelineHeight = 15;
+    private final int taskHeight = 30;
     private LocalDate startDate;
     private LocalDate endDate;
     ArrayList<TimelineRectangle> timelineList = new ArrayList<>();

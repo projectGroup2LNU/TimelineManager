@@ -30,7 +30,7 @@ public class Task {
 		this.endTime = endTime;
 	
 		// Temp color
-		color = Color.rgb(200,175,160);
+		color = Color.rgb(255,255,255);
     }
 	
 	public Duration getDuration(LocalDate startTime , LocalDate endTime){
