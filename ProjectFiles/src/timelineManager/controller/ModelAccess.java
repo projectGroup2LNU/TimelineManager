@@ -40,7 +40,6 @@ public class ModelAccess
     
     public void setSelectedTask(Task task){
         selectedTask=task;
-        System.out.println("task selected!!"+ selectedTask.getTitle());
     }
     
     

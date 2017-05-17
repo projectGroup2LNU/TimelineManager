@@ -2,6 +2,8 @@ package timelineManager.model;
 
 import java.time.LocalDateTime;
 import javafx.scene.paint.Color;
+import timelineManager.controller.ModelAccess;
+
 import java.time.Duration;
 import java.time.LocalDate;
 
@@ -30,8 +32,18 @@ public class Task {
 		this.endTime = endTime;
 	
 		// Temp color
-		color = Color.rgb(255,255,255);
+		//color = Color.rgb(255,255,255);
     }
+	public Task(String title, String description, LocalDate startTime, LocalDate endTime, Color inputColor) {
+		this.id = counter++;
+		this.title = title;
+		this.description = description;
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.color = inputColor;
+	}
+	
+	
 	
 	public Duration getDuration(LocalDate startTime , LocalDate endTime){
 		Duration Duration = java.time.Duration.between(startTime, endTime);

@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import org.junit.Before;
 import org.junit.Test;
 
+import timelineManager.helpClasses.TimelineViewer;
 import timelineManager.model.Task;
 import timelineManager.model.Timeline;
 import timelineManager.controller.AddTaskController;
@@ -21,7 +22,8 @@ import javafx.fxml.FXMLLoader;
 
 public class TUTask01_AddTaskJUnitTest {
 	private ModelAccess modelAccess = new ModelAccess();
-	private AddTaskController controller = new AddTaskController(modelAccess);
+	private TimelineViewer timelineViewer = new TimelineViewer();
+	private AddTaskController controller = new AddTaskController(modelAccess,timelineViewer);
 	private String fxmlPath = "/timelineManager/view/AddTaskView.fxml";
 	private ObservableList<Task> tasks;
 

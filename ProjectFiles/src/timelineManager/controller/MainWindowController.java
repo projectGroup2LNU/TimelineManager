@@ -26,6 +26,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.layout.AnchorPane;
 import timelineManager.helpClasses.DateViewer;
+import timelineManager.helpClasses.DummyCreator;
 import timelineManager.helpClasses.TimelineViewer;
 import timelineManager.model.Task;
 import timelineManager.model.Timeline;
@@ -80,8 +81,6 @@ public class MainWindowController extends AbstractController implements Initiali
     @FXML
     private AnchorPane gridAnchor;
     
-    
-    
     @FXML
     private RadioButton radioButtonAllTimelines;
     
@@ -90,7 +89,7 @@ public class MainWindowController extends AbstractController implements Initiali
     
     private MenuItem showDetails = new MenuItem("show details");
     
-    private TimelineViewer tm;
+    
     public static final int DAY_PIXEL_SIZE = 59;  // this is the width for a day in the the grids
     
     DateViewer dateViewer;
@@ -103,8 +102,12 @@ public class MainWindowController extends AbstractController implements Initiali
     //date of the day
     private LocalDate currentDate = LocalDate.now();
 
-    public MainWindowController(ModelAccess modelAccess) {
-        super(modelAccess);
+    public MainWindowController(ModelAccess modelAccess, TimelineViewer timelineViewer) {
+        
+        super(modelAccess, timelineViewer);
+        
+        // This next rows is just for adding dummy Data.
+     //   DummyCreator dc = new DummyCreator(super.getModelAccess());
     }
     
     public void openAddTimelineWindow(ActionEvent e){
@@ -151,7 +154,7 @@ public class MainWindowController extends AbstractController implements Initiali
         currentDate = currentDate.plus(7,ChronoUnit.DAYS);
         datePickerUpdate(currentDate);
         dateViewer.showDates(currentDate);
-        tm.update(currentDate, super.getModelAccess().timelineModel);
+        super.timelineViewer.update(currentDate, super.getModelAccess().timelineModel);
     }
     
     //to be connected to the left button, changing the date to a week back
@@ -159,7 +162,7 @@ public class MainWindowController extends AbstractController implements Initiali
         currentDate = currentDate.minus(7, ChronoUnit.DAYS);
         datePickerUpdate(currentDate);
         dateViewer.showDates(currentDate);
-        tm.update(currentDate, super.getModelAccess().timelineModel);
+        super.timelineViewer.update(currentDate, super.getModelAccess().timelineModel);
     }
     
     //to be connected to a reset button, that will change the date back to the actual date of the day
@@ -168,7 +171,7 @@ public class MainWindowController extends AbstractController implements Initiali
         datePickerUpdate(currentDate);
         
         dateViewer.showDates(currentDate);
-        tm.update(currentDate, super.getModelAccess().timelineModel);
+        super.timelineViewer.update(currentDate, super.getModelAccess().timelineModel);
         
     }
     
@@ -179,7 +182,7 @@ public class MainWindowController extends AbstractController implements Initiali
         currentDate= mainWindowDatePicker.getValue();
         datePickerUpdate(currentDate);
         dateViewer.showDates(currentDate);
-        tm.update(currentDate, super.getModelAccess().timelineModel);
+        super.timelineViewer.update(currentDate, super.getModelAccess().timelineModel);
     }
     
     
@@ -248,14 +251,15 @@ public class MainWindowController extends AbstractController implements Initiali
                     }
 		});	
         
-        tm = new TimelineViewer(currentDate, timelineGrid, super.getModelAccess(), radioButtonAllTimelines, radioButtonSelectedTimeline);
+        timelineViewer.timelineViewerInitialize(currentDate, timelineGrid, super.getModelAccess(), radioButtonAllTimelines, radioButtonSelectedTimeline);
       
-        goLeft();  // this solves a bug with dates showing a small space if
+        // Think this is solved with resizeing and not needed anymore
+       /* goLeft();  // this solves a bug with dates showing a small space if
         goLeft();   // not a view with to dates has been visible
         goLeft();
         goRight();
         goRight();
-        goRight();
+        goRight();*/
     }
     
     // getter for PixelWidth

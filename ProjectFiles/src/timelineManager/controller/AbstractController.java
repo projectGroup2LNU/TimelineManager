@@ -5,6 +5,8 @@
  */
 package timelineManager.controller;
 
+import timelineManager.helpClasses.TimelineViewer;
+
 /**
  *
  * @author beysimeryalmaz
@@ -12,9 +14,11 @@ package timelineManager.controller;
 public abstract class AbstractController {
     
     private ModelAccess modelAccess;
+    TimelineViewer timelineViewer;
     
-    public AbstractController(ModelAccess modelAccess){
+    public AbstractController(ModelAccess modelAccess, TimelineViewer timelineViewer){
         this.modelAccess=modelAccess;
+        this.timelineViewer = timelineViewer;
     }
     
     

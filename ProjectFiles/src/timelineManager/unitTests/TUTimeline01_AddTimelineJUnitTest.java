@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import timelineManager.controller.AddTimelineController;
 import timelineManager.controller.ModelAccess;
+import timelineManager.helpClasses.TimelineViewer;
 import timelineManager.model.Timeline;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
@@ -19,7 +20,8 @@ import java.time.LocalDate;
 
 public class TUTimeline01_AddTimelineJUnitTest {
 	private ModelAccess modelAccess = new ModelAccess();
-	private AddTimelineController controller = new AddTimelineController(modelAccess);
+	private TimelineViewer timelineViewer = new TimelineViewer();
+	private AddTimelineController controller = new AddTimelineController(modelAccess,timelineViewer);
 	private String fxmlPath = "/timelineManager/view/AddTimelineView.fxml";
 	private ObservableList<Timeline> timelines;
 	

@@ -26,7 +26,7 @@ public class TaskRectangle extends StackPane
         task = inputTask;
         rectangle = new Rectangle(200,20);
         rectangle.setFill(task.getColor());
-        rectangle.setOpacity(0.6);
+        rectangle.setOpacity(1);
         rectangle.setArcWidth(10);
         rectangle.setArcHeight(10);
         text = new Label("");

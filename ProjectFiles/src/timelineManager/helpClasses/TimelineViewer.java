@@ -44,20 +44,36 @@ public class TimelineViewer
     LocalDate currentDate;
     ContextMenu contextMenuTimeline = new ContextMenu();
     ContextMenu contextMenuTask = new ContextMenu();
-    ViewFactory viewFactory=ViewFactory.defaultFactory;
- 
+    ViewFactory viewFactory;
+    
     MenuItem editTimeline = new MenuItem("Edit Timeline");
     MenuItem editTask = new MenuItem("Edit Task");
-    MenuItem deleteTimeline=new MenuItem("Delete Timeline");
-    MenuItem deleteTask=new MenuItem("Delete Task");
+    MenuItem deleteTimeline = new MenuItem("Delete Timeline");
+    MenuItem deleteTask = new MenuItem("Delete Task");
     RadioButton refRadioAllTimelines;
     RadioButton refRadioSelectedTimeline;
     
     private final int DAY_PIXEL_SIZE = MainWindowController.DAY_PIXEL_SIZE;
     
-    public TimelineViewer(LocalDate currentDate, GridPane inGrid, ModelAccess inputModelAccess, RadioButton allTimelines, RadioButton selectedTimeline)
+    // empty constructor
+    public TimelineViewer()
     {
+       
+    }
     
+    /**
+     * Initializes the timeline, this need to be run before using the class,
+     * but the calling class Abstract controller doesn't reach all inputs so it needs to be called by developer
+     *
+     * @param currentDate
+     * @param inGrid
+     * @param inputModelAccess
+     * @param allTimelines
+     * @param selectedTimeline
+     */
+    public void timelineViewerInitialize(LocalDate currentDate, GridPane inGrid, ModelAccess inputModelAccess, RadioButton allTimelines, RadioButton selectedTimeline)
+    {
+        viewFactory = ViewFactory.defaultFactory;
         modelAccess = inputModelAccess;
         tm = inputModelAccess.timelineModel;
         grid = inGrid;
@@ -80,68 +96,74 @@ public class TimelineViewer
         startDate = currentDate.minusDays(4);
         endDate = currentDate.plusDays(12);
     
-        
-        timelineListener();
     
-        editTimeline.setOnAction(new EventHandler<ActionEvent>() {
- 
+        //timelineListener();
+    
+        editTimeline.setOnAction(new EventHandler<ActionEvent>()
+        {
             @Override
-            public void handle(ActionEvent event) {
+            public void handle(ActionEvent event)
+            {
                 Scene scene = viewFactory.getEditTimelineScene();
-                Stage stage=new Stage();
+                Stage stage = new Stage();
                 stage.centerOnScreen();
                 stage.setResizable(false);
                 stage.setTitle("Edit Timeline");
                 stage.getIcons().add(new Image("file:../TimelineManager/ProjectFiles/src/timelineManager/resource/image/icon.png"));
                 stage.setScene(scene);
-                
                 stage.show();
-                
-        
+            
+            
             }
         });
         
-        deleteTimeline.setOnAction(new EventHandler<ActionEvent>() {
- 
+        deleteTimeline.setOnAction(new EventHandler<ActionEvent>()
+        {
+    
             @Override
-            public void handle(ActionEvent event) {
+            public void handle(ActionEvent event)
+            {
                 
-                int indexOfTimeline=modelAccess.timelineModel.timelineList.indexOf(modelAccess.getSelectedTimeline());
+                int indexOfTimeline = modelAccess.timelineModel.timelineList.indexOf(modelAccess.getSelectedTimeline());
                 modelAccess.timelineModel.timelineList.remove(indexOfTimeline);
-                
-                 
+                update(tm);
+        
             }
         });
         
-        contextMenuTimeline.getItems().addAll(editTimeline,deleteTimeline);
+        contextMenuTimeline.getItems().addAll(editTimeline, deleteTimeline);
         
-        editTask.setOnAction(new EventHandler<ActionEvent>() {
- 
+        editTask.setOnAction(new EventHandler<ActionEvent>()
+        {
+    
             @Override
-            public void handle(ActionEvent event) {
+            public void handle(ActionEvent event)
+            {
                 Scene scene = viewFactory.getEditTaskScene();
-                Stage stage=new Stage();
+                Stage stage = new Stage();
                 stage.centerOnScreen();
                 stage.setResizable(false);
                 stage.setTitle("Edit Task");
                 stage.getIcons().add(new Image("file:../TimelineManager/ProjectFiles/src/timelineManager/resource/image/icon.png"));
                 stage.setScene(scene);
-                
                 stage.show();
         
             }
         });
         
-        deleteTask.setOnAction(new EventHandler<ActionEvent>() {
- 
+        deleteTask.setOnAction(new EventHandler<ActionEvent>()
+        {
+    
             @Override
-            public void handle(ActionEvent event) {
-                int indexOfTimeline=modelAccess.timelineModel.timelineList.indexOf(modelAccess.getSelectedTimeline());
+            public void handle(ActionEvent event)
+            {
+                int indexOfTimeline = modelAccess.timelineModel.timelineList.indexOf(modelAccess.getSelectedTimeline());
                 modelAccess.timelineModel.timelineList.get(indexOfTimeline).taskList.remove(modelAccess.getSelectedTask());
+                update(tm);
             }
         });
         
-        contextMenuTask.getItems().addAll(editTask,deleteTask);
+        contextMenuTask.getItems().addAll(editTask, deleteTask);
         update(currentDate, modelAccess.timelineModel);
     
         refRadioAllTimelines.setOnAction(event ->
@@ -155,15 +177,22 @@ public class TimelineViewer
     }
     
     /**
-     *  Listends to changes made in the timeline list and updates the screen if any changes been made
+     * Listends to changes made in the timeline list and updates the screen if any changes been made
      */
     private void timelineListener()
     {
-        modelAccess.timelineModel.timelineList.addListener((ListChangeListener)(c -> {
+        modelAccess.timelineModel.timelineList.addListener((ListChangeListener) (c ->
+        {
     
             update(currentDate, modelAccess.timelineModel);
         }));
     
+    }
+    
+    // this calls other update function with previous inputs, not to be used if date is changen on screen
+    public void update(TimelineModel inputModel)
+    {
+        update(currentDate,inputModel);
     }
     /**
      * This function updates the screen by recalculate all positions for dates and rectangles and
@@ -370,10 +399,11 @@ public class TimelineViewer
         grid.add(filler,0,hPos);
         
         // adds a listener for task list in each timeline
-        for(Timeline timeline : modelAccess.getTimelineModel().timelineList)
+     /*   for(Timeline timeline : modelAccess.getTimelineModel().timelineList)
             timeline.taskList.addListener((ListChangeListener)( c -> {
                 update(currentDate, modelAccess.timelineModel);
             }));
+            */
     }
     
 }
