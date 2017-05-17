@@ -17,7 +17,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" prefHeight="620.0" prefWidth="120.0" styleClass="background" stylesheets="@../css/stylesheet.css" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" prefHeight="620.0" prefWidth="120.0" styleClass="background" stylesheets="@../css/stylesheet.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <AnchorPane prefHeight="600.0" prefWidth="199.0" styleClass="background-left" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -37,7 +37,7 @@
                </toggleGroup>
             </RadioButton>
             <RadioButton fx:id="radioButtonSelectedTimeline" layoutX="17.0" layoutY="361.0" mnemonicParsing="false" scaleX="0.8" scaleY="0.8" text="Selected Timeline" toggleGroup="$viewSettings" />
-            <Text layoutX="20.0" layoutY="323.0" strokeType="OUTSIDE" strokeWidth="0.0" text="View Settings" />
+            <Text layoutX="20.0" layoutY="323.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-title" text="View Settings" />
 
 
          </children>

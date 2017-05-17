@@ -15,8 +15,9 @@
  * 5. #FFF white
  */
 /*
- *updated by xingchenLu 2017-05-16.
+ *updated by xingchenLu 2017-05-17.
  */
+/*left side*/
 .datebar {
     -fx-background-color: #000;
     -fx-text-fill: #FFF;
@@ -28,7 +29,16 @@
  .background {
     -fx-background-color: #D9D9D9;
 }
- 
+ .text-title {
+    -fx-font-family: "Tw Cen MT";
+    -fx-font-size:25;
+    -fx-fill:#FFF;
+}
+.radio-button {
+    -fx-text-fill: #FFF;
+    -fx-font-family: "Tw Cen MT";
+    -fx-font-size:18;
+}
 .text-c1 {
     -fx-background-color: #D9D9D9;
 }
@@ -37,6 +47,7 @@
     -fx-font-family: "Tw Cen MT";
     -jfx-default-color: #F28026;
 }
+/*small windows*/
 .text-field-title {
     -fx-font-size: 18pt;
     -fx-font-family: "Tw Cen MT";
@@ -55,6 +66,7 @@
     -jfx-focus-color: #F28026;
     -jfx-unfocus-color: #000;
 }
+/*right side*/
 .button {
     -fx-padding: 2px;
     -fx-border-width: 2;
@@ -129,7 +141,7 @@
 .button-chooser:hover {
     -fx-background-color: #D9D9D9;
     -fx-text-fill: #D9D9D9;
-    -fx-opacity: .8;
+    -fx-opacity: 0;
     -fx-cursor:hand;
 }
 .button-chooser:pressed, .button-chooser:default:hover:pressed{
