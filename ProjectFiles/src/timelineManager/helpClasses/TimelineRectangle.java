@@ -31,7 +31,7 @@ public class TimelineRectangle extends StackPane
         timeline = inputTimeline;
         rectangle = new Rectangle(200,10);
         rectangle.setFill(timeline.getColor());
-        rectangle.setOpacity(0.6);
+        rectangle.setOpacity(1);
         rectangle.setArcWidth(10);
         rectangle.setArcHeight(10);
         text = new Label("");

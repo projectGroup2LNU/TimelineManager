@@ -20,6 +20,7 @@ import javafx.scene.control.DatePicker;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import timelineManager.helpClasses.TimelineViewer;
 import timelineManager.model.Task;
 import timelineManager.model.Timeline;
 
@@ -60,8 +61,8 @@ public class AddTaskController extends AbstractController implements Initializab
      * that use the same technique
      * @param modelAccess uses the superClass to give same reference for the model to all controllers
      */
-    public AddTaskController(ModelAccess modelAccess) {
-        super(modelAccess);
+    public AddTaskController(ModelAccess modelAccess, TimelineViewer timelineViewer) {
+        super(modelAccess, timelineViewer);
     }
     
     /**
@@ -81,7 +82,7 @@ public class AddTaskController extends AbstractController implements Initializab
         	
         	Task task = new Task(title, desc, start, end);
         	getModelAccess().getSelectedTimeline().addTask(task);
-        	
+        	super.timelineViewer.update(super.getModelAccess().timelineModel);
         	// If check is needed for JUnit tests
             if(!isTestMode) {
                 // Window closes itself after user clicks the Save button
@@ -97,6 +98,7 @@ public class AddTaskController extends AbstractController implements Initializab
                 alert.initModality(Modality.APPLICATION_MODAL);
                 alert.showAndWait();
         	} else {
+        	    exception.printStackTrace();
         		throw exception;
         	}
         }

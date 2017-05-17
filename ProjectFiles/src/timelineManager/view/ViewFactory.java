@@ -12,6 +12,7 @@ import timelineManager.controller.EditTaskController;
 import timelineManager.controller.EditTimelineController;
 import timelineManager.controller.MainWindowController;
 import timelineManager.controller.ModelAccess;
+import timelineManager.helpClasses.TimelineViewer;
 
 /**
  * This class is a helper class for loading the views from .fxml files.
@@ -23,6 +24,8 @@ public class ViewFactory {
     public static ViewFactory defaultFactory=new ViewFactory();
     
     private ModelAccess modelAccess=new ModelAccess();
+    private TimelineViewer timelineViewer = new TimelineViewer();
+    
     private AddTaskController addTaskController;
     private AddTimelineController addTimelineController;
     private MainWindowController mainWindowController;
@@ -38,20 +41,20 @@ public class ViewFactory {
     
     
      public Scene getMainScene(){
-	mainWindowController=new MainWindowController(modelAccess);
+	mainWindowController=new MainWindowController(modelAccess,timelineViewer);
         return initilazeScene(MAIN_FXML, mainWindowController);
 		
 	}
     
      public Scene getAddTimelineScene(){
-        addTimelineController=new AddTimelineController(modelAccess);
+        addTimelineController=new AddTimelineController(modelAccess,timelineViewer);
         return initilazeScene(ADD_TIMELINE_FXML, addTimelineController);
      
      
      }
 	
 	 public Scene getAddTaskScene(){
-         addTaskController=new AddTaskController(modelAccess);
+         addTaskController=new AddTaskController(modelAccess,timelineViewer);
          return initilazeScene(ADD_TASK_FXML, addTaskController);
      
         }
@@ -59,20 +62,17 @@ public class ViewFactory {
          
          
     public Scene getEditTimelineScene(){
-	editTimelineController=new EditTimelineController(modelAccess);
+	editTimelineController=new EditTimelineController(modelAccess,timelineViewer);
         return initilazeScene(EDIT_TIMELINE_FXML, editTimelineController);
 		
 	}
     
     
     public Scene getEditTaskScene(){
-         editTaskController=new EditTaskController(modelAccess);
+         editTaskController=new EditTaskController(modelAccess,timelineViewer);
          return initilazeScene(EDIT_TASK_FXML, editTaskController);
     }
-        
-         
-         
-         
+
          public Scene initilazeScene(String fxmlPath, AbstractController abstractController){
          FXMLLoader loader;
 		Parent parent;
@@ -82,6 +82,7 @@ public class ViewFactory {
 			loader.setController(abstractController);
 			parent = loader.load();
 		} catch (Exception e) {
+		    e.printStackTrace();
 			return null;
 		}
 		

@@ -29,6 +29,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import timelineManager.helpClasses.TimelineViewer;
 import timelineManager.model.Task;
 import timelineManager.model.Timeline;
 
@@ -64,8 +65,8 @@ public class EditTimelineController extends AbstractController implements Initia
     
     LocalDate start,oldStart,end,oldEnd;
 
-    public EditTimelineController(ModelAccess modelAccess) {
-        super(modelAccess);
+    public EditTimelineController(ModelAccess modelAccess, TimelineViewer timelineViewer) {
+        super(modelAccess, timelineViewer);
     }
     
 
@@ -169,10 +170,12 @@ public class EditTimelineController extends AbstractController implements Initia
                             }
                         
                         }
-                        getModelAccess().timelineModel.timelineList.remove(indexOfTimeline);
-                        getModelAccess().timelineModel.timelineList.add(temp);
-                        
                         getModelAccess().setSelectedTimeline(temp);
+                        getModelAccess().timelineModel.timelineList.remove(indexOfTimeline);
+                        
+                        getModelAccess().timelineModel.timelineList.add(temp);
+                        timelineViewer.update(getModelAccess().timelineModel);
+                        
                         
                         
                         
@@ -186,13 +189,14 @@ public class EditTimelineController extends AbstractController implements Initia
                
                getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList=newTaskList;
                         
-                        Timeline temp=new Timeline(title, desc, start, end);
+               Timeline temp=new Timeline(title, desc, start, end);
                     
-                        temp.taskList=getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList;
-                        getModelAccess().timelineModel.timelineList.remove(indexOfTimeline);
-                        getModelAccess().timelineModel.timelineList.add(temp);
-                        
-                        getModelAccess().setSelectedTimeline(temp);
+               temp.taskList=getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList;
+               getModelAccess().setSelectedTimeline(temp);
+               getModelAccess().timelineModel.timelineList.remove(indexOfTimeline);
+               getModelAccess().timelineModel.timelineList.add(temp);
+    
+               timelineViewer.update(getModelAccess().timelineModel);
            
            
            
@@ -226,15 +230,11 @@ public class EditTimelineController extends AbstractController implements Initia
                             }
                         
                         }
-                    
-                        
+    
+                        getModelAccess().setSelectedTimeline(temp);
                         getModelAccess().timelineModel.timelineList.remove(indexOfTimeline);
                         getModelAccess().timelineModel.timelineList.add(temp);
-                        
-                        getModelAccess().setSelectedTimeline(temp);
-
-                        
-                    
+                        timelineViewer.update(getModelAccess().timelineModel);
                     }
                
                
@@ -296,6 +296,7 @@ public class EditTimelineController extends AbstractController implements Initia
             
         
         }
+        
     }
     
     public void setTitle(String title) {
@@ -327,8 +328,9 @@ public class EditTimelineController extends AbstractController implements Initia
         titleField.setText(tm.getTitle());
         indexOfTimeline=getModelAccess().timelineModel.timelineList.indexOf(tm);
         descriptionField.setText(tm.getDescription());
-        
+        startDate.setValue(tm.getStartTime());
+        endDate.setValue(tm.getEndTime());
         
     }
-    
+   
 }

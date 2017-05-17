@@ -9,13 +9,15 @@ import javafx.embed.swing.JFXPanel;
 import javafx.fxml.FXMLLoader;
 import timelineManager.controller.MainWindowController;
 import timelineManager.controller.ModelAccess;
+import timelineManager.helpClasses.TimelineViewer;
 
 import java.io.IOException;
 import java.time.LocalDate;
 
 public class TUTime01_TimeButtonsJUnitTest {
 	private ModelAccess modelAccess = new ModelAccess();
-	private MainWindowController time = new MainWindowController(modelAccess);
+	private TimelineViewer timelineViewer = new TimelineViewer();
+	private MainWindowController time = new MainWindowController(modelAccess, timelineViewer);
 	private String fxmlPath = "/timelineManager/view/MainView.fxml";
 	
 	@Before
