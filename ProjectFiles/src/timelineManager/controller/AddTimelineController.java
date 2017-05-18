@@ -66,7 +66,7 @@ public class AddTimelineController extends AbstractController{
             Timeline timeline = new Timeline(title,desc,start,end);
             getModelAccess().setSelectedTimeline(timeline);
             getModelAccess().timelineModel.addTimelineToList(timeline);
-            super.timelineViewer.update(getModelAccess().timelineModel);
+            super.timelineViewer.update(timeline.getStartTime(), getModelAccess().timelineModel);
             
             // If check is needed for JUnit tests
             if(!isTestMode) {
@@ -83,7 +83,6 @@ public class AddTimelineController extends AbstractController{
                 alert.initModality(Modality.APPLICATION_MODAL);
                 alert.showAndWait();
         	} else {
-        	    exception.printStackTrace();
         		throw exception;
         	}
         }
