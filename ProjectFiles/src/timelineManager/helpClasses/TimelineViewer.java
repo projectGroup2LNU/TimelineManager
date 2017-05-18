@@ -323,6 +323,10 @@ public class TimelineViewer
                     {
                         taskStart = startDate;
                         taskRectangle.setLeftCutoff(true);
+                        Rectangle taskStartRect = new Rectangle(5,20);
+                        taskStartRect.setFill(taskRectangle.getRectangle().getFill());
+                        taskRectangle.getChildren().add(taskStartRect);
+                        taskRectangle.setAlignment(taskStartRect, Pos.TOP_LEFT);
                     }
                     else
                     {
