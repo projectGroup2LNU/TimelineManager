@@ -12,8 +12,8 @@ import javafx.scene.text.Text;
 import java.time.LocalDate;
 
 /**
- * Created by joakimbergqvist on 2017-04-26.
- * Updated colors by xingchenLu on 2017-05-13.
+ * A class for showing dates in a gridPane
+ * First row is months and year, and second row is the dates and days.
  */
 public class DateViewer
 {
@@ -56,6 +56,9 @@ public class DateViewer
         
     }
     
+    /**
+     * initializes the elements needed for showing dates, months and year.
+     */
     public void initializeCalendarView()
     {
         
@@ -101,7 +104,7 @@ public class DateViewer
         year2Text = new Text("");
         year1Text.setFont(new Font (12));
         year2Text.setFont(new Font (12));
-       
+        
         
         monthPane1.getChildren().add(monthRect1);
         monthPane2.getChildren().add(monthRect2);
@@ -109,7 +112,7 @@ public class DateViewer
         monthPane2.getChildren().add(month2Text);
         monthPane1.getChildren().add(year1Text);
         monthPane2.getChildren().add(year2Text);
-
+        
         month1Text.setLayoutX(30);
         month1Text.setLayoutY(30);
         month2Text.setLayoutX(30);
@@ -128,6 +131,10 @@ public class DateViewer
         showDates(currentDate);
     }
     
+    /**
+     * Updates the dates, starts 4 days before input date and will show in total 17 days.
+     * @param inputDate LocalDate of the date to show.
+     */
     public void showDates(LocalDate inputDate)
     {
         inputDate= inputDate.minusDays(4);
@@ -162,7 +169,7 @@ public class DateViewer
             year1Text.setText(inputDate.getYear()+ "");
             year1Text.setLayoutX(yearPlacementRetriver(inputDate));
             monthRect1.setWidth(month1Width * DAY_PIXEL_SIZE);
-
+            
         }
         else
         {
@@ -186,6 +193,11 @@ public class DateViewer
         grid.add(rightFiller,17,0,1,2);
         
     }
+    
+    /*
+        private help method to calculate the distance the year after the name of the month.
+        this could probobly be replaced by using a HBox instead of the Pane as of now.
+     */
     private int  yearPlacementRetriver(LocalDate currentDate)
     {
         int month = currentDate.getMonthValue();
