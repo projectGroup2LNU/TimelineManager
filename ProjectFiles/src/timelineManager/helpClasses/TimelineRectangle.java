@@ -2,6 +2,8 @@ package timelineManager.helpClasses;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -16,7 +18,7 @@ import timelineManager.model.Timeline;
 /**
  * A class for printing a Timeline in a grid pane.
  */
-public class TimelineRectangle extends StackPane
+public class TimelineRectangle extends AnchorPane
 {
     
     private Timeline timeline;
@@ -31,7 +33,7 @@ public class TimelineRectangle extends StackPane
         timeline = inputTimeline;
         rectangle = new Rectangle(200,10);
         rectangle.setFill(timeline.getColor());
-        rectangle.setOpacity(0.6);
+        rectangle.setOpacity(1);
         rectangle.setArcWidth(10);
         rectangle.setArcHeight(10);
         text = new Label("");
@@ -39,7 +41,7 @@ public class TimelineRectangle extends StackPane
         text.setText(timeline.getTitle());
         //text.setTextAlignment(TextAlignment.CENTER);
         text.setTextFill(Color.rgb(255, 255, 255));
-        setAlignment(Pos.TOP_CENTER);
+        //setAlignment(Pos.TOP_CENTER);
         text.setAlignment(Pos.TOP_CENTER);
         
         text.setLayoutY(20);
@@ -94,7 +96,7 @@ public class TimelineRectangle extends StackPane
         return rectangle;
     }
     
-    public StackPane getStackPane()
+    public AnchorPane getStackPane()
     {
         return this;
     }

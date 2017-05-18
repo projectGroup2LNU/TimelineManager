@@ -13,6 +13,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import timelineManager.helpClasses.TimelineViewer;
 import timelineManager.model.Timeline;
 
 /**
@@ -46,8 +47,9 @@ public class AddTimelineController extends AbstractController{
     LocalDate start,end;
     
 
-    public AddTimelineController(ModelAccess modelAccess) {
-        super(modelAccess);
+    public AddTimelineController(ModelAccess modelAccess, TimelineViewer timelineViewer)
+    {
+        super(modelAccess, timelineViewer);
        
     }
     
@@ -64,6 +66,7 @@ public class AddTimelineController extends AbstractController{
             Timeline timeline = new Timeline(title,desc,start,end);
             getModelAccess().setSelectedTimeline(timeline);
             getModelAccess().timelineModel.addTimelineToList(timeline);
+            super.timelineViewer.update(getModelAccess().timelineModel);
             
             // If check is needed for JUnit tests
             if(!isTestMode) {
@@ -80,6 +83,7 @@ public class AddTimelineController extends AbstractController{
                 alert.initModality(Modality.APPLICATION_MODAL);
                 alert.showAndWait();
         	} else {
+        	    exception.printStackTrace();
         		throw exception;
         	}
         }

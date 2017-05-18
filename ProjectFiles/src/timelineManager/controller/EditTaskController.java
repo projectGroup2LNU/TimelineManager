@@ -24,6 +24,7 @@ import javafx.scene.control.DatePicker;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import timelineManager.helpClasses.TimelineViewer;
 import timelineManager.model.Task;
 import timelineManager.model.Timeline;
 
@@ -62,10 +63,10 @@ public class EditTaskController extends AbstractController implements Initializa
     LocalDate start,oldStart,end,oldEnd;
     private Callback<DatePicker, DateCell> dayCellFactory;
     
-    public EditTaskController(ModelAccess modelAccess) {
-        super(modelAccess);
+    public EditTaskController(ModelAccess modelAccess, TimelineViewer timelineViewer)
+    {
+        super(modelAccess, timelineViewer);
     }
-    
     
     
     public void editTask(ActionEvent e){
@@ -81,7 +82,8 @@ public class EditTaskController extends AbstractController implements Initializa
             Task temp=new Task(title, desc, start, end);
              getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList.remove(indexOfTask);
              getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList.add(temp);
-             
+    
+            timelineViewer.update(getModelAccess().timelineModel);
              /*
             getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList.get(indexOfTask).setTitle(title);
             getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList.get(indexOfTask).setDescription(desc);
@@ -148,8 +150,9 @@ public class EditTaskController extends AbstractController implements Initializa
             alert.showAndWait();
         
         }
+        timelineViewer.update(getModelAccess().timelineModel);
     }
-
+    
     @Override
     public void initialize(URL location, ResourceBundle resources) {
        
@@ -171,7 +174,8 @@ public class EditTaskController extends AbstractController implements Initializa
             
             titleField.setText(task.getTitle());
             descriptionField.setText(task.getDescription());
-            
+            startDate.setValue(task.getStartTime());
+            endDate.setValue(task.getEndTime());
             
             dayCellFactory = new Callback<DatePicker, DateCell>() {
         	public DateCell call(final DatePicker datePicker) {
@@ -191,26 +195,11 @@ public class EditTaskController extends AbstractController implements Initializa
 		endDate.setDayCellFactory(dayCellFactory);
         
         }
-        
-         
-            
-        
     }
-    
-    
     
     public void cancelTask(){
     	Stage stage = (Stage) cancelButton.getScene().getWindow();
     	stage.close();
     }
-    
-    
-    
-    
-    
-            
-    
-   
-    
     
 }
