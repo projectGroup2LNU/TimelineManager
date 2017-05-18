@@ -123,6 +123,14 @@ public class TimelineViewer
             {
                 int indexOfTimeline = modelAccess.timelineModel.timelineList.indexOf(modelAccess.getSelectedTimeline());
                 modelAccess.timelineModel.timelineList.remove(indexOfTimeline);
+                if(modelAccess.timelineModel.timelineList.isEmpty())   // makes selected timeline to null if there is no timelines
+                {                                                       // after delete
+                    modelAccess.setSelectedTimeline(null);
+                }
+                else                                                    // else change selected timeline to highest index of timelineList
+                {
+                    modelAccess.setSelectedTimeline(modelAccess.timelineModel.timelineList.get(modelAccess.timelineModel.timelineList.size()-1));
+                }
                 update(tm);
             }
         });
