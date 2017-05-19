@@ -52,6 +52,7 @@ public class EditTaskController extends AbstractController implements Initializa
     @FXML
     private JFXButton cancelButton;
     
+    private boolean isTestMode = false; // Used for JUnit tests
     
     int indexOfTimeline,indexOfTask;
   
@@ -75,9 +76,9 @@ public class EditTaskController extends AbstractController implements Initializa
         start=startDate.getValue();
         end=endDate.getValue();
         indexOfTimeline=getModelAccess().timelineModel.timelineList.indexOf(tm);
-          
-    
-        if(!title.isEmpty() && start!=null && end!=null && (end.isAfter(start) || end.isEqual(start)) && ((tm.getStartTime().isBefore(start) ||tm.getStartTime().isEqual(start)) && (tm.getEndTime().isAfter(end) || tm.getEndTime().isEqual(end) )) ){
+
+        try {
+    		errorCheck(); // Throws exception if there's any invalid or missing information
             
             Task temp=new Task(title, desc, start, end);
              getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList.remove(indexOfTask);
@@ -91,72 +92,35 @@ public class EditTaskController extends AbstractController implements Initializa
             getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList.get(indexOfTask).setEndTime(end);
                */
 
-          
-          
-          
+        	// If check is needed for JUnit tests
+    		if(!isTestMode) {
+    			// Window closes itself after user clicks the Save button
+    			final Node source = (Node) e.getSource();
+    			final Stage stage = (Stage) source.getScene().getWindow();
+    			stage.close();
+    		}
             
-            
-            // If check is needed for JUnit tests
-           
-	            //It closes itself after user clicked Save button
-	            final Node source = (Node) e.getSource();
-	            final Stage stage = (Stage) source.getScene().getWindow();
-	            stage.close();
-            
-        }
-	    
-	else if (title.isEmpty()){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Warning ");
-            alert.setHeaderText("Please select a title");
-            alert.initModality(Modality.APPLICATION_MODAL);
-            alert.showAndWait();
-        
-        }
-        
-        else if (start==null){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Warning ");
-            alert.setHeaderText("Please select start date ");
-            alert.initModality(Modality.APPLICATION_MODAL);
-            alert.showAndWait();
-        
-        }
-        
-        else if (end==null){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Warning ");
-            alert.setHeaderText("Please select end date ");
-            alert.initModality(Modality.APPLICATION_MODAL);
-            alert.showAndWait();
-        
-        }
-        
-        else if (!(end.isAfter(start)|| end.isEqual(start))){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Warning ");
-            alert.setHeaderText("End date cannot be before start date ");
-            alert.initModality(Modality.APPLICATION_MODAL);
-            alert.showAndWait();
-        
-        }
-	    
-        else{
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Warning ");
-            alert.setHeaderText("Invalid or missing value");
-            alert.setContentText("Please fill all areas!!\nStart date should be before end date");
-            alert.initModality(Modality.APPLICATION_MODAL);
-            alert.showAndWait();
-        
-        }
+        } catch (RuntimeException exception) {
+    		if(!isTestMode) {
+    			Alert alert = new Alert(Alert.AlertType.WARNING);
+    			alert.setTitle("Warning ");
+    			alert.setHeaderText(exception.getMessage());
+    			alert.initModality(Modality.APPLICATION_MODAL);
+    			alert.showAndWait();
+    		} else {
+    			throw exception;
+    		}
+    	}
         timelineViewer.update(getModelAccess().timelineModel);
+    }
+    
+    public void cancelTask(){
+    	Stage stage = (Stage) cancelButton.getScene().getWindow();
+    	stage.close();
     }
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-       
-        
         indexOfTask=tm.taskList.indexOf(task);
         
         if(indexOfTask<0){
@@ -193,13 +157,54 @@ public class EditTaskController extends AbstractController implements Initializa
         	
 	 	startDate.setDayCellFactory(dayCellFactory);
 		endDate.setDayCellFactory(dayCellFactory);
-        
         }
     }
     
-    public void cancelTask(){
-    	Stage stage = (Stage) cancelButton.getScene().getWindow();
-    	stage.close();
+    // Setters
+    public void setTitle(String title) {
+        titleField.setText(title);
     }
     
+    public void setStartDate(LocalDate startDate) {
+        this.startDate.setValue(startDate);
+    }
+    
+    public void setEndDate(LocalDate endDate) {
+        this.endDate.setValue(endDate);
+    }
+    
+    public void setDescription(String description) {
+        descriptionField.setText(description);
+    }
+    
+    public void setTestMode(boolean isTestMode){
+    	this.isTestMode = isTestMode;
+    }
+    
+    // Private methods
+    // Checks for any invalid or missing information and throws and exception if found
+    private void errorCheck() {
+    	boolean errorFound = true;
+    	String errorMessage = "";
+
+    	if(title.trim().isEmpty()){
+    		errorMessage = "Please select a title";
+    	} else if(start == null){
+    		errorMessage = "Please select start date";
+    	} else if(end == null) {
+    		errorMessage = "Please select end date";
+    	} else if(end.isBefore(start)) {
+    		errorMessage = "End date cannot be before start date";
+    	} else if(end.isAfter(getModelAccess().getSelectedTimeline().getEndTime())) {
+    		errorMessage = "Task end date cannot be after timeline end date";
+    	} else if(start.isBefore(getModelAccess().getSelectedTimeline().getStartTime())) {
+    		errorMessage = "Task start date cannot be before timeline start date";
+    	} else {
+    		errorFound = false;
+    	}
+
+    	if(errorFound) {
+    		throw new RuntimeException(errorMessage);
+    	}
+    }  
 }
