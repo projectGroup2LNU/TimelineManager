@@ -79,7 +79,7 @@ public class AddTaskController extends AbstractController implements Initializab
         
         // Tries to add the Task to the selected timeline
         try {
-        	errorCheck(); // Throws exception if there's any invalid or missing information
+        	errorChecking(); // Throws exception if there's any invalid or missing information
         	
         	Task task = new Task(title, desc, start, end);
         	getModelAccess().getSelectedTimeline().addTask(task);
@@ -105,7 +105,7 @@ public class AddTaskController extends AbstractController implements Initializab
                 stage.close();
             } 
         } catch (RuntimeException exception) {
-        	if(!isTestMode) {
+        	/*if(!isTestMode) {
         		Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Warning ");
                 alert.setHeaderText(exception.getMessage());
@@ -115,7 +115,21 @@ public class AddTaskController extends AbstractController implements Initializab
         	    exception.printStackTrace();
         		throw exception;
         	}
-        }
+        }*/
+		if(!isTestMode) {
+        		if (title.isEmpty())
+        			titleField.setTooltip(new Tooltip("Please insert title"));
+        		else if (start==null)
+        			startDate.setTooltip(new Tooltip("Select start date"));
+        		else if (end==null)
+        			endDate.setTooltip(new Tooltip("Select end date"));
+        		else if (end.isBefore(start))
+        			endDate.setTooltip(new Tooltip("End date cannot be before start date"));
+        	}
+        	else 
+			throw exception;
+        	 
+        	
     }
     
     public void cancelTask(){
@@ -169,7 +183,7 @@ public class AddTaskController extends AbstractController implements Initializab
 	
     // Private methods
 	// Checks for any invalid or missing information and throws and exception if found
-    private void errorCheck() {
+  /*  private void errorCheck() {
     	boolean errorFound = true;
     	String errorMessage = "";
 
@@ -192,5 +206,20 @@ public class AddTaskController extends AbstractController implements Initializab
     	if(errorFound) {
     		throw new RuntimeException(errorMessage);
     	}
+    }	*/
+    private void errorChecking() {
+    	boolean errorFound = true;
+    	
+    	if(title.trim().isEmpty())
+    			titleField.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
+    		else if (start==null)
+    			startDate.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
+    		else if (end==null || end.isBefore(start))
+    			endDate.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
+    		else 
+        		errorFound = false;
+
+    	if(errorFound) 
+    		throw new RuntimeException();
     }
 }
