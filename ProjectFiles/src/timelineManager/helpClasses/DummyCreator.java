@@ -39,13 +39,9 @@ public class DummyCreator
                 date = date.plusDays(j);
                 task.setStartTime(tm.getStartTime().plusDays(j));
                 task.setEndTime(task.getStartTime().plusDays(3));
-                
-               // tm.setTaskColor(task);
                 tm.taskList.add(task);
                 tm.setTaskColor(task);
             }
         }
-       // Timeline temp = new Timeline("Test","Description", LocalDate.of(2017,5,10), LocalDate.of(2017,5,17));
-      //  acess.timelineModel.addTimelineToList(temp);
     }
 }

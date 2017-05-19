@@ -83,7 +83,6 @@ public class AddTimelineController extends AbstractController{
                 alert.initModality(Modality.APPLICATION_MODAL);
                 alert.showAndWait();
         	} else {
-        	    exception.printStackTrace();
         		throw exception;
         	}
         }

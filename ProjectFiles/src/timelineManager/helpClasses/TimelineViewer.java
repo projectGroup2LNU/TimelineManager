@@ -1,6 +1,5 @@
 package timelineManager.helpClasses;
 
-import javafx.collections.ListChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -13,10 +12,8 @@ import timelineManager.controller.ModelAccess;
 import timelineManager.model.Task;
 import timelineManager.model.Timeline;
 import timelineManager.model.TimelineModel;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
-
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -40,7 +37,7 @@ public class TimelineViewer
     private LocalDate endDate;
     ArrayList<TimelineRectangle> timelineList = new ArrayList<>();
     ArrayList<TaskRectangle> taskList = new ArrayList<>();
-    TimelineModel tm;
+    TimelineModel timelineModel;
     LocalDate currentDate;
     ContextMenu contextMenuTimeline = new ContextMenu();
     ContextMenu contextMenuTask = new ContextMenu();
@@ -65,17 +62,17 @@ public class TimelineViewer
      * Initializes the timeline, this need to be run before using the class,
      * but the calling class Abstract controller doesn't reach all inputs so it needs to be called by developer
      *
-     * @param currentDate
-     * @param inGrid
-     * @param inputModelAccess
-     * @param allTimelines
-     * @param selectedTimeline
+     * @param currentDate LocalDate of the date to be displayed
+     * @param inGrid The grid that the Timelines/Tasks should be printed on
+     * @param inputModelAccess modelacess to reach the timelineModel which reaches the timelines and tasks
+     * @param allTimelines RadioButton from mainWindow that makes all timelines visible
+     * @param selectedTimeline RadioButton from mainWindow that only shows selected timeline
      */
     public void timelineViewerInitialize(LocalDate currentDate, GridPane inGrid, ModelAccess inputModelAccess, RadioButton allTimelines, RadioButton selectedTimeline)
     {
         viewFactory = ViewFactory.defaultFactory;
         modelAccess = inputModelAccess;
-        tm = inputModelAccess.timelineModel;
+        timelineModel = inputModelAccess.timelineModel;
         grid = inGrid;
         grid.setVgap(5);
         
@@ -96,9 +93,7 @@ public class TimelineViewer
         startDate = currentDate.minusDays(4);
         endDate = currentDate.plusDays(12);
         
-        
-        //timelineListener();
-        
+        // EventHandler for edit a Timeline
         editTimeline.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override
@@ -115,23 +110,32 @@ public class TimelineViewer
             }
         });
         
+        // EvenHandler for deleting a timeline
         deleteTimeline.setOnAction(new EventHandler<ActionEvent>()
         {
-            
             @Override
             public void handle(ActionEvent event)
             {
                 int indexOfTimeline = modelAccess.timelineModel.timelineList.indexOf(modelAccess.getSelectedTimeline());
                 modelAccess.timelineModel.timelineList.remove(indexOfTimeline);
-                update(tm);
+                if(modelAccess.timelineModel.timelineList.isEmpty())   // makes selected timeline to null if there is no timelines
+                {                                                       // after delete
+                    modelAccess.setSelectedTimeline(null);
+                }
+                else                                                    // else change selected timeline to highest index of timelineList
+                {
+                    modelAccess.setSelectedTimeline(modelAccess.timelineModel.timelineList.get(modelAccess.timelineModel.timelineList.size()-1));
+                }
+                update(timelineModel);
             }
         });
         
-        contextMenuTimeline.getItems().addAll(editTimeline, deleteTimeline);
+        contextMenuTimeline.getItems().addAll(editTimeline, deleteTimeline); // makes a menu when rightclicking a TimelineRectangle
         
+        
+        // EventHandler for edit a task
         editTask.setOnAction(new EventHandler<ActionEvent>()
         {
-            
             @Override
             public void handle(ActionEvent event)
             {
@@ -146,21 +150,23 @@ public class TimelineViewer
             }
         });
         
+        // EventHandler for deleting a task
         deleteTask.setOnAction(new EventHandler<ActionEvent>()
         {
-            
             @Override
             public void handle(ActionEvent event)
             {
                 int indexOfTimeline = modelAccess.timelineModel.timelineList.indexOf(modelAccess.getSelectedTimeline());
                 modelAccess.timelineModel.timelineList.get(indexOfTimeline).taskList.remove(modelAccess.getSelectedTask());
-                update(tm);
+                update(timelineModel);
             }
         });
         
-        contextMenuTask.getItems().addAll(editTask, deleteTask);
-        update(currentDate, modelAccess.timelineModel);
+        contextMenuTask.getItems().addAll(editTask, deleteTask);  // makes a menu when rightclicking a TaskRectangle
         
+        update(currentDate, modelAccess.timelineModel);  // updates the screen at startup
+        
+        // listeners that update the views if radiobuttons in MainWindow side pane is clicked.
         refRadioAllTimelines.setOnAction(event ->
         {
             update(modelAccess.timelineModel);
@@ -176,14 +182,16 @@ public class TimelineViewer
     {
         update(currentDate,inputModel);
     }
+    
     /**
      * This function updates the screen by recalculate all positions for dates and rectangles and
      * draw them to their grids.
+     * If DateViewer is used as top grid this also has to be called seperately to get the right dates for the view.
      */
     public void update(LocalDate inputDate, TimelineModel inputModel)
     {
         currentDate = inputDate;
-        tm = inputModel;
+        timelineModel = inputModel;
         grid.getChildren().removeAll(timelineList);
         grid.getChildren().removeAll(taskList);
         hPos = 1;
@@ -220,10 +228,11 @@ public class TimelineViewer
                 timelineTooltip.setMaxWidth(400);
                 timelineTooltip.setText(tooltipTimelineString);
                 
+                // Tooltip is used when hovering a timeline rectangle to show info
                 Tooltip.install(
                         timelineRectangle, timelineTooltip);
                 
-                // (timeline streches outside the view
+                // if timeline streches outside the view in the left side
                 if(timelineRectangle.getTimeline().getStartTime().compareTo(startDate) < 0)
                 {
                     timelineStart = startDate;
@@ -231,6 +240,7 @@ public class TimelineViewer
                     Rectangle startRect = new Rectangle(5,10);
                     startRect.setFill(timelineRectangle.getRectangle().getFill());
                     timelineRectangle.getChildren().add(startRect);
+                    
                     Line topLine = new Line();
                     topLine.setStartX(0);
                     topLine.setStartY(0);
@@ -246,32 +256,28 @@ public class TimelineViewer
                     timelineRectangle.getChildren().add(topLine);
                     timelineRectangle.getChildren().add(bottomLine);
                     
-                    //timelineRectangle.setAlignment(topLine,Pos.TOP_LEFT);
-                    //timelineRectangle.setAlignment(bottomLine, Pos.TOP_CENTER);
-                    //bottomLine.setLayoutY(20);
-                    
                     if(!timeline.equals(modelAccess.getSelectedTimeline()))
                     {
                         topLine.setStroke(timelineRectangle.getRectangle().getStroke());
                         bottomLine.setStroke(timelineRectangle.getRectangle().getStroke());
                     }
-                    
-                  //  timelineRectangle.setAlignment(startRect,Pos.TOP_LEFT);
-                    
                 }
                 else
                 {
                     timelineStart = timelineRectangle.getTimeline().getStartTime();
                 }
                 
+                // if timeline streches outside the view in the right side
                 if(timelineRectangle.getTimeline().getEndTime().compareTo(endDate) > 0)
                 {
                     timelineEnd = endDate;
                     timelineRectangle.setRightCutoff(true);
-                } else
+                }
+                else
                 {
                     timelineEnd = timelineRectangle.getTimeline().getEndTime();
                 }
+                
                 int timelineDuration = timelineStart.until(timelineEnd).getDays() + 1;
                 timelineRectangle.getRectangle().setWidth(timelineDuration * DAY_PIXEL_SIZE);
                 timelineRectangle.getText().setMaxWidth(timelineRectangle.getRectangle().getWidth()- 10);
@@ -280,14 +286,14 @@ public class TimelineViewer
                 timelineRectangle.setTopAnchor(timelineRectangle.getText(), -1.0);
                 timelineRectangle.setLeftAnchor(timelineRectangle.getText(), 0.0);
                 timelineRectangle.setRightAnchor(timelineRectangle.getText(), 0.0);
-            //    timelineRectangle.setAlignment(timelineRectangle.getText(), Pos.TOP_CENTER);
                 
-                if(timeline == modelAccess.getSelectedTimeline())
+                if(timeline == modelAccess.getSelectedTimeline())  // if timeline is selected it should have a black stroke
                 {
                     timelineRectangle.getRectangle().setStroke(Color.rgb(0,0,0));
                 }
                 timelineList.add(timelineRectangle);
                 
+                // adds the popup menu when rightclick the TimelineRectangle
                 timelineRectangle.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
                     
                     @Override
@@ -297,6 +303,7 @@ public class TimelineViewer
                     }
                 });
                 
+                // sets that if a timeline is clicked it will be the main timeline
                 timelineRectangle.setOnMouseClicked(event ->
                 {
                     modelAccess.setSelectedTimeline(timeline);
@@ -311,17 +318,23 @@ public class TimelineViewer
                     LocalDate taskStart = null;
                     LocalDate taskEnd = null;
                     TaskRectangle taskRectangle = new TaskRectangle(task);
+                    
+                    // Task is cutoff at left side  (starts earlier than the view shows)
                     if(taskRectangle.getTask().getStartTime().compareTo(startDate) < 0)
                     {
                         taskStart = startDate;
                         taskRectangle.setLeftCutoff(true);
+                        Rectangle taskStartRect = new Rectangle(5,20);
+                        taskStartRect.setFill(taskRectangle.getRectangle().getFill());
+                        taskRectangle.getChildren().add(taskStartRect);
+                        taskRectangle.setAlignment(taskStartRect, Pos.TOP_LEFT);
                     }
                     else
                     {
                         taskStart = taskRectangle.getTask().getStartTime();
-                        
                     }
                     
+                    // Task is cutoff at right side
                     if(taskRectangle.getTask().getEndTime().compareTo(endDate) > 0)
                     {
                         taskEnd = endDate;
@@ -331,14 +344,14 @@ public class TimelineViewer
                     {
                         taskEnd = taskRectangle.getTask().getEndTime();
                     }
+                    
                     int taskDuration = taskStart.until(taskEnd).getDays() + 1;
                     taskRectangle.getRectangle().setWidth(taskDuration * DAY_PIXEL_SIZE);
                     taskRectangle.getText().setMaxWidth(taskRectangle.getRectangle().getWidth()- 10);
                     
-                    if(task.getStartTime().equals(task.getEndTime()))  // makes a non duration task
+                    if(task.getStartTime().equals(task.getEndTime()))  // makes a non-duration task which looks different
                     {
                         taskRectangle.getRectangle().setWidth(20);
-                        
                         taskRectangle.getRectangle().setRotate(45);
                         taskRectangle.getText().setVisible(false);
                     }
@@ -349,6 +362,7 @@ public class TimelineViewer
                     
                     taskList.add(taskRectangle);
                     
+                    // tooltips make taskrectangle open info pop-up if hovered over with the mouse pointer
                     final Tooltip taskTooltip = new Tooltip();
                     taskTooltip.setFont(new Font(11));
                     taskTooltip.setMaxWidth(400);
@@ -356,11 +370,14 @@ public class TimelineViewer
                     taskTooltip.setWrapText(true);
                     Tooltip.install(
                             taskRectangle, taskTooltip);
+                    
+                    // nothing visually happens when selecting a task, but it's used when edit/delete task
                     taskRectangle.setOnMouseClicked(event ->
                     {
                         modelAccess.setSelectedTask(task);
-                        
                     });
+                    
+                    // adds the TaskRectangle to grid and adds one to horizontal position
                     grid.add(taskRectangle, startDate.until(taskStart).getDays(), hPos++, taskDuration, 1);
                     
                     taskRectangle.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
@@ -378,13 +395,6 @@ public class TimelineViewer
             Rectangle filler = new Rectangle(DAY_PIXEL_SIZE,20);
             filler.setOpacity(0);
             grid.add(filler,0,hPos);
-            
-            // adds a listener for task list in each timeline
-     /*   for(Timeline timeline : modelAccess.getTimelineModel().timelineList)
-            timeline.taskList.addListener((ListChangeListener)( c -> {
-                update(currentDate, modelAccess.timelineModel);
-            }));
-            */
         }
     }
 }
