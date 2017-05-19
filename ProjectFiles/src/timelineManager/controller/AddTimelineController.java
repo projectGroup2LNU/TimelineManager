@@ -12,6 +12,7 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Tooltip;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import timelineManager.helpClasses.TimelineViewer;
@@ -84,7 +85,8 @@ public class AddTimelineController extends AbstractController{
 	            final Stage stage = (Stage) saveButton.getScene().getWindow();
 	            stage.close();
             }
-        } catch (RuntimeException exception) {
+        } catch (RuntimeException exception)
+        {
         	/*if(!isTestMode) {
         		Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Warning ");
@@ -95,19 +97,20 @@ public class AddTimelineController extends AbstractController{
         		throw exception;
         	}
         }*/
-		
-	    if(!isTestMode) {
-        		if (title.isEmpty())
-        			titleField.setTooltip(new Tooltip("Please insert title"));
-        		else if (start==null)
-        			startDate.setTooltip(new Tooltip("Select start date"));
-        		else if (end==null)
-        			endDate.setTooltip(new Tooltip("Select end date"));
-        		else if (end.isBefore(start))
-        			endDate.setTooltip(new Tooltip("End date cannot be before start date"));
-        	}
-        	else 
-        		throw exception;
+    
+            if(!isTestMode)
+            {
+                if(title.isEmpty())
+                    titleField.setTooltip(new Tooltip("Please insert title"));
+                else if(start == null)
+                    startDate.setTooltip(new Tooltip("Select start date"));
+                else if(end == null)
+                    endDate.setTooltip(new Tooltip("Select end date"));
+                else if(end.isBefore(start))
+                    endDate.setTooltip(new Tooltip("End date cannot be before start date"));
+            } else
+                throw exception;
+        }
     }
     
     public void cancelTimeline(){
@@ -159,7 +162,7 @@ public class AddTimelineController extends AbstractController{
     		throw new RuntimeException(errorMessage);
     	}
     } */
-    private void errorChecking() {
+    private void errorCheck() {
     	boolean errorFound = true;
     	
     	if(title.trim().isEmpty())

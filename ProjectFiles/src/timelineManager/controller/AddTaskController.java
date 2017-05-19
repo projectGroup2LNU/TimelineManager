@@ -18,6 +18,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Tooltip;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -79,7 +80,7 @@ public class AddTaskController extends AbstractController implements Initializab
         
         // Tries to add the Task to the selected timeline
         try {
-        	errorChecking(); // Throws exception if there's any invalid or missing information
+        	errorCheck(); // Throws exception if there's any invalid or missing information
         	
         	Task task = new Task(title, desc, start, end);
         	getModelAccess().getSelectedTimeline().addTask(task);
@@ -104,7 +105,8 @@ public class AddTaskController extends AbstractController implements Initializab
                 final Stage stage = (Stage) source.getScene().getWindow();
                 stage.close();
             } 
-        } catch (RuntimeException exception) {
+        }
+        catch (RuntimeException exception) {
         	/*if(!isTestMode) {
         		Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Warning ");
@@ -115,19 +117,21 @@ public class AddTaskController extends AbstractController implements Initializab
         	    exception.printStackTrace();
         		throw exception;
         	}
-        }*/
-		if(!isTestMode) {
-        		if (title.isEmpty())
-        			titleField.setTooltip(new Tooltip("Please insert title"));
-        		else if (start==null)
-        			startDate.setTooltip(new Tooltip("Select start date"));
-        		else if (end==null)
-        			endDate.setTooltip(new Tooltip("Select end date"));
-        		else if (end.isBefore(start))
-        			endDate.setTooltip(new Tooltip("End date cannot be before start date"));
-        	}
-        	else 
-			throw exception;
+        	*/
+        }
+		if(!isTestMode)
+        {
+            if(title.isEmpty())
+                titleField.setTooltip(new Tooltip("Please insert title"));
+            else if(start == null)
+                startDate.setTooltip(new Tooltip("Select start date"));
+            else if(end == null)
+                endDate.setTooltip(new Tooltip("Select end date"));
+            else if(end.isBefore(start))
+                endDate.setTooltip(new Tooltip("End date cannot be before start date"));
+        }
+        	else
+			throw new RuntimeException("Something went wrong");
         	 
         	
     }
@@ -207,7 +211,7 @@ public class AddTaskController extends AbstractController implements Initializab
     		throw new RuntimeException(errorMessage);
     	}
     }	*/
-    private void errorChecking() {
+    private void errorCheck() {
     	boolean errorFound = true;
     	
     	if(title.trim().isEmpty())
