@@ -6,6 +6,7 @@ import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
@@ -70,7 +71,7 @@ public class AddTaskController extends AbstractController implements Initializab
      * what timeline to assign it to.
      * @param e an ActionEvent
      */
-    public void addTheTask(ActionEvent e){
+    public void addTheTask(ActionEvent e) throws ClassNotFoundException, SQLException, Exception{
         title = titleField.getText();
         desc = descriptionField.getText();
         start = startDate.getValue();
@@ -82,7 +83,20 @@ public class AddTaskController extends AbstractController implements Initializab
         	
         	Task task = new Task(title, desc, start, end);
         	getModelAccess().getSelectedTimeline().addTask(task);
+                
+                 getModelAccess().database.connectToDatabase();
+                int id=(int) getModelAccess().getSelectedTimeline().getId();
+                int tasksId=(int) task.getId();
+                getModelAccess().database.addTask(tasksId, title, desc, start.toString(), end.toString(), id);
+                
+                // Closes the connection
+                getModelAccess().database.getConnection().close();
+                
         	super.timelineViewer.update(super.getModelAccess().timelineModel);
+                
+                
+                
+                
         	// If check is needed for JUnit tests
             if(!isTestMode) {
                 // Window closes itself after user clicks the Save button

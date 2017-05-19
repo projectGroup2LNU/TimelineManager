@@ -16,6 +16,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 public class TUTimeline01_AddTimelineJUnitTest {
@@ -45,7 +46,7 @@ public class TUTimeline01_AddTimelineJUnitTest {
 	}
 	
 	@Test
-	public void testTimelines() {
+	public void testTimelines() throws Exception {
 		addTimelines(1);
 		
 		// Tests only one timeline
@@ -84,7 +85,7 @@ public class TUTimeline01_AddTimelineJUnitTest {
 	}
 	
 	@Test
-	public void testExceptions() {
+	public void testExceptions() throws SQLException, Exception {
 		// Tests empty title
 		try {
 			controller.setTitle("");
@@ -132,7 +133,7 @@ public class TUTimeline01_AddTimelineJUnitTest {
 	}
 	
 	// Adds new timelines to the ArrayList
-	private void addTimelines(int amount) {
+	private void addTimelines(int amount) throws SQLException, Exception {
 		int startNumber = timelines.size();
 		
 		for(int i = startNumber; i < amount + startNumber; i++) {

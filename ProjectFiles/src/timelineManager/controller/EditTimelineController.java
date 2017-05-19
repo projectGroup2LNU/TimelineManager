@@ -10,6 +10,7 @@ import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -57,11 +58,11 @@ public class EditTimelineController extends AbstractController implements Initia
     @FXML
     private JFXButton cancelButton;
     
+    private boolean isTestMode = false; // Used for JUnit tests
     
-    int indexOfTimeline;
-    Timeline tm;
+    int indexOfTimeline,oldId;
+    
     String title,desc;
-    
     
     LocalDate start,oldStart,end,oldEnd;
 
@@ -69,236 +70,189 @@ public class EditTimelineController extends AbstractController implements Initia
         super(modelAccess, timelineViewer);
     }
     
-
-    
-    
-    
-    public void editTimeline(ActionEvent e){
-        title=titleField.getText();
-        desc=descriptionField.getText();
-        start=startDate.getValue();
-        end=endDate.getValue();
-        boolean isInBoundries=true;
-        boolean isDurationTheSame=false;
-        boolean isCut=false;
+    public void editTimeline(ActionEvent e) throws SQLException, Exception{
+        title = titleField.getText();
+        desc = descriptionField.getText();
+        start = startDate.getValue();
+        end = endDate.getValue();
       
-        ObservableList<Task> newTaskList;
-        
-        if(!title.isEmpty() && start!=null && end!=null &&(end.isAfter(start)|| end.isEqual(start))){
+		// Tries to edit the timeline
+		try {
+			errorCheck(); // Throws exception if there's any invalid or missing information
+			
+			ObservableList<Task> taskList = getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList;;
+			ObservableList<Task> newTaskList = FXCollections.observableArrayList();
            
-            long diffStart= DAYS.between(oldStart, start);
-            long diffEnd= DAYS.between(oldEnd, end);
+            long diffStart =  DAYS.between(oldStart, start);
+            long diffEnd =  DAYS.between(oldEnd, end);
             
-            isInBoundries=true;
-            isDurationTheSame=false;
-            isCut=false;
-            
-            
-            for(int k=0;k<getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList.size();k++){
-                            if(getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList.get(k).getStartTime().isBefore(start)){
-                                isCut=true;
-                            }
-                            if(getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList.get(k).getEndTime().isAfter(end)){
-                                isCut=true;
-                            }
-                        
-                        }
+            boolean isInBoundries = true;
+            boolean isDurationTheSame = false;
+            boolean isCut = false;
             
             
-            if(diffEnd==diffStart){
-                isDurationTheSame=true;
+            for(int k = 0;k<taskList.size();k++){
+            	if(taskList.get(k).getStartTime().isBefore(start)){
+            		isCut = true;
+            	}
+            	if(taskList.get(k).getEndTime().isAfter(end)){
+            		isCut = true;
+            	}
             }
             
-            newTaskList=FXCollections.observableArrayList();
-            
+            if(diffEnd == diffStart){
+                isDurationTheSame = true;
+            }
             
             //Checks for any overlaps
-            for(int i=0;i<getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList.size();i++){
-               if(getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList.get(i).getStartTime().isAfter(end) || getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList.get(i).getEndTime().isBefore(start) ){
-                     isInBoundries=false;
-                     
-                     
-               }else{
-                   
-                   newTaskList.add(getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList.get(i));
-               }
-            
+            for(int i = 0; i < taskList.size(); i++){
+            	if(taskList.get(i).getStartTime().isAfter(end) || taskList.get(i).getEndTime().isBefore(start) ){
+            		isInBoundries = false;
+            	} else {
+            		newTaskList.add(taskList.get(i));
+            	}
             }
-            
-            
-            
-           if(isDurationTheSame==true || getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList.isEmpty()){
-           for(int j=0;j<getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList.size();j++){
-                    LocalDate newStartforTask=getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList.get(j).getStartTime().plus(diffStart, DAYS);
-                    getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList.get(j).setStartTime(newStartforTask);
-                    LocalDate newEndforTask=getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList.get(j).getEndTime().plus(diffEnd, DAYS);
-                    getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList.get(j).setEndTime(newEndforTask);
-            }
-           
-                    Timeline temp=new Timeline(title, desc, start, end);
-                    
-                    temp.taskList=getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList;
-                    getModelAccess().timelineModel.timelineList.remove(indexOfTimeline);
-                    getModelAccess().timelineModel.timelineList.add(temp);
-                    getModelAccess().setSelectedTimeline(temp);
-           
-           }
-           else if(!isInBoundries){
-               
-                    Alert alert = new Alert(AlertType.CONFIRMATION);
-                    alert.setTitle("Timeline Edit");
-                    alert.setHeaderText("Timeline edit will affect it's tasks.");
-                    alert.setContentText("If you click delete, program will delete the task which completly will be out after your changes. \n If you dont want to loose any task please click cancel and manually edit tasks first!");
-                    ButtonType DELETE = new ButtonType("Delete");
-                    ButtonType CANCEL = new ButtonType("Cancel");
-                    alert.getButtonTypes().setAll(DELETE,CANCEL);
-                     
-                    Optional<ButtonType> result = alert.showAndWait();
 
-                    if (result.get() == DELETE){
-                        getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList=newTaskList;
-                        
-                        Timeline temp=new Timeline(title, desc, start, end);
-                    
-                        temp.taskList=getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList;
-                        for(int k=0;k<getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList.size();k++){
-                            if(getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList.get(k).getStartTime().isBefore(start)){
-                                getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList.get(k).setStartTime(start);
-                            }
-                            if(getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList.get(k).getEndTime().isAfter(end)){
-                                getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList.get(k).setEndTime(end);
-                            }
-                        
-                        }
-                        getModelAccess().setSelectedTimeline(temp);
-                        getModelAccess().timelineModel.timelineList.remove(indexOfTimeline);
-                        
-                        getModelAccess().timelineModel.timelineList.add(temp);
-                        timelineViewer.update(getModelAccess().timelineModel);
-                        
-                        
-                        
-                        
-                        
-                        
-                    } else if (result.get() == CANCEL) {
-    
-                    }
-              
-           }else if(!isCut){
-               
-               getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList=newTaskList;
-                        
-               Timeline temp=new Timeline(title, desc, start, end);
-                    
-               temp.taskList=getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList;
-               getModelAccess().setSelectedTimeline(temp);
-               getModelAccess().timelineModel.timelineList.remove(indexOfTimeline);
-               getModelAccess().timelineModel.timelineList.add(temp);
-    
-               timelineViewer.update(getModelAccess().timelineModel);
-           
-           
-           
-           }
-           
-           else {
-               
-                    Alert alert = new Alert(AlertType.CONFIRMATION);
-                    alert.setTitle("Timeline Edit");
-                    alert.setHeaderText("Timeline edit will affect it's tasks.");
-                    alert.setContentText("Some tasks are partly outside of new dates!\nIf you continue, program will cut off the dates which don't match");
-                    ButtonType EDIT = new ButtonType("Edit Anyway");
-                    ButtonType CANCEL = new ButtonType("Cancel");
-                    alert.getButtonTypes().setAll(EDIT,CANCEL);
-                     
-                    Optional<ButtonType> result = alert.showAndWait();
-                    
-                    if(result.get()==EDIT){
-                    
-                        
-                        getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList=newTaskList;
-                        
-                        Timeline temp=new Timeline(title, desc, start, end);
-                        temp.taskList=getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList;
-                        for(int k=0;k<temp.taskList.size();k++){
-                            if(temp.taskList.get(k).getStartTime().isBefore(start)){
-                                temp.taskList.get(k).setStartTime(start);
-                            }
-                            if(temp.taskList.get(k).getEndTime().isAfter(end)){
-                                temp.taskList.get(k).setEndTime(end);
-                            }
-                        
-                        }
-    
-                        getModelAccess().setSelectedTimeline(temp);
-                        getModelAccess().timelineModel.timelineList.remove(indexOfTimeline);
-                        getModelAccess().timelineModel.timelineList.add(temp);
-                        timelineViewer.update(getModelAccess().timelineModel);
-                    }
-               
-               
-               
-                  }
-                     // If check is needed for JUnit tests
-           
-	            //It closes itself after user clicked Save button
-	            final Node source = (Node) e.getSource();
-	            final Stage stage = (Stage) source.getScene().getWindow();
-	            stage.close();
+            if(isDurationTheSame == true || taskList.isEmpty()){
+            	for(int i = 0; i < taskList.size(); i++){
+            		LocalDate newStartforTask = taskList.get(i).getStartTime().plus(diffStart, DAYS);
+            		taskList.get(i).setStartTime(newStartforTask);
+            		LocalDate newEndforTask = taskList.get(i).getEndTime().plus(diffEnd, DAYS);
+            		taskList.get(i).setEndTime(newEndforTask);
+            	}
+
+            	Timeline temp = new Timeline(title, desc, start, end);
+
+            	temp.taskList = taskList;
+            	getModelAccess().timelineModel.timelineList.remove(indexOfTimeline);
+            	getModelAccess().timelineModel.timelineList.add(temp);
+            	
+                  editTimelinewithTasksInDB(temp,oldId);
+
+            } else if(!isInBoundries){
+            	
+            	Alert alert = new Alert(AlertType.CONFIRMATION);
+            	alert.setTitle("Timeline Edit");
+            	alert.setHeaderText("Timeline edit will affect it's tasks.");
+            	alert.setContentText("If you click delete, program will delete the task which completly will be out after your changes. \n If you dont want to loose any task please click cancel and manually edit tasks first!");
+            	ButtonType DELETE = new ButtonType("Delete");
+            	ButtonType CANCEL = new ButtonType("Cancel");
+            	alert.getButtonTypes().setAll(DELETE,CANCEL);
+
+            	Optional<ButtonType> result = alert.showAndWait();
+
+            	if (result.get() == DELETE){
+            		taskList = newTaskList;
+
+            		Timeline temp = new Timeline(title, desc, start, end);
+            		temp.taskList = taskList;
+            		
+            		for(int i = 0; i < taskList.size(); i++){
+            			if(taskList.get(i).getStartTime().isBefore(start)){
+            				taskList.get(i).setStartTime(start);
+            			}
+            			if(taskList.get(i).getEndTime().isAfter(end)){
+            				taskList.get(i).setEndTime(end);
+            			}
+
+            		}
+            		
+            		getModelAccess().timelineModel.timelineList.remove(indexOfTimeline);
+
+            		getModelAccess().timelineModel.timelineList.add(temp);
+                        editTimelinewithTasksInDB(temp,oldId);
+            		timelineViewer.update(getModelAccess().timelineModel);
+                          
+
+            	} else if (result.get() == CANCEL) {
+            	}
+
+            } else if(!isCut){
+
+            	taskList = newTaskList;
+            	Timeline temp = new Timeline(title, desc, start, end);
+            	temp.taskList = taskList;
+            	
             
-        }
-	    
-        else if (title.isEmpty()){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Warning ");
-            alert.setHeaderText("Please select a title");
-            alert.initModality(Modality.APPLICATION_MODAL);
-            alert.showAndWait();
-        
-        }
-        
-        else if (start==null){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Warning ");
-            alert.setHeaderText("Please select start date ");
-            alert.initModality(Modality.APPLICATION_MODAL);
-            alert.showAndWait();
-        
-        }
-        
-        else if (end==null){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Warning ");
-            alert.setHeaderText("Please select end date ");
-            alert.initModality(Modality.APPLICATION_MODAL);
-            alert.showAndWait();
-        
-        }
-        
-        else if (!(end.isAfter(start)|| end.isEqual(start))){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Warning ");
-            alert.setHeaderText("End date cannot be before start date ");
-            alert.initModality(Modality.APPLICATION_MODAL);
-            alert.showAndWait();
-        
-        }
-	    
-        else{
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Warning ");
-            alert.setHeaderText("Invalid or missing value");
-            alert.setContentText("Please fill all areas!!\nStart date should be before end date");
-            alert.initModality(Modality.APPLICATION_MODAL);
+            	getModelAccess().timelineModel.timelineList.remove(indexOfTimeline);
+            	getModelAccess().timelineModel.timelineList.add(temp);
+                editTimelinewithTasksInDB(temp,oldId);
+            	timelineViewer.update(getModelAccess().timelineModel);
+            	
+            } else {
+            	Alert alert = new Alert(AlertType.CONFIRMATION);
+            	alert.setTitle("Timeline Edit");
+            	alert.setHeaderText("Timeline edit will affect it's tasks.");
+            	alert.setContentText("Some tasks are partly outside of new dates!\nIf you continue, program will cut off the dates which don't match");
+            	ButtonType EDIT = new ButtonType("Edit Anyway");
+            	ButtonType CANCEL = new ButtonType("Cancel");
+            	alert.getButtonTypes().setAll(EDIT,CANCEL);
+
+            	Optional<ButtonType> result = alert.showAndWait();
+
+            	if(result.get() == EDIT){
+            		taskList = newTaskList;
+            		Timeline temp = new Timeline(title, desc, start, end);
+            		temp.taskList = taskList;
+            		
+            		for(int i = 0; i < temp.taskList.size(); i++){
+            			if(temp.taskList.get(i).getStartTime().isBefore(start)){
+            				temp.taskList.get(i).setStartTime(start);
+            			}
+            			if(temp.taskList.get(i).getEndTime().isAfter(end)){
+            				temp.taskList.get(i).setEndTime(end);
+            			}
+            		}
+
+            	
+            		getModelAccess().timelineModel.timelineList.remove(indexOfTimeline);
+            		getModelAccess().timelineModel.timelineList.add(temp);
+                        editTimelinewithTasksInDB(temp,oldId);
+            		timelineViewer.update(getModelAccess().timelineModel);
+            	}
+            }
+            // If check is needed for JUnit tests
+            if(!isTestMode) {
+            	// // Window closes itself after user clicks the Save button
+                final Node source = (Node) e.getSource();
+                final Stage stage = (Stage) source.getScene().getWindow();
+                stage.close();
+            }
             
-            alert.showAndWait();
-            
-        
-        }
+
+		} catch (RuntimeException exception) {
+			if(!isTestMode) {
+				Alert alert = new Alert(Alert.AlertType.WARNING);
+				alert.setTitle("Warning ");
+				alert.setHeaderText(exception.getMessage());
+				alert.initModality(Modality.APPLICATION_MODAL);
+				alert.showAndWait();
+			} else {
+				throw exception;
+			}
+		} 
+    }
+    
+    public void cancelTimeline(){
+    	Stage stage = (Stage) cancelButton.getScene().getWindow();
+    	stage.close();
+    }
+    
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        getModelAccess().getSelectedTimeline();
+        oldId=(int) getModelAccess().getSelectedTimeline().getId();
+        oldEnd = getModelAccess().getSelectedTimeline().getEndTime();
+        oldStart = getModelAccess().getSelectedTimeline().getStartTime();
+        titleField.setText(getModelAccess().getSelectedTimeline().getTitle());
+        indexOfTimeline = getModelAccess().timelineModel.timelineList.indexOf(getModelAccess().getSelectedTimeline());
+        descriptionField.setText(getModelAccess().getSelectedTimeline().getDescription());
+        startDate.setValue(getModelAccess().getSelectedTimeline().getStartTime());
+        endDate.setValue(getModelAccess().getSelectedTimeline().getEndTime());
         
     }
     
+	 // Setters
     public void setTitle(String title) {
     	titleField.setText(title);
     }
@@ -315,22 +269,55 @@ public class EditTimelineController extends AbstractController implements Initia
     	descriptionField.setText(description);
     }
 	
-    public void cancelTimeline(){
-    	Stage stage = (Stage) cancelButton.getScene().getWindow();
-    	stage.close();
+    public void setTestMode(boolean isTestMode){
+    	this.isTestMode = isTestMode;
     }
+    
+	// Private methods
+	// Checks for any invalid or missing information and throws and exception if found
+	private void errorCheck() {
+		boolean errorFound = true;
+		String errorMessage = "";
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        Timeline tm=getModelAccess().getSelectedTimeline();
-        oldEnd=tm.getEndTime();
-        oldStart=tm.getStartTime();
-        titleField.setText(tm.getTitle());
-        indexOfTimeline=getModelAccess().timelineModel.timelineList.indexOf(tm);
-        descriptionField.setText(tm.getDescription());
-        startDate.setValue(tm.getStartTime());
-        endDate.setValue(tm.getEndTime());
+		if(title.trim().isEmpty()){
+			errorMessage = "Please select a title";
+		} else if(start == null){
+			errorMessage = "Please select start date";
+		} else if(end == null) {
+			errorMessage = "Please select end date";
+		} else if(end.isBefore(start)) {
+			errorMessage = "End date cannot be before start date";
+		} else {
+			errorFound = false;
+		}
+
+		if(errorFound) {
+			throw new RuntimeException(errorMessage);
+		}
+	} 
         
-    }
+        protected void editTimelinewithTasksInDB(Timeline temp,int OldId) throws ClassNotFoundException, SQLException, Exception{
+                    //Connects to Db
+                    getModelAccess().database.connectToDatabase();
+                
+                    getModelAccess().database.deleteTimeLineByID(OldId);
+                    getModelAccess().database.deleteAllTaskByID( OldId);
+                
+                    int newId=(int) temp.getId();
+                    getModelAccess().database.addTimeLine(newId, title, desc, start.toString(), end.toString());
+                    for (int i = 0; i < temp.taskList.size(); i++) {
+                        String Tasktitle=temp.taskList.get(i).getTitle();
+                        String Taskdesc=temp.taskList.get(i).getDescription();
+                        LocalDate Taskstart=temp.taskList.get(i).getStartTime();
+                        LocalDate Taskend=temp.taskList.get(i).getEndTime();
+                        System.out.println(Tasktitle+" "+ Taskdesc);
+                        getModelAccess().database.addTask(newId, Tasktitle, Taskdesc, Taskstart.toString(), Taskend.toString(), newId);
+                    }
+                    
+                    //closes the connection
+                    getModelAccess().database.getConnection().close();
+                    
+    
+}
    
 }
