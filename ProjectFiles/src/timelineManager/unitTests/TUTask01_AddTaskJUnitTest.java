@@ -14,6 +14,7 @@ import timelineManager.controller.AddTaskController;
 import timelineManager.controller.ModelAccess;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 import javafx.embed.swing.JFXPanel;
@@ -48,7 +49,7 @@ public class TUTask01_AddTaskJUnitTest {
 	}
 
 	@Test
-	public void testTasks() {
+	public void testTasks() throws Exception {
 		addTasks(1);
 
 		// Tests only one task
@@ -91,7 +92,7 @@ public class TUTask01_AddTaskJUnitTest {
 	}
 
 	@Test
-	public void testExceptions() {
+	public void testExceptions() throws SQLException, Exception {
 		// Tests empty title
 		try {
 			controller.setTitle("");
@@ -163,7 +164,7 @@ public class TUTask01_AddTaskJUnitTest {
 	}
 
 	// Adds new tasks to the Timeline
-	private void addTasks(int amount) {
+	private void addTasks(int amount) throws SQLException, Exception {
 		int startNumber = tasks.size();
 
 		for(int i = startNumber; i < amount + startNumber; i++) {

@@ -10,6 +10,7 @@ import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -59,8 +60,8 @@ public class EditTimelineController extends AbstractController implements Initia
     
     private boolean isTestMode = false; // Used for JUnit tests
     
-    int indexOfTimeline;
-    Timeline tm;
+    int indexOfTimeline,oldId;
+    
     String title,desc;
     
     LocalDate start,oldStart,end,oldEnd;
@@ -69,7 +70,7 @@ public class EditTimelineController extends AbstractController implements Initia
         super(modelAccess, timelineViewer);
     }
     
-    public void editTimeline(ActionEvent e){
+    public void editTimeline(ActionEvent e) throws SQLException, Exception{
         title = titleField.getText();
         desc = descriptionField.getText();
         start = startDate.getValue();
@@ -125,7 +126,8 @@ public class EditTimelineController extends AbstractController implements Initia
             	temp.taskList = taskList;
             	getModelAccess().timelineModel.timelineList.remove(indexOfTimeline);
             	getModelAccess().timelineModel.timelineList.add(temp);
-            	getModelAccess().setSelectedTimeline(temp);
+            	
+                  editTimelinewithTasksInDB(temp,oldId);
 
             } else if(!isInBoundries){
             	
@@ -154,11 +156,13 @@ public class EditTimelineController extends AbstractController implements Initia
             			}
 
             		}
-            		getModelAccess().setSelectedTimeline(temp);
+            		
             		getModelAccess().timelineModel.timelineList.remove(indexOfTimeline);
 
             		getModelAccess().timelineModel.timelineList.add(temp);
+                        editTimelinewithTasksInDB(temp,oldId);
             		timelineViewer.update(getModelAccess().timelineModel);
+                          
 
             	} else if (result.get() == CANCEL) {
             	}
@@ -169,9 +173,10 @@ public class EditTimelineController extends AbstractController implements Initia
             	Timeline temp = new Timeline(title, desc, start, end);
             	temp.taskList = taskList;
             	
-            	getModelAccess().setSelectedTimeline(temp);
+            
             	getModelAccess().timelineModel.timelineList.remove(indexOfTimeline);
             	getModelAccess().timelineModel.timelineList.add(temp);
+                editTimelinewithTasksInDB(temp,oldId);
             	timelineViewer.update(getModelAccess().timelineModel);
             	
             } else {
@@ -199,9 +204,10 @@ public class EditTimelineController extends AbstractController implements Initia
             			}
             		}
 
-            		getModelAccess().setSelectedTimeline(temp);
+            	
             		getModelAccess().timelineModel.timelineList.remove(indexOfTimeline);
             		getModelAccess().timelineModel.timelineList.add(temp);
+                        editTimelinewithTasksInDB(temp,oldId);
             		timelineViewer.update(getModelAccess().timelineModel);
             	}
             }
@@ -234,14 +240,15 @@ public class EditTimelineController extends AbstractController implements Initia
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Timeline tm = getModelAccess().getSelectedTimeline();
-        oldEnd = tm.getEndTime();
-        oldStart = tm.getStartTime();
-        titleField.setText(tm.getTitle());
-        indexOfTimeline = getModelAccess().timelineModel.timelineList.indexOf(tm);
-        descriptionField.setText(tm.getDescription());
-        startDate.setValue(tm.getStartTime());
-        endDate.setValue(tm.getEndTime());
+        getModelAccess().getSelectedTimeline();
+        oldId=(int) getModelAccess().getSelectedTimeline().getId();
+        oldEnd = getModelAccess().getSelectedTimeline().getEndTime();
+        oldStart = getModelAccess().getSelectedTimeline().getStartTime();
+        titleField.setText(getModelAccess().getSelectedTimeline().getTitle());
+        indexOfTimeline = getModelAccess().timelineModel.timelineList.indexOf(getModelAccess().getSelectedTimeline());
+        descriptionField.setText(getModelAccess().getSelectedTimeline().getDescription());
+        startDate.setValue(getModelAccess().getSelectedTimeline().getStartTime());
+        endDate.setValue(getModelAccess().getSelectedTimeline().getEndTime());
         
     }
     
@@ -288,5 +295,29 @@ public class EditTimelineController extends AbstractController implements Initia
 			throw new RuntimeException(errorMessage);
 		}
 	} 
+        
+        protected void editTimelinewithTasksInDB(Timeline temp,int OldId) throws ClassNotFoundException, SQLException, Exception{
+                    //Connects to Db
+                    getModelAccess().database.connectToDatabase();
+                
+                    getModelAccess().database.deleteTimeLineByID(OldId);
+                    getModelAccess().database.deleteAllTaskByID( OldId);
+                
+                    int newId=(int) temp.getId();
+                    getModelAccess().database.addTimeLine(newId, title, desc, start.toString(), end.toString());
+                    for (int i = 0; i < temp.taskList.size(); i++) {
+                        String Tasktitle=temp.taskList.get(i).getTitle();
+                        String Taskdesc=temp.taskList.get(i).getDescription();
+                        LocalDate Taskstart=temp.taskList.get(i).getStartTime();
+                        LocalDate Taskend=temp.taskList.get(i).getEndTime();
+                        System.out.println(Tasktitle+" "+ Taskdesc);
+                        getModelAccess().database.addTask(newId, Tasktitle, Taskdesc, Taskstart.toString(), Taskend.toString(), newId);
+                    }
+                    
+                    //closes the connection
+                    getModelAccess().database.getConnection().close();
+                    
+    
+}
    
 }
