@@ -5,7 +5,14 @@
  */
 package timelineManager.controller;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import timelineManager.helpClasses.TimelineViewer;
+import timelineManager.model.Task;
+import timelineManager.model.Timeline;
 
 /**
  *
@@ -25,5 +32,114 @@ public abstract class AbstractController {
     public ModelAccess getModelAccess(){
         return modelAccess;
     }
+    
+    protected void getDatabaseConnection(){
+    
+         try {
+            getModelAccess().database.connectToDatabase();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    
+    
+    }
+   
+    
+    protected void populateTimelineModel() throws SQLException, ClassNotFoundException{
+    
+        ResultSet rSet=modelAccess.database.displaySetOfAllTimeLines();
+        Timeline timeline;
+       
+        
+        String title,desc;
+        long id;
+        LocalDate start,end;
+        
+        
+        while(rSet.next()){
+            
+            title=rSet.getString("TimeLineTitle");
+            desc=rSet.getString("TimeLineDesc");
+            start=LocalDate.parse(rSet.getString("TimeLineStart"));
+            end=LocalDate.parse(rSet.getString("TimeLineEnd"));
+            id= new Long(rSet.getString("TimeLineID"));
+          
+            timeline=new Timeline(title, desc, start, end);
+            
+             Task task;
+              
+             ResultSet taskRSet=modelAccess.database.getAllTaskofTheTimeline(id);
+            while(taskRSet.next()){
+                
+                title=taskRSet.getString("TTitle");
+                desc=taskRSet.getString("TaskDesc");
+                start=LocalDate.parse(taskRSet.getString("TaskStart"));
+                end=LocalDate.parse(taskRSet.getString("TaskEnd"));
+                
+                task=new Task(title, desc, start, end);
+                timeline.addTask(task);
+                
+            }
+            
+            
+            modelAccess.timelineModel.timelineList.add(timeline);
+            
+            
+           
+
+        }
+        
+    
+    
+    
+        
+ }
+    
+    
+    
+
+    protected void cleanDb() throws ClassNotFoundException, SQLException{
+       
+        getModelAccess().database.cleanTimelineTable();
+        getModelAccess().database.cleanTaskTable();
+       
+    
+    }
+
+    protected void reInititilizeTables() throws ClassNotFoundException, SQLException{
+        String title,desc,start,end;
+        int id,tmListSize,taskListSize,tasksId;
+        
+        tmListSize=modelAccess.timelineModel.timelineList.size();
+     
+        for (int i = 0; i < tmListSize; i++) {
+            id=(int) modelAccess.timelineModel.timelineList.get(i).getId();
+            title=modelAccess.timelineModel.timelineList.get(i).getTitle();
+            desc=modelAccess.timelineModel.timelineList.get(i).getDescription();
+            start=modelAccess.timelineModel.timelineList.get(i).getStartTime().toString();
+            end=modelAccess.timelineModel.timelineList.get(i).getEndTime().toString();
+            
+            modelAccess.database.addTimeLine(id, title, desc, start, end);
+            taskListSize=modelAccess.timelineModel.timelineList.get(i).taskList.size();
+            
+            for (int j = 0; j < taskListSize; j++){
+                tasksId=(int) modelAccess.timelineModel.timelineList.get(i).taskList.get(j).getId();
+                title=modelAccess.timelineModel.timelineList.get(i).taskList.get(j).getTitle();
+                desc=modelAccess.timelineModel.timelineList.get(i).taskList.get(j).getDescription();
+                start=modelAccess.timelineModel.timelineList.get(i).taskList.get(j).getStartTime().toString();
+                end=modelAccess.timelineModel.timelineList.get(i).taskList.get(j).getEndTime().toString();
+            
+                modelAccess.database.addTask(tasksId, title, desc, start, end, id);
+            
+            }
+
+            
+        }
+
+    }
+    
+    
     
 }

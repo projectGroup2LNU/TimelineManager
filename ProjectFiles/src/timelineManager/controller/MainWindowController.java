@@ -4,10 +4,13 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDatePicker;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Iterator;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
 
 import javafx.event.ActionEvent;
@@ -250,6 +253,47 @@ public class MainWindowController extends AbstractController implements Initiali
                     System.out.println("Title of the task "+ task.getTitle());
                     }
 		});	
+       
+       
+       
+       getDatabaseConnection();
+            try {
+                populateTimelineModel();
+                
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+           
+            
+             try {
+            cleanDb();
+            } catch (ClassNotFoundException ex) {
+            Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+            Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            
+            
+          try { 
+            reInititilizeTables();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+                try {
+                    getModelAccess().database.getConnection().close();
+                } catch (Exception ex) {
+                    Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+          }
+          
+       
+       
         
         timelineViewer.timelineViewerInitialize(currentDate, timelineGrid, super.getModelAccess(), radioButtonAllTimelines, radioButtonSelectedTimeline);
       

@@ -4,6 +4,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 import javafx.event.ActionEvent;
@@ -43,8 +44,9 @@ public class AddTimelineController extends AbstractController{
     
     private boolean isTestMode = false; // Used for Junit tests
     
-    String title,desc;
+    String title;
     LocalDate start,end;
+    String desc="";
     
 
     public AddTimelineController(ModelAccess modelAccess, TimelineViewer timelineViewer)
@@ -53,7 +55,7 @@ public class AddTimelineController extends AbstractController{
        
     }
     
-    public void addTheTimeline(ActionEvent e){
+    public void addTheTimeline(ActionEvent e) throws ClassNotFoundException, SQLException, Exception{
         title = titleField.getText();
         desc = descriptionField.getText();
         start = startDate.getValue();
@@ -67,6 +69,13 @@ public class AddTimelineController extends AbstractController{
             getModelAccess().setSelectedTimeline(timeline);
             getModelAccess().timelineModel.addTimelineToList(timeline);
             super.timelineViewer.update(getModelAccess().timelineModel);
+            int id=(int) timeline.getId();
+            getDatabaseConnection();
+            getModelAccess().database.addTimeLine(id, title, desc, start.toString(), end.toString());
+            //closes the connection
+            getModelAccess().database.getConnection().close();
+            
+            
             
             // If check is needed for JUnit tests
             if(!isTestMode) {

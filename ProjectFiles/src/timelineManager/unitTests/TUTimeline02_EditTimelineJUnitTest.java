@@ -50,7 +50,7 @@ public class TUTimeline02_EditTimelineJUnitTest {
 	}
 	
 	@Test
-	public void testSeveralTimelines() {
+	public void testSeveralTimelines() throws Exception {
 		
 		// Test first timeline
 		setCurrentTimeline(0);
@@ -89,7 +89,7 @@ public class TUTimeline02_EditTimelineJUnitTest {
 	}
 	
 	@Test
-	public void testExceptions() {
+	public void testExceptions() throws Exception {
 		// Tests empty title
 		try {
 			controller.setTitle("");
@@ -150,7 +150,7 @@ public class TUTimeline02_EditTimelineJUnitTest {
 		controller.initialize(null, null);
 	}
 	
-	private void editTimeline(int toAdd) {
+	private void editTimeline(int toAdd) throws Exception {
 		controller.setTitle("TestTitle" + toAdd);
 		controller.setDescription("TestDescription" + toAdd);
 		controller.setStartDate(LocalDate.now().plusDays(toAdd));

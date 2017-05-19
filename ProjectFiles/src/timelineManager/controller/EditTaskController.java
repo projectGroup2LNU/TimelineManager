@@ -10,6 +10,7 @@ import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -59,7 +60,7 @@ public class EditTaskController extends AbstractController implements Initializa
     String title,desc;
     
      Task task=getModelAccess().getSelectedTask();
-     Timeline tm=getModelAccess().getSelectedTimeline();
+    
     
     LocalDate start,oldStart,end,oldEnd;
     private Callback<DatePicker, DateCell> dayCellFactory;
@@ -70,21 +71,29 @@ public class EditTaskController extends AbstractController implements Initializa
     }
     
     
-    public void editTask(ActionEvent e){
+    public void editTask(ActionEvent e) throws ClassNotFoundException, SQLException, Exception{
         title=titleField.getText();
         desc=descriptionField.getText();
         start=startDate.getValue();
         end=endDate.getValue();
-        indexOfTimeline=getModelAccess().timelineModel.timelineList.indexOf(tm);
+        indexOfTimeline=getModelAccess().timelineModel.timelineList.indexOf(getModelAccess().getSelectedTimeline());
 
         try {
     		errorCheck(); // Throws exception if there's any invalid or missing information
-            
+             getDatabaseConnection();
             Task temp=new Task(title, desc, start, end);
-             getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList.remove(indexOfTask);
-             getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList.add(temp);
+            int timelineId= (int)getModelAccess().timelineModel.timelineList.get(indexOfTimeline).getId();
+            getModelAccess().database.deleteTaskByTaskID((int) getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList.get(indexOfTask).getId());
+            getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList.remove(indexOfTask);
+            getModelAccess().database.addTask((int) temp.getId(), title, desc, start.toString(), end.toString(),timelineId );
+            
+            getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList.add(temp);
+             
+            getModelAccess().database.getConnection().close();
+             
     
             timelineViewer.update(getModelAccess().timelineModel);
+             /*
              /*
             getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList.get(indexOfTask).setTitle(title);
             getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList.get(indexOfTask).setDescription(desc);
@@ -121,7 +130,7 @@ public class EditTaskController extends AbstractController implements Initializa
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        indexOfTask=tm.taskList.indexOf(task);
+        indexOfTask=getModelAccess().getSelectedTimeline().taskList.indexOf(task);
         
         if(indexOfTask<0){
             Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -147,7 +156,7 @@ public class EditTaskController extends AbstractController implements Initializa
         			@Override public void updateItem(LocalDate item, boolean empty) {
         				super.updateItem(item, empty);
         				
-        				if(item.isBefore(tm.getStartTime()) || item.isAfter(tm.getEndTime())) {
+        				if(item.isBefore(getModelAccess().getSelectedTimeline().getStartTime()) || item.isAfter(getModelAccess().getSelectedTimeline().getEndTime())) {
         					setDisable(true);
         				}
         			}
