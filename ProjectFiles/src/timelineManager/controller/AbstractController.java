@@ -28,7 +28,6 @@ public abstract class AbstractController {
         this.timelineViewer = timelineViewer;
     }
     
-    
     public ModelAccess getModelAccess(){
         return modelAccess;
     }
@@ -42,21 +41,16 @@ public abstract class AbstractController {
         } catch (SQLException ex) {
             Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
-    
-    
     }
-   
     
     protected void populateTimelineModel() throws SQLException, ClassNotFoundException{
     
         ResultSet rSet=modelAccess.database.displaySetOfAllTimeLines();
         Timeline timeline;
-       
         
         String title,desc;
         long id;
         LocalDate start,end;
-        
         
         while(rSet.next()){
             
@@ -67,10 +61,11 @@ public abstract class AbstractController {
             id= new Long(rSet.getString("TimeLineID"));
           
             timeline=new Timeline(title, desc, start, end);
-            
-             Task task;
+            modelAccess.timelineModel.addTimelineToList(timeline);
+            modelAccess.setSelectedTimeline(timeline);
+            Task task;
               
-             ResultSet taskRSet=modelAccess.database.getAllTaskofTheTimeline(id);
+            ResultSet taskRSet=modelAccess.database.getAllTaskofTheTimeline(id);
             while(taskRSet.next()){
                 
                 title=taskRSet.getString("TTitle");
@@ -79,33 +74,17 @@ public abstract class AbstractController {
                 end=LocalDate.parse(taskRSet.getString("TaskEnd"));
                 
                 task=new Task(title, desc, start, end);
+              //  timeline.setTaskColor(task);
                 timeline.addTask(task);
                 
             }
-            
-            
-            modelAccess.timelineModel.timelineList.add(timeline);
-            
-            
-           
-
         }
-        
-    
-    
-    
-        
- }
-    
-    
-    
+    }
 
     protected void cleanDb() throws ClassNotFoundException, SQLException{
        
         getModelAccess().database.cleanTimelineTable();
         getModelAccess().database.cleanTaskTable();
-       
-    
     }
 
     protected void reInititilizeTables() throws ClassNotFoundException, SQLException{
@@ -134,12 +113,6 @@ public abstract class AbstractController {
                 modelAccess.database.addTask(tasksId, title, desc, start, end, id);
             
             }
-
-            
         }
-
     }
-    
-    
-    
 }

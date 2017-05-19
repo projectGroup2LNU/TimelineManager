@@ -27,7 +27,7 @@
               <JFXButton fx:id="addTaskButton" buttonType="RAISED" layoutX="14.0" layoutY="240.0" onAction="#openAddTaskWindow" prefHeight="27.0" prefWidth="164.0" text="Add Task" />
             <TableView fx:id="timelineTable" layoutY="410.0" prefHeight="201.0" prefWidth="200.0" styleClass="text-c1">
               <columns>
-                <TableColumn fx:id="titleOfTable" prefWidth="199.0" text="C1" />
+                <TableColumn fx:id="titleOfTable" prefWidth="199.0" text="Timelines" />
               </columns>
             </TableView>
             <Line endX="200.0" layoutY="300.0" />
@@ -37,7 +37,7 @@
                </toggleGroup>
             </RadioButton>
             <RadioButton fx:id="radioButtonSelectedTimeline" layoutX="17.0" layoutY="361.0" mnemonicParsing="false" scaleX="0.8" scaleY="0.8" text="Selected Timeline" toggleGroup="$viewSettings" />
-            <Text layoutX="20.0" layoutY="323.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-title" text="View Settings" />
+            <Text layoutX="20.0" layoutY="323.0" strokeType="OUTSIDE" strokeWidth="0.0" text="View Settings" />
 
 
          </children>
