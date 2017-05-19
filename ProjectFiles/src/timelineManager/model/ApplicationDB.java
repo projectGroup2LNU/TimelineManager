@@ -17,13 +17,13 @@ public class ApplicationDB {
          private boolean hasTaskTable = false;
 	 
 	 public void connectToDatabase() throws ClassNotFoundException, SQLException {
-		  // sqlite driver
+		 
+		   // sqlite driver
 		  Class.forName("org.sqlite.JDBC");
 		  // database path, if it's new database, it will be created in the project folder
-                 
+		 
 		  con = DriverManager.getConnection("jdbc:sqlite:TimeLineManagerDatabase.db");
-                                    
-
+		
 		  initialiseTimeLinesTable();
 		  initialiseTasksTable();
 	 }
@@ -56,7 +56,7 @@ public class ApplicationDB {
                         preparedStatement.executeUpdate();
 	 
 	        } catch (SQLException e) {
-                     System.out.println("baba burda");
+                     System.out.println("baba burda");    // TODO is this for test??
 	            System.out.println(e.getMessage());
 	        }
 	    } 
