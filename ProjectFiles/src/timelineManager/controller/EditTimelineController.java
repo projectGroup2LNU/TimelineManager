@@ -80,7 +80,7 @@ public class EditTimelineController extends AbstractController implements Initia
 		try {
 			errorCheck(); // Throws exception if there's any invalid or missing information
 			
-			ObservableList<Task> taskList = getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList;;
+			ObservableList<Task> taskList = getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList;
 			ObservableList<Task> newTaskList = FXCollections.observableArrayList();
            
             long diffStart =  DAYS.between(oldStart, start);
@@ -128,6 +128,9 @@ public class EditTimelineController extends AbstractController implements Initia
             	getModelAccess().timelineModel.timelineList.add(temp);
             	
                   editTimelinewithTasksInDB(temp,oldId);
+                  getModelAccess().setSelectedTimeline(temp);
+                  timelineViewer.update(getModelAccess().timelineModel);
+                  
 
             } else if(!isInBoundries){
             	
@@ -161,8 +164,10 @@ public class EditTimelineController extends AbstractController implements Initia
 
             		getModelAccess().timelineModel.timelineList.add(temp);
                         editTimelinewithTasksInDB(temp,oldId);
+                        getModelAccess().setSelectedTimeline(temp);
+
             		timelineViewer.update(getModelAccess().timelineModel);
-                          
+  
 
             	} else if (result.get() == CANCEL) {
             	}
@@ -177,7 +182,10 @@ public class EditTimelineController extends AbstractController implements Initia
             	getModelAccess().timelineModel.timelineList.remove(indexOfTimeline);
             	getModelAccess().timelineModel.timelineList.add(temp);
                 editTimelinewithTasksInDB(temp,oldId);
+                getModelAccess().setSelectedTimeline(temp);
+
             	timelineViewer.update(getModelAccess().timelineModel);
+
             	
             } else {
             	Alert alert = new Alert(AlertType.CONFIRMATION);
@@ -208,6 +216,8 @@ public class EditTimelineController extends AbstractController implements Initia
             		getModelAccess().timelineModel.timelineList.remove(indexOfTimeline);
             		getModelAccess().timelineModel.timelineList.add(temp);
                         editTimelinewithTasksInDB(temp,oldId);
+                        getModelAccess().setSelectedTimeline(getModelAccess().timelineModel.timelineList.get(getModelAccess().timelineModel.timelineList.indexOf(temp)));
+
             		timelineViewer.update(getModelAccess().timelineModel);
             	}
             }
