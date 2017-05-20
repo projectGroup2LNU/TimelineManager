@@ -72,14 +72,14 @@ public class AddTaskController extends AbstractController implements Initializab
      * @param e an ActionEvent
      */
     public void addTheTask(ActionEvent e) throws ClassNotFoundException, SQLException, Exception{
+
     	title = titleField.getText();
     	desc = descriptionField.getText();
     	start = startDate.getValue();
     	end = endDate.getValue();
 
     	errorCheck(); // Checks if there's any missing or invalid information in the fields.
-
-    	Task task = new Task(title, desc, start, end);
+      Task task = new Task(title, desc, start, end, getModelAccess().getSelectedTimeline());
     	getModelAccess().getSelectedTimeline().addTask(task);
 
     	// If check is needed for JUnit tests

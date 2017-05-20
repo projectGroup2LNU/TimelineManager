@@ -37,13 +37,14 @@ public class ModelAccess
         return timelineModel;
     }
     
-     public Task getSelectedTask(){
+    public Task getSelectedTask(){
         return selectedTask;
     }
     
     public void setSelectedTask(Task task){
         selectedTask=task;
     }
+    
     
     
 }
