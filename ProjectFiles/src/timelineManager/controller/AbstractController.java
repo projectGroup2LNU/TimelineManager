@@ -73,7 +73,7 @@ public abstract class AbstractController {
                 start=LocalDate.parse(taskRSet.getString("TaskStart"));
                 end=LocalDate.parse(taskRSet.getString("TaskEnd"));
                 
-                task=new Task(title, desc, start, end);
+                task=new Task(title, desc, start, end, timeline);
               //  timeline.setTaskColor(task);
                 timeline.addTask(task);
                 

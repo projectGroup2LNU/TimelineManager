@@ -38,12 +38,12 @@ public class Timeline{
 	/*timelineManager.model.Task*/
 	public void addTask(Task t){
                 if(t!=null)
-                    taskList.add(t);
+				{
+					taskList.add(t);
+				}
                 setTaskColor(t);	
 	}
-	public void editTask(Task t){
-		
-	}
+	
 	public void deleteTask(Task t){
 		taskList.remove(t);
 	}

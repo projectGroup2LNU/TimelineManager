@@ -16,6 +16,7 @@ public class Task {
 	private Color color;
 	private String priority;
 	private static long counter = 1;
+	private Timeline timeline;
 	
 	/**
 	 * The constructor adds a unique ID to each created object of the class.
@@ -24,15 +25,14 @@ public class Task {
 		this.id = counter++;
 	}
     
-    public Task(String title, String description, LocalDate startTime, LocalDate endTime) {
+    public Task(String title, String description, LocalDate startTime, LocalDate endTime, Timeline timeline) {
                 this.id = counter++;
 		this.title = title;
 		this.description = description;
 		this.startTime = startTime;
 		this.endTime = endTime;
-	
-		// Temp color
-		//color = Color.rgb(255,255,255);
+		this.timeline = timeline;
+		
     }
 	public Task(String title, String description, LocalDate startTime, LocalDate endTime, Color inputColor) {
 		this.id = counter++;
@@ -93,5 +93,13 @@ public class Task {
     public String getPriority(){
     	return priority;}
 	
-    
+	public Timeline getTimeline()
+	{
+		return timeline;
+	}
+	
+	public void setTimeline(Timeline timeline)
+	{
+		this.timeline = timeline;
+	}
 }

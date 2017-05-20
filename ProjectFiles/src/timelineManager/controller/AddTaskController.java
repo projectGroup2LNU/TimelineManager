@@ -82,7 +82,7 @@ public class AddTaskController extends AbstractController implements Initializab
         try {
         	errorCheck(); // Throws exception if there's any invalid or missing information
         	
-        	Task task = new Task(title, desc, start, end);
+        	Task task = new Task(title, desc, start, end, getModelAccess().getSelectedTimeline());
         	getModelAccess().getSelectedTimeline().addTask(task);
                 
                  getModelAccess().database.connectToDatabase();

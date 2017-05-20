@@ -30,8 +30,7 @@ import timelineManager.model.Task;
 import timelineManager.model.Timeline;
 
 /**
- *
- * @author beysimeryalmaz
+ * This is a controller class for an FXML window which is used to edit Tasks
  */
 public class EditTaskController extends AbstractController implements Initializable {
     
@@ -57,7 +56,7 @@ public class EditTaskController extends AbstractController implements Initializa
     
     int indexOfTimeline,indexOfTask;
   
-    String title,desc;
+    String title,description;
     
      Task task=getModelAccess().getSelectedTask();
     
@@ -65,42 +64,45 @@ public class EditTaskController extends AbstractController implements Initializa
     LocalDate start,oldStart,end,oldEnd;
     private Callback<DatePicker, DateCell> dayCellFactory;
     
+    /**
+     * Constructor that makes access to the Model and TimelineViewer
+     * @param modelAccess conection to the model
+     * @param timelineViewer logics for printing timelines in GUI
+     */
     public EditTaskController(ModelAccess modelAccess, TimelineViewer timelineViewer)
     {
         super(modelAccess, timelineViewer);
     }
     
-    
+    /**
+     * This function edits an task.
+     * @param e actionEvent
+     * @throws ClassNotFoundException
+     * @throws SQLException
+     * @throws Exception
+     */
     public void editTask(ActionEvent e) throws ClassNotFoundException, SQLException, Exception{
         title=titleField.getText();
-        desc=descriptionField.getText();
+        description=descriptionField.getText();
         start=startDate.getValue();
         end=endDate.getValue();
-        indexOfTimeline=getModelAccess().timelineModel.timelineList.indexOf(getModelAccess().getSelectedTimeline());
+        
 
         try {
-    		errorCheck(); // Throws exception if there's any invalid or missing information
+    		errorCheck(task); // Throws exception if there's any invalid or missing information
              getDatabaseConnection();
-            Task temp=new Task(title, desc, start, end);
-            int timelineId= (int)getModelAccess().timelineModel.timelineList.get(indexOfTimeline).getId();
+            Task taskInChange= getModelAccess().getSelectedTask();
+            taskInChange. setTitle(title);
+            taskInChange.setDescription(description);
+            taskInChange.setStartTime(start);
+            taskInChange.setEndTime(end);
+            int timelineId = (int)taskInChange.getId();
             getModelAccess().database.deleteTaskByTaskID((int) getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList.get(indexOfTask).getId());
-            getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList.remove(indexOfTask);
-            getModelAccess().database.addTask((int) temp.getId(), title, desc, start.toString(), end.toString(),timelineId );
-            
-            getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList.add(temp);
-             
+            getModelAccess().database.addTask((int) taskInChange.getId(), title, description, start.toString(), end.toString(),timelineId );
             getModelAccess().database.getConnection().close();
-             
-    
+            
             timelineViewer.update(getModelAccess().timelineModel);
-             /*
-             /*
-            getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList.get(indexOfTask).setTitle(title);
-            getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList.get(indexOfTask).setDescription(desc);
-            getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList.get(indexOfTask).setStartTime(start);
-            getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList.get(indexOfTask).setEndTime(end);
-               */
-
+            
         	// If check is needed for JUnit tests
     		if(!isTestMode) {
     			// Window closes itself after user clicks the Save button
@@ -130,44 +132,30 @@ public class EditTaskController extends AbstractController implements Initializa
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        indexOfTask=getModelAccess().getSelectedTimeline().taskList.indexOf(task);
         
-        if(indexOfTask<0){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Warning ");
-            alert.setHeaderText("To be able to edit the task you should select the corret timeline!");
-            alert.initModality(Modality.APPLICATION_MODAL);
-            
-            alert.showAndWait();
-            
-            saveButton.setDisable(true);
-            
-        }
-        else{
-            
-            titleField.setText(task.getTitle());
-            descriptionField.setText(task.getDescription());
-            startDate.setValue(task.getStartTime());
-            endDate.setValue(task.getEndTime());
-            
-            dayCellFactory = new Callback<DatePicker, DateCell>() {
-        	public DateCell call(final DatePicker datePicker) {
-        		return new DateCell() {
-        			@Override public void updateItem(LocalDate item, boolean empty) {
-        				super.updateItem(item, empty);
-        				
-        				if(item.isBefore(getModelAccess().getSelectedTimeline().getStartTime()) || item.isAfter(getModelAccess().getSelectedTimeline().getEndTime())) {
-        					setDisable(true);
-        				}
-        			}
-        		};
-        	}
+        titleField.setText(task.getTitle());
+        descriptionField.setText(task.getDescription());
+        startDate.setValue(task.getStartTime());
+        endDate.setValue(task.getEndTime());
+        
+        dayCellFactory = new Callback<DatePicker, DateCell>() {
+            public DateCell call(final DatePicker datePicker) {
+                return new DateCell() {
+                    @Override public void updateItem(LocalDate item, boolean empty) {
+                        super.updateItem(item, empty);
+                        
+                        if(item.isBefore(task.getTimeline().getStartTime()) || item.isAfter(task.getTimeline().getEndTime())) {
+                            setDisable(true);
+                        }
+                    }
+                };
+            }
         };
-        	
-	 	startDate.setDayCellFactory(dayCellFactory);
-		endDate.setDayCellFactory(dayCellFactory);
-        }
+        
+        startDate.setDayCellFactory(dayCellFactory);
+        endDate.setDayCellFactory(dayCellFactory);
     }
+
     
     // Setters
     public void setTitle(String title) {
@@ -192,7 +180,7 @@ public class EditTaskController extends AbstractController implements Initializa
     
     // Private methods
     // Checks for any invalid or missing information and throws and exception if found
-    private void errorCheck() {
+    private void errorCheck(Task task) {
     	boolean errorFound = true;
     	String errorMessage = "";
 
@@ -204,9 +192,9 @@ public class EditTaskController extends AbstractController implements Initializa
     		errorMessage = "Please select end date";
     	} else if(end.isBefore(start)) {
     		errorMessage = "End date cannot be before start date";
-    	} else if(end.isAfter(getModelAccess().getSelectedTimeline().getEndTime())) {
+    	} else if(end.isAfter(task.getTimeline().getEndTime())) {
     		errorMessage = "Task end date cannot be after timeline end date";
-    	} else if(start.isBefore(getModelAccess().getSelectedTimeline().getStartTime())) {
+    	} else if(start.isBefore(task.getTimeline().getStartTime())) {
     		errorMessage = "Task start date cannot be before timeline start date";
     	} else {
     		errorFound = false;
