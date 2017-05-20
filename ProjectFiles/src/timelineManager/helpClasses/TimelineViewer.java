@@ -180,7 +180,7 @@ public class TimelineViewer
             public void handle(ActionEvent event)
             {
                 int indexOfTimeline = modelAccess.timelineModel.timelineList.indexOf(modelAccess.getSelectedTimeline());
-                modelAccess.timelineModel.timelineList.get(indexOfTimeline).taskList.remove(modelAccess.getSelectedTask());
+                modelAccess.getSelectedTask().getTimeline().deleteTask(modelAccess.getSelectedTask());
                 update(timelineModel);
                 
                 
