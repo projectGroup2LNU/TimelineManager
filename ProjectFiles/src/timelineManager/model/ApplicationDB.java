@@ -33,7 +33,6 @@ public class ApplicationDB {
 	         
 	        
 	        try {
-                    System.out.println(id);
                   PreparedStatement  preparedStatement = con.prepareStatement(sql);
 	          //  preparedStatement.setInt(1, id);
 	            preparedStatement.executeUpdate();
@@ -45,7 +44,6 @@ public class ApplicationDB {
 	    } 
          
           public void deleteTaskByTaskID(int id) {
-                System.out.println(id);
 	         String sql = "DELETE FROM TasksTable WHERE TaskUniqueID = '"+id+"'";
 	       
             
@@ -170,7 +168,6 @@ public class ApplicationDB {
 			 ResultSet Task = TaskSt.executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='TasksTable'");
 			 
 			 if( !Task.next()) {
-				 System.out.println("Building the Tasks Table:");
 				 // need to build the table
 				  Statement state2 = con.createStatement();
 				  state2.executeUpdate("create table TasksTable(id integer,"
@@ -192,7 +189,6 @@ public class ApplicationDB {
 			// ResultSet TimeLine = TimelineSt.executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='TimelinesTable'");
 			 
 			 if( !TimeLine.next()) {
-				 System.out.println("Building the TimeLine Table:");
 				 // need to build the table
 				  Statement state2 = con.createStatement();
 				  state2.executeUpdate("create table TimeLinesTable(id integer,"
