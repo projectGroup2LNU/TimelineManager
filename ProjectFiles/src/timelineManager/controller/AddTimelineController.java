@@ -47,13 +47,11 @@ public class AddTimelineController extends AbstractController{
     
     String title;
     LocalDate start,end;
-    String desc="";
+    String desc = "";
     
 
-    public AddTimelineController(ModelAccess modelAccess, TimelineViewer timelineViewer)
-    {
+    public AddTimelineController(ModelAccess modelAccess, TimelineViewer timelineViewer) {
         super(modelAccess, timelineViewer);
-       
     }
     
     public void addTheTimeline(ActionEvent e) throws ClassNotFoundException, SQLException, Exception {
@@ -62,25 +60,25 @@ public class AddTimelineController extends AbstractController{
     	start = startDate.getValue();
     	end = endDate.getValue();
 
-    	errorCheck(); // Throws exception if there's any invalid or missing information
+    	if(!errorCheck()) { // Checks if there's any missing or invalid information in the fields.
+    		Timeline timeline = new Timeline(title,desc,start,end);
+    		getModelAccess().setSelectedTimeline(timeline);
+    		getModelAccess().timelineModel.addTimelineToList(timeline);
 
-    	Timeline timeline = new Timeline(title,desc,start,end);
-    	getModelAccess().setSelectedTimeline(timeline);
-    	getModelAccess().timelineModel.addTimelineToList(timeline);
+    		// If check is needed for JUnit tests
+    		if(!isTestMode) {
+    			super.timelineViewer.update(getModelAccess().timelineModel);
+    			int id = (int) timeline.getId();
+    			getDatabaseConnection();
+    			getModelAccess().database.addTimeLine(id, title, desc, start.toString(), end.toString());
+    			//closes the connection
+    			getModelAccess().database.getConnection().close();
 
-    	// If check is needed for JUnit tests
-    	if(!isTestMode) {
-        	super.timelineViewer.update(getModelAccess().timelineModel);
-        	int id =(int) timeline.getId();
-        	getDatabaseConnection();
-        	getModelAccess().database.addTimeLine(id, title, desc, start.toString(), end.toString());
-        	//closes the connection
-        	getModelAccess().database.getConnection().close();
-        	
-    		// Window closes itself after user clicks the Save button
-    		final Node source = (Node) e.getSource();
-    		final Stage stage = (Stage) saveButton.getScene().getWindow();
-    		stage.close();
+    			// Window closes itself after user clicks the Save button
+    			final Node source = (Node) e.getSource();
+    			final Stage stage = (Stage) saveButton.getScene().getWindow();
+    			stage.close();
+    		}
     	}
     } 
         	/*if(!isTestMode) {
@@ -177,19 +175,25 @@ public class AddTimelineController extends AbstractController{
     	}
     } */
     
-    private void errorCheck() {
+    private boolean errorCheck() {
+    	boolean errorFound = true;
+    	
     	if(title.trim().isEmpty()) {
     		titleField.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
     		titleField.setTooltip(new Tooltip("Please insert title"));
-    	} else if (start==null) {
+    	} else if (start == null) {
     		startDate.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
     		startDate.setTooltip(new Tooltip("Select start date"));
-    	} else if (end==null) {
+    	} else if (end == null) {
     		endDate.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
     		endDate.setTooltip(new Tooltip("Select end date"));
     	} else if(end.isBefore(start)) {
     		endDate.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
     		endDate.setTooltip(new Tooltip("End date cannot be before start date"));
-    	} 
+    	} else {
+    		errorFound = false;
+    	}
+    	
+    	return errorFound;
     }
 }
