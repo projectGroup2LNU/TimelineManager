@@ -72,33 +72,33 @@ public class AddTaskController extends AbstractController implements Initializab
      * @param e an ActionEvent
      */
     public void addTheTask(ActionEvent e) throws ClassNotFoundException, SQLException, Exception{
-
     	title = titleField.getText();
     	desc = descriptionField.getText();
     	start = startDate.getValue();
     	end = endDate.getValue();
 
-    	errorCheck(); // Checks if there's any missing or invalid information in the fields.
-      Task task = new Task(title, desc, start, end, getModelAccess().getSelectedTimeline());
-    	getModelAccess().getSelectedTimeline().addTask(task);
+    	if(!errorCheck()) { // Checks if there's any missing or invalid information in the fields.
+    		Task task = new Task(title, desc, start, end, getModelAccess().getSelectedTimeline());
+    		getModelAccess().getSelectedTimeline().addTask(task);
 
-    	// If check is needed for JUnit tests
-    	if(!isTestMode) {
-    		getModelAccess().database.connectToDatabase();
-    		int id=(int) getModelAccess().getSelectedTimeline().getId();
-    		int tasksId=(int) task.getId();
-    		getModelAccess().database.addTask(tasksId, title, desc, start.toString(), end.toString(), id);
+    		// If check is needed for JUnit tests
+    		if(!isTestMode) {
+    			getModelAccess().database.connectToDatabase();
+    			int id = (int) getModelAccess().getSelectedTimeline().getId();
+    			int tasksId = (int) task.getId();
+    			getModelAccess().database.addTask(tasksId, title, desc, start.toString(), end.toString(), id);
 
-    		// Closes the connection
-    		getModelAccess().database.getConnection().close();
+    			// Closes the connection
+    			getModelAccess().database.getConnection().close();
 
-    		super.timelineViewer.update(super.getModelAccess().timelineModel);
+    			super.timelineViewer.update(super.getModelAccess().timelineModel);
 
-    		// Window closes itself after user clicks the Save button
-    		final Node source = (Node) e.getSource();
-    		final Stage stage = (Stage) source.getScene().getWindow();
-    		stage.close();
-    	} 
+    			// Window closes itself after user clicks the Save button
+    			final Node source = (Node) e.getSource();
+    			final Stage stage = (Stage) source.getScene().getWindow();
+    			stage.close();
+    		} 
+    	}
     }
 
         	/*if(!isTestMode) {
@@ -207,20 +207,26 @@ public class AddTaskController extends AbstractController implements Initializab
     
     // Private methods
     
-    private void errorCheck() {
+    private boolean errorCheck() {
+    	boolean errorFound = true;
+    	
     	if(title.trim().isEmpty()) {
     		titleField.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
     		titleField.setTooltip(new Tooltip("Please insert title"));
-    	} else if (start==null) {
+    	} else if (start == null) {
     		startDate.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
     		startDate.setTooltip(new Tooltip("Select start date"));
-    	} else if (end==null) {
+    	} else if (end == null) {
     		endDate.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
     		endDate.setTooltip(new Tooltip("Select end date"));
     	} else if(end.isBefore(start)) {
     		endDate.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
     		endDate.setTooltip(new Tooltip("End date cannot be before start date"));
-    	} 
+    	} else {
+    		errorFound = false;
+    	}
+    	
+    	return errorFound;
     }
     
     // Disables dates in the date pickers that are before/after the timeline start/end
