@@ -17,19 +17,19 @@ import javafx.scene.paint.Color;
 public class TimelineModel{
   
   
-    public static Color red = Color.rgb(242,67,71);
-    public static Color orange = Color.rgb(235,141,47);
-    public static Color yellow = Color.rgb(231,187,48);
-    public static Color green = Color.rgb(90,167,59);
-    public static Color blue = Color.rgb(62,160,230);
-    public static Color purple = Color.rgb(98,0,255);
+    public static Color red = Color.rgb(232, 127, 129);
+    public static Color orange = Color.rgb(228,171,115);
+    public static Color yellow = Color.rgb(225,199,115);
+    public static Color green = Color.rgb(141,187,122);
+    public static Color blue = Color.rgb(124,183,225);
+    public static Color purple = Color.rgb(172,152,224);
     public Color[] colorbar = {red,orange,yellow,green,blue,purple};
-    public static Color[][] taskColorbar = {{Color.rgb(242,100,104),Color.rgb(242,133,137),Color.rgb(242,166,170),Color.rgb(242,199,203)},/*red bar*/
-                                            {Color.rgb(235,106,47),Color.rgb(235,71,47),Color.rgb(235,36,47),Color.rgb(235,1,47)},/*orange bar*/
-                                            {Color.rgb(231,162,48),Color.rgb(231,137,48),Color.rgb(231,112,48),Color.rgb(231,87,48)},/*yellow bar*/
-                                            {Color.rgb(90,174,90),Color.rgb(90,182,121),Color.rgb(90,189,152),Color.rgb(57,197,187)},/*green bar*/
-                                            {Color.rgb(79,143,230),Color.rgb(87,125,230),Color.rgb(94,108,230),Color.rgb(102,90,230)},/*blue bar*/
-                                            {Color.rgb(150,80,255),Color.rgb(128,128,255),Color.rgb(150,150,255),Color.rgb(180,180,255)}};/*purple bar*/
+    public static Color[][] taskColorbar = {{Color.rgb(232, 147, 149),Color.rgb(232, 166, 169),Color.rgb(232, 115, 125),Color.rgb(232, 132, 143)},/*red bar*/
+                                            {Color.rgb(228, 150, 115),Color.rgb(228,129,115),Color.rgb(228, 108, 95),Color.rgb(228, 115, 105)},/*orange bar*/
+                                            {Color.rgb(225,169,115),Color.rgb(220,160,120),Color.rgb(225,139,115),Color.rgb(225,184,115)},/*yellow bar*/
+                                            {Color.rgb(141,191,141),Color.rgb(141,196,159),Color.rgb(141,200,178),Color.rgb(121,205,199)},/*green bar*/
+                                            {Color.rgb(134,172,225),Color.rgb(139,162,225),Color.rgb(143, 151, 225),Color.rgb(120, 141, 225)},/*blue bar*/
+                                            {Color.rgb(170,160,240),Color.rgb(177,177,240),Color.rgb(163,163,240),Color.rgb(177,135,240)}};/*purple bar*/
     
     public ObservableList<Timeline> timelineList=FXCollections.observableArrayList();
     int current=0;
@@ -111,22 +111,4 @@ public class TimelineModel{
        });
         return list;
    }
-    
 }
-
-
-    
-
-
-
-
-       
-    
-
-    
-       
-    
-    
-   
-    
-

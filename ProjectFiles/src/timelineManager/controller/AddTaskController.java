@@ -6,6 +6,7 @@ import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
@@ -17,6 +18,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Tooltip;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -50,7 +52,6 @@ public class AddTaskController extends AbstractController implements Initializab
     @FXML
     private JFXButton cancelButton;
     
-    private Callback<DatePicker, DateCell> dayCellFactory;
     private boolean isTestMode = false; // Used for JUnit tests
     
     String title,desc,priority;
@@ -70,28 +71,37 @@ public class AddTaskController extends AbstractController implements Initializab
      * what timeline to assign it to.
      * @param e an ActionEvent
      */
-    public void addTheTask(ActionEvent e){
-        title = titleField.getText();
-        desc = descriptionField.getText();
-        start = startDate.getValue();
-        end = endDate.getValue();
-        
-        // Tries to add the Task to the selected timeline
-        try {
-        	errorCheck(); // Throws exception if there's any invalid or missing information
-        	
-        	Task task = new Task(title, desc, start, end);
-        	getModelAccess().getSelectedTimeline().addTask(task);
-        	super.timelineViewer.update(super.getModelAccess().timelineModel);
-        	// If check is needed for JUnit tests
-            if(!isTestMode) {
-                // Window closes itself after user clicks the Save button
-                final Node source = (Node) e.getSource();
-                final Stage stage = (Stage) source.getScene().getWindow();
-                stage.close();
-            } 
-        } catch (RuntimeException exception) {
-        	if(!isTestMode) {
+    public void addTheTask(ActionEvent e) throws ClassNotFoundException, SQLException, Exception{
+
+    	title = titleField.getText();
+    	desc = descriptionField.getText();
+    	start = startDate.getValue();
+    	end = endDate.getValue();
+
+    	errorCheck(); // Checks if there's any missing or invalid information in the fields.
+      Task task = new Task(title, desc, start, end, getModelAccess().getSelectedTimeline());
+    	getModelAccess().getSelectedTimeline().addTask(task);
+
+    	// If check is needed for JUnit tests
+    	if(!isTestMode) {
+    		getModelAccess().database.connectToDatabase();
+    		int id=(int) getModelAccess().getSelectedTimeline().getId();
+    		int tasksId=(int) task.getId();
+    		getModelAccess().database.addTask(tasksId, title, desc, start.toString(), end.toString(), id);
+
+    		// Closes the connection
+    		getModelAccess().database.getConnection().close();
+
+    		super.timelineViewer.update(super.getModelAccess().timelineModel);
+
+    		// Window closes itself after user clicks the Save button
+    		final Node source = (Node) e.getSource();
+    		final Stage stage = (Stage) source.getScene().getWindow();
+    		stage.close();
+    	} 
+    }
+
+        	/*if(!isTestMode) {
         		Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Warning ");
                 alert.setHeaderText(exception.getMessage());
@@ -101,35 +111,33 @@ public class AddTaskController extends AbstractController implements Initializab
         	    exception.printStackTrace();
         		throw exception;
         	}
+        	*/
+        /*
+		if(!isTestMode)
+        {
+            if(title.isEmpty())
+                titleField.setTooltip(new Tooltip("Please insert title"));
+            else if(start == null)
+                startDate.setTooltip(new Tooltip("Select start date"));
+            else if(end == null)
+                endDate.setTooltip(new Tooltip("Select end date"));
+            else if(end.isBefore(start))
+                endDate.setTooltip(new Tooltip("End date cannot be before start date"));
         }
-    }
+        	else
+			throw new RuntimeException("Something went wrong");
+        	 */
+        	
+ 
     
     public void cancelTask(){
         Stage stage = (Stage) cancelButton.getScene().getWindow();
         stage.close();
     }
     
-    // Disables the dates in the date pickers that are before or after the timeline dates.
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		Timeline currentTimeline = getModelAccess().getSelectedTimeline();
-    	
-        dayCellFactory = new Callback<DatePicker, DateCell>() {
-        	public DateCell call(final DatePicker datePicker) {
-        		return new DateCell() {
-        			@Override public void updateItem(LocalDate item, boolean empty) {
-        				super.updateItem(item, empty);
-        				
-        				if(item.isBefore(currentTimeline.getStartTime()) || item.isAfter(currentTimeline.getEndTime())) {
-        					setDisable(true);
-        				}
-        			}
-        		};
-        	}
-        };
-        	
-	 	startDate.setDayCellFactory(dayCellFactory);
-		endDate.setDayCellFactory(dayCellFactory);
+		disableDates();
 	}
 	
     // Setters
@@ -152,10 +160,27 @@ public class AddTaskController extends AbstractController implements Initializab
     public void setTestMode(boolean isTestMode){
     	this.isTestMode = isTestMode;
     }
+    
+    // Getters
+    public JFXTextField getTitleField() {
+    	return titleField;
+    }
+    
+    public JFXTextArea getDescField() {
+    	return descriptionField;
+    }
+    
+    public JFXDatePicker getStartDate() {
+    	return startDate;
+    }
+    
+    public JFXDatePicker getEndDate() {
+    	return endDate;
+    }
 	
-    // Private methods
+   
 	// Checks for any invalid or missing information and throws and exception if found
-    private void errorCheck() {
+  /*  private void errorCheck() {
     	boolean errorFound = true;
     	String errorMessage = "";
 
@@ -178,5 +203,47 @@ public class AddTaskController extends AbstractController implements Initializab
     	if(errorFound) {
     		throw new RuntimeException(errorMessage);
     	}
+    }	*/
+    
+    // Private methods
+    
+    private void errorCheck() {
+    	if(title.trim().isEmpty()) {
+    		titleField.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
+    		titleField.setTooltip(new Tooltip("Please insert title"));
+    	} else if (start==null) {
+    		startDate.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
+    		startDate.setTooltip(new Tooltip("Select start date"));
+    	} else if (end==null) {
+    		endDate.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
+    		endDate.setTooltip(new Tooltip("Select end date"));
+    	} else if(end.isBefore(start)) {
+    		endDate.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
+    		endDate.setTooltip(new Tooltip("End date cannot be before start date"));
+    	} 
+    }
+    
+    // Disables dates in the date pickers that are before/after the timeline start/end
+    private void disableDates() {
+    	Callback<DatePicker, DateCell> dayCellFactory;
+    	
+		Timeline currentTimeline = getModelAccess().getSelectedTimeline();
+    	
+        dayCellFactory = new Callback<DatePicker, DateCell>() {
+        	public DateCell call(final DatePicker datePicker) {
+        		return new DateCell() {
+        			@Override public void updateItem(LocalDate item, boolean empty) {
+        				super.updateItem(item, empty);
+        				
+        				if(item.isBefore(currentTimeline.getStartTime()) || item.isAfter(currentTimeline.getEndTime())) {
+        					setDisable(true);
+        				}
+        			}
+        		};
+        	}
+        };
+        	
+	 	startDate.setDayCellFactory(dayCellFactory);
+		endDate.setDayCellFactory(dayCellFactory);
     }
 }

@@ -5,6 +5,7 @@
  */
 package timelineManager.controller;
 
+import timelineManager.model.ApplicationDB;
 import timelineManager.model.Task;
 import timelineManager.model.Timeline;
 import timelineManager.model.TimelineModel;
@@ -21,6 +22,8 @@ public class ModelAccess
     private Task selectedTask;
     private Timeline selectedTimeline;
     public TimelineModel timelineModel=new TimelineModel();
+    public ApplicationDB database=new ApplicationDB();
+
     
     public Timeline getSelectedTimeline(){
         return selectedTimeline;
@@ -34,13 +37,14 @@ public class ModelAccess
         return timelineModel;
     }
     
-     public Task getSelectedTask(){
+    public Task getSelectedTask(){
         return selectedTask;
     }
     
     public void setSelectedTask(Task task){
         selectedTask=task;
     }
+    
     
     
 }

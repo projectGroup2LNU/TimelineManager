@@ -1,5 +1,6 @@
 package timelineManager.helpClasses;
 
+import java.sql.SQLException;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -14,6 +15,8 @@ import timelineManager.model.Timeline;
 import timelineManager.model.TimelineModel;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -117,7 +120,25 @@ public class TimelineViewer
             public void handle(ActionEvent event)
             {
                 int indexOfTimeline = modelAccess.timelineModel.timelineList.indexOf(modelAccess.getSelectedTimeline());
+                
+                try {
+                    modelAccess.database.connectToDatabase();
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(TimelineViewer.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(TimelineViewer.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                modelAccess.database.deleteTimeLineByID((int) modelAccess.timelineModel.timelineList.get(indexOfTimeline).getId());
+                modelAccess.database.deleteAllTaskByID((int) modelAccess.timelineModel.timelineList.get(indexOfTimeline).getId());
+                try {
+                    modelAccess.database.getConnection().close();
+                } catch (Exception ex) {
+                    Logger.getLogger(TimelineViewer.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
                 modelAccess.timelineModel.timelineList.remove(indexOfTimeline);
+                
                 if(modelAccess.timelineModel.timelineList.isEmpty())   // makes selected timeline to null if there is no timelines
                 {                                                       // after delete
                     modelAccess.setSelectedTimeline(null);
@@ -126,6 +147,8 @@ public class TimelineViewer
                 {
                     modelAccess.setSelectedTimeline(modelAccess.timelineModel.timelineList.get(modelAccess.timelineModel.timelineList.size()-1));
                 }
+                
+                
                 update(timelineModel);
             }
         });
@@ -157,9 +180,28 @@ public class TimelineViewer
             public void handle(ActionEvent event)
             {
                 int indexOfTimeline = modelAccess.timelineModel.timelineList.indexOf(modelAccess.getSelectedTimeline());
-                modelAccess.timelineModel.timelineList.get(indexOfTimeline).taskList.remove(modelAccess.getSelectedTask());
+                modelAccess.getSelectedTask().getTimeline().deleteTask(modelAccess.getSelectedTask());
                 update(timelineModel);
+                
+                
+                try {
+            modelAccess.database.connectToDatabase();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+                modelAccess.database.deleteTaskByTaskID((int) modelAccess.getSelectedTask().getId());
+                try {
+                    modelAccess.database.getConnection().close();
+                } catch (Exception ex) {
+                    Logger.getLogger(TimelineViewer.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            
+                
             }
+
+           
         });
         
         contextMenuTask.getItems().addAll(editTask, deleteTask);  // makes a menu when rightclicking a TaskRectangle

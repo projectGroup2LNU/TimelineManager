@@ -16,12 +16,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 public class TUTimeline01_AddTimelineJUnitTest {
 	private ModelAccess modelAccess = new ModelAccess();
-	private TimelineViewer timelineViewer = new TimelineViewer();
-	private AddTimelineController controller = new AddTimelineController(modelAccess,timelineViewer);
+	//private TimelineViewer timelineViewer = new TimelineViewer();
+	private AddTimelineController controller = new AddTimelineController(modelAccess, null);
 	private String fxmlPath = "/timelineManager/view/AddTimelineView.fxml";
 	private ObservableList<Timeline> timelines;
 	
@@ -45,7 +46,7 @@ public class TUTimeline01_AddTimelineJUnitTest {
 	}
 	
 	@Test
-	public void testTimelines() {
+	public void testTimelines() throws Exception {
 		addTimelines(1);
 		
 		// Tests only one timeline
@@ -84,55 +85,85 @@ public class TUTimeline01_AddTimelineJUnitTest {
 	}
 	
 	@Test
-	public void testExceptions() {
+	public void testExceptions() throws SQLException, Exception {
+		
 		// Tests empty title
-		try {
-			controller.setTitle("");
-			controller.setStartDate(LocalDate.now());
-			controller.setEndDate(LocalDate.now().plusDays(1));
-			controller.addTheTimeline(new ActionEvent());
-			fail("Expected RunTimeException: Please select a title");
-		} catch (RuntimeException e) {
-			assertEquals(e.getMessage(), "Please select a title");
-		}
+		controller.setTitle("");
+		controller.setStartDate(LocalDate.now());
+		controller.setEndDate(LocalDate.now().plusDays(1));
+		controller.addTheTimeline(new ActionEvent());
+		assertEquals("Please insert title", controller.getTitleField().getTooltip().getText());
 		
 		// Tests empty start date
-		try {
-			controller.setTitle("TestTitle");
-			controller.setStartDate(null);
-			controller.setEndDate(LocalDate.now().plusDays(1));
-			controller.addTheTimeline(new ActionEvent());
-			fail("Expected RunTimeException: Please select start date");
-		} catch (RuntimeException e) {
-			assertEquals(e.getMessage(), "Please select start date");
-		}
+		controller.setTitle("TestTitle");
+		controller.setStartDate(null);
+		controller.setEndDate(LocalDate.now().plusDays(1));
+		controller.addTheTimeline(new ActionEvent());
+		assertEquals("Select start date", controller.getStartDate().getTooltip().getText());
 		
 		// Tests empty end date
-		try {
-			controller.setTitle("TestTitle");
-			controller.setStartDate(LocalDate.now());
-			controller.setEndDate(null);
-			controller.addTheTimeline(new ActionEvent());
-			fail("Expected RunTimeException: Please select end date");
-		} catch (RuntimeException e) {
-			assertEquals(e.getMessage(), "Please select end date");
-		}
+		controller.setTitle("TestTitle");
+		controller.setStartDate(LocalDate.now());
+		controller.setEndDate(null);
+		controller.addTheTimeline(new ActionEvent());
+		assertEquals("Select end date", controller.getEndDate().getTooltip().getText());
 		
 		// Tests end date before start date
-		try {
-			controller.setTitle("TestTitle");
-			controller.setStartDate(LocalDate.now());
-			controller.setEndDate(LocalDate.now().minusDays(1));
-			controller.addTheTimeline(new ActionEvent());
-			fail("Expected RunTimeException: End date cannot be before start date");
-		} catch (RuntimeException e) {
-			assertEquals(e.getMessage(), "End date cannot be before start date");
-			
-		}
+		controller.setTitle("TestTitle");
+		controller.setStartDate(LocalDate.now());
+		controller.setEndDate(LocalDate.now().minusDays(1));
+		controller.addTheTimeline(new ActionEvent());
+		assertEquals("End date cannot be before start date", controller.getEndDate().getTooltip().getText());
+		
+		
+//		// Tests empty title
+//		try {
+//			controller.setTitle("");
+//			controller.setStartDate(LocalDate.now());
+//			controller.setEndDate(LocalDate.now().plusDays(1));
+//			controller.addTheTimeline(new ActionEvent());
+//			fail("Expected RunTimeException: Please select a title");
+//		} catch (RuntimeException e) {
+//			assertEquals(e.getMessage(), "Please select a title");
+//		}
+//		
+//		// Tests empty start date
+//		try {
+//			controller.setTitle("TestTitle");
+//			controller.setStartDate(null);
+//			controller.setEndDate(LocalDate.now().plusDays(1));
+//			controller.addTheTimeline(new ActionEvent());
+//			fail("Expected RunTimeException: Please select start date");
+//		} catch (RuntimeException e) {
+//			assertEquals(e.getMessage(), "Please select start date");
+//		}
+//		
+//		// Tests empty end date
+//		try {
+//			controller.setTitle("TestTitle");
+//			controller.setStartDate(LocalDate.now());
+//			controller.setEndDate(null);
+//			controller.addTheTimeline(new ActionEvent());
+//			fail("Expected RunTimeException: Please select end date");
+//		} catch (RuntimeException e) {
+//			assertEquals(e.getMessage(), "Please select end date");
+//		}
+//		
+//		// Tests end date before start date
+//		try {
+//			controller.setTitle("TestTitle");
+//			controller.setStartDate(LocalDate.now());
+//			controller.setEndDate(LocalDate.now().minusDays(1));
+//			controller.addTheTimeline(new ActionEvent());
+//			fail("Expected RunTimeException: End date cannot be before start date");
+//		} catch (RuntimeException e) {
+//			assertEquals(e.getMessage(), "End date cannot be before start date");
+//			
+//		}
 	}
 	
 	// Adds new timelines to the ArrayList
-	private void addTimelines(int amount) {
+	private void addTimelines(int amount) throws SQLException, Exception {
 		int startNumber = timelines.size();
 		
 		for(int i = startNumber; i < amount + startNumber; i++) {

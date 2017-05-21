@@ -8,87 +8,154 @@ import javafx.scene.paint.Color;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import timelineManager.controller.EditTimelineController;
+import timelineManager.controller.ModelAccess;
+import timelineManager.helpClasses.TimelineViewer;
+import timelineManager.model.Timeline;
+import javafx.embed.swing.JFXPanel;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+
+import java.io.IOException;
+import java.time.LocalDate;
+
 public class TUTimeline02_EditTimelineJUnitTest {
-	private ArrayList<Timeline> timelines = new ArrayList<Timeline>();
+	private ModelAccess modelAccess = new ModelAccess();
+	private EditTimelineController controller = new EditTimelineController(modelAccess, null);
+	private String fxmlPath = "/timelineManager/view/EditTimelineView.fxml";
+	
+	@Before
+	public void setUp() {
+		//Initializes test mode and JavaFX
+		controller.setTestMode(true);
+		new JFXPanel();
+		
+		// Initializes Timelines so that they are editable
+		initializeTimelines();
+
+		// Loads the FXML file so that we can modify the text areas in the controller
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+			loader.setController(controller);
+			loader.load();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	@Test
-	public void testSeveralTimelines() {
-		addTimelines(101);
+	public void testSeveralTimelines() throws Exception {
 		
 		// Test first timeline
-		timelines.get(0).setTitle("TestTitle0");
-		timelines.get(0).setDescription("TestDescription0");
-		timelines.get(0).setStartTime(LocalDate.now());
-		timelines.get(0).setEndTime(LocalDate.now().plusDays(1));
-		timelines.get(0).setColor(Color.rgb(0, 0, 0));
+		setCurrentTimeline(0);
+		editTimeline(10);
 		
-		assertEquals("TestTitle0", timelines.get(0).getTitle());
-		assertEquals("TestDescription0", timelines.get(0).getDescription());
-		assertEquals(LocalDate.now(), timelines.get(0).getStartTime());
-		assertEquals(LocalDate.now().plusDays(1), timelines.get(0).getEndTime());
-		assertEquals(Color.rgb(0, 0, 0), timelines.get(0).getColor());
+		assertEquals("TestTitle10", modelAccess.getSelectedTimeline().getTitle());
+		assertEquals("TestDescription10", modelAccess.getSelectedTimeline().getDescription());
+		assertEquals(LocalDate.now().plusDays(10), modelAccess.getSelectedTimeline().getStartTime());
+		assertEquals(LocalDate.now().plusDays(11), modelAccess.getSelectedTimeline().getEndTime());
 		
 		// Test middle timeline
-		timelines.get(50).setTitle("TestTitle50");
-		timelines.get(50).setDescription("TestDescription50");
-		timelines.get(50).setStartTime(LocalDate.now().plusDays(50));
-		timelines.get(50).setEndTime(LocalDate.now().plusDays(51));
-		timelines.get(50).setColor(Color.rgb(50, 0, 0));
+		setCurrentTimeline(50);
+		editTimeline(60);
 		
-		assertEquals("TestTitle50", timelines.get(50).getTitle());
-		assertEquals("TestDescription50", timelines.get(50).getDescription());
-		assertEquals(LocalDate.now().plusDays(50), timelines.get(50).getStartTime());
-		assertEquals(LocalDate.now().plusDays(51), timelines.get(50).getEndTime());
-		assertEquals(Color.rgb(50, 0, 0), timelines.get(50).getColor());
+		assertEquals("TestTitle60", modelAccess.getSelectedTimeline().getTitle());
+		assertEquals("TestDescription60", modelAccess.getSelectedTimeline().getDescription());
+		assertEquals(LocalDate.now().plusDays(60), modelAccess.getSelectedTimeline().getStartTime());
+		assertEquals(LocalDate.now().plusDays(61), modelAccess.getSelectedTimeline().getEndTime());
 		
 		// Test last timeline
-		timelines.get(100).setTitle("TestTitle100");
-		timelines.get(100).setDescription("TestDescription100");
-		timelines.get(100).setStartTime(LocalDate.now().plusDays(100));
-		timelines.get(100).setEndTime(LocalDate.now().plusDays(101));
-		timelines.get(100).setColor(Color.rgb(100, 0, 0));
+		setCurrentTimeline(97);
+		editTimeline(110);
+
+		assertEquals("TestTitle110", modelAccess.getSelectedTimeline().getTitle());
+		assertEquals("TestDescription110", modelAccess.getSelectedTimeline().getDescription());
+		assertEquals(LocalDate.now().plusDays(110), modelAccess.getSelectedTimeline().getStartTime());
+		assertEquals(LocalDate.now().plusDays(111), modelAccess.getSelectedTimeline().getEndTime());
 		
-		assertEquals("TestTitle100", timelines.get(100).getTitle());
-		assertEquals("TestDescription100", timelines.get(100).getDescription());
-		assertEquals(LocalDate.now().plusDays(100), timelines.get(100).getStartTime());
-		assertEquals(LocalDate.now().plusDays(101), timelines.get(100).getEndTime());
-		assertEquals(Color.rgb(100, 0, 0), timelines.get(100).getColor());
+		// Test first timeline again (it will be on index 97 since new edited timeline is created at the end of the timeline list and the old one is deleted)
+		setCurrentTimeline(97);
 		
-		// Test first timeline again
-		assertEquals("TestTitle0", timelines.get(0).getTitle());
-		assertEquals("TestDescription0", timelines.get(0).getDescription());
-		assertEquals(LocalDate.now(), timelines.get(0).getStartTime());
-		assertEquals(LocalDate.now().plusDays(1), timelines.get(0).getEndTime());
-		assertEquals(Color.rgb(0, 0, 0), timelines.get(0).getColor());
+		assertEquals("TestTitle10", modelAccess.getSelectedTimeline().getTitle());
+		assertEquals("TestDescription10", modelAccess.getSelectedTimeline().getDescription());
+		assertEquals(LocalDate.now().plusDays(10), modelAccess.getSelectedTimeline().getStartTime());
+		assertEquals(LocalDate.now().plusDays(11), modelAccess.getSelectedTimeline().getEndTime());
 	}
 	
 	@Test
-	public void testTimelineTwice() {
-		addTimelines(1);
+	public void testExceptions() throws Exception {
+		// Tests empty title
+		try {
+			controller.setTitle("");
+			controller.setStartDate(LocalDate.now());
+			controller.setEndDate(LocalDate.now().plusDays(1));
+			controller.editTimeline(new ActionEvent());
+			fail("Expected RunTimeException: Please select a title");
+		} catch (RuntimeException e) {
+			assertEquals(e.getMessage(), "Please select a title");
+		}
 		
-		timelines.get(0).setTitle("TestTitle0");
-		timelines.get(0).setDescription("TestDescription0");
-		timelines.get(0).setStartTime(LocalDate.now());
-		timelines.get(0).setEndTime(LocalDate.now().plusDays(1));
-		timelines.get(0).setColor(Color.rgb(0, 0, 0));
+		// Tests empty start date
+		try {
+			controller.setTitle("TestTitle");
+			controller.setStartDate(null);
+			controller.setEndDate(LocalDate.now().plusDays(1));
+			controller.editTimeline(new ActionEvent());
+			fail("Expected RunTimeException: Please select start date");
+		} catch (RuntimeException e) {
+			assertEquals(e.getMessage(), "Please select start date");
+		}
 		
-		// Edits the same timeline again
-		timelines.get(0).setTitle("TestTitle100");
-		timelines.get(0).setDescription("TestDescription100");
-		timelines.get(0).setStartTime(LocalDate.now().plusDays(100));
-		timelines.get(0).setEndTime(LocalDate.now().plusDays(101));
-		timelines.get(0).setColor(Color.rgb(100, 0, 0));
+		// Tests empty end date
+		try {
+			controller.setTitle("TestTitle");
+			controller.setStartDate(LocalDate.now());
+			controller.setEndDate(null);
+			controller.editTimeline(new ActionEvent());
+			fail("Expected RunTimeException: Please select end date");
+		} catch (RuntimeException e) {
+			assertEquals(e.getMessage(), "Please select end date");
+		}
 		
-		assertEquals("TestTitle100", timelines.get(0).getTitle());
-		assertEquals("TestDescription100", timelines.get(0).getDescription());
-		assertEquals(LocalDate.now().plusDays(100), timelines.get(0).getStartTime());
-		assertEquals(LocalDate.now().plusDays(101), timelines.get(0).getEndTime());
-		assertEquals(Color.rgb(100, 0, 0), timelines.get(0).getColor());
+		// Tests end date before start date
+		try {
+			controller.setTitle("TestTitle");
+			controller.setStartDate(LocalDate.now());
+			controller.setEndDate(LocalDate.now().minusDays(1));
+			controller.editTimeline(new ActionEvent());
+			fail("Expected RunTimeException: End date cannot be before start date");
+		} catch (RuntimeException e) {
+			assertEquals(e.getMessage(), "End date cannot be before start date");
+			
+		}
 	}
 	
-	private void addTimelines(int amount) {
-		for(int i = 0; i < amount; i++) {
-			timelines.add(new Timeline());
+	// Creates 100 timelines to edit
+	private void initializeTimelines() {
+		for(int i = 0; i < 100; i++) {
+			modelAccess.timelineModel.addTimelineToList(new Timeline("TestTitle" + i, "TestDescription" + i, LocalDate.now().plusDays(i), LocalDate.now().plusDays(1 + i)));
 		}
+		modelAccess.setSelectedTimeline(modelAccess.timelineModel.timelineList.get(0));
+	}
+	
+	// Sets a certain timeline to be editable
+	private void setCurrentTimeline(int index) {
+		modelAccess.setSelectedTimeline(modelAccess.timelineModel.timelineList.get(index));
+		controller.initialize(null, null);
+	}
+	
+	private void editTimeline(int toAdd) throws Exception {
+		controller.setTitle("TestTitle" + toAdd);
+		controller.setDescription("TestDescription" + toAdd);
+		controller.setStartDate(LocalDate.now().plusDays(toAdd));
+		controller.setEndDate(LocalDate.now().plusDays(toAdd + 1));
+		
+		controller.editTimeline(new ActionEvent());
 	}
 }

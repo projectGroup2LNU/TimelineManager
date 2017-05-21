@@ -13,29 +13,48 @@ import java.sql.Statement;
 
 public class ApplicationDB {
 	 private static Connection con;
-	 private static boolean hasData = false;
+	 private boolean hasTimelineTable = false;
+         private boolean hasTaskTable = false;
 	 
-	 private void getConnection() throws ClassNotFoundException, SQLException {
-		  // sqlite driver
+	 public void connectToDatabase() throws ClassNotFoundException, SQLException {
+		 
+		   // sqlite driver
 		  Class.forName("org.sqlite.JDBC");
 		  // database path, if it's new database, it will be created in the project folder
+		 
 		  con = DriverManager.getConnection("jdbc:sqlite:TimeLineManagerDatabase.db");
+		
 		  initialiseTimeLinesTable();
 		  initialiseTasksTable();
 	 }
 	 
-	 // This method works well but should be deleted in future because we create db on each action
-	 public void deleteTaskByID(int id) {
-	        String sql = "DELETE FROM TasksTable WHERE TaskUniqueID = ?";
+	 public void deleteAllTaskByID(int id) {
+	        String sql = "DELETE FROM TasksTable WHERE TimeLineID = '"+id+"'";
 	         
-	         PreparedStatement preparedStatement = null;
+	        
 	        try {
-	        	Connection connection = DriverManager.getConnection("jdbc:sqlite:TimeLineManagerDatabase.db");
-	        	preparedStatement = connection.prepareStatement(sql);
-	            preparedStatement.setInt(1, id);
+                  PreparedStatement  preparedStatement = con.prepareStatement(sql);
+	          //  preparedStatement.setInt(1, id);
 	            preparedStatement.executeUpdate();
 	 
 	        } catch (SQLException e) {
+                    System.out.println("timelineManager.model.ApplicationDB.deleteAllTaskByID()");
+	            System.out.println(e.getMessage());
+	        }
+	    } 
+         
+          public void deleteTaskByTaskID(int id) {
+	         String sql = "DELETE FROM TasksTable WHERE TaskUniqueID = '"+id+"'";
+	       
+            
+	        try {
+                   
+                    PreparedStatement preparedStatement = con.prepareStatement(sql);
+                     //   preparedStatement.setInt(1, id);
+                        preparedStatement.executeUpdate();
+	 
+	        } catch (SQLException e) {
+                     System.out.println("baba burda");    // TODO is this for test??
 	            System.out.println(e.getMessage());
 	        }
 	    } 
@@ -43,14 +62,14 @@ public class ApplicationDB {
 	 // If you delete a timeline tasks will also be gone, this method also can be just used for temp 
 	 public void deleteTimeLineByID(int id) {
 	        String sql = "DELETE FROM TimeLinesTable WHERE TimeLineID = ?";
-            PreparedStatement preparedStatement = null;
+            
 	        try {
-	        	Connection connection = DriverManager.getConnection("jdbc:sqlite:TimeLineManagerDatabase.db");
-	        	preparedStatement = connection.prepareStatement(sql);
-	            preparedStatement.setInt(1, id);
-	            preparedStatement.executeUpdate();
+	        	PreparedStatement preparedStatement = con.prepareStatement(sql);
+                        preparedStatement.setInt(1, id);
+                        preparedStatement.executeUpdate();
 	 
 	        } catch (SQLException e) {
+                    System.out.println("timelineManager.model.ApplicationDB.deleteTimeLineByID()");
 	            System.out.println(e.getMessage());
 	        }
 	    } 
@@ -60,7 +79,7 @@ public class ApplicationDB {
 	public void addTask(int UniqueName, String Title, String TaskDescription, String TaskStartDate, String TaskEndDate, int TimelineID) throws ClassNotFoundException, SQLException {
 		 if(con == null) {
 			 // get connection
-			 getConnection();
+			 connectToDatabase();
 		 }
 		  PreparedStatement prep = con
 				    .prepareStatement("insert into TasksTable values(?,?,?,?,?,?,?);");
@@ -76,7 +95,7 @@ public class ApplicationDB {
 	public void addTimeLine(int TimeLineID, String TimeLineTitle, String TimelineDescription, String TimelineStartDate, String TimeLineEndDate) throws ClassNotFoundException, SQLException {
 		 if(con == null) {
 			 // get connection
-			 getConnection();
+			 connectToDatabase();
 		 }
 		  PreparedStatement prep = con
 				    .prepareStatement("insert into TimeLinesTable values(?,?,?,?,?,?);");
@@ -91,7 +110,7 @@ public class ApplicationDB {
 	 public ResultSet displaySetOfAllTasks() throws SQLException, ClassNotFoundException {
 		 if(con == null) {
 			 // get connection
-			 getConnection();
+			 connectToDatabase();
 		 }
 		 Statement state = con.createStatement();
 		 ResultSet res = state.executeQuery("select TaskUniqueID, TTitle, TaskDesc, TaskStart, TaskEnd, TimeLineID from TasksTable");
@@ -101,7 +120,7 @@ public class ApplicationDB {
 	 public ResultSet displaySetOfAllTimeLines() throws SQLException, ClassNotFoundException {
 		 if(con == null) {
 			 // get connection
-			 getConnection();
+			 connectToDatabase();
 		 }
 		 Statement state = con.createStatement();
 		 ResultSet res = state.executeQuery("select TimeLineID, TimeLineTitle, TimeLineDesc, TimeLineStart, TimeLineEnd from TimeLinesTable");
@@ -140,33 +159,15 @@ public class ApplicationDB {
 		  }
 		 
 	 }
-	 /* Show Tasks of TimeLines by ID that belongs to them, Example: All the tasks with "TimeLine ID=1" that belongs to "TimeLine with ID=1" will be returned. 
-	  * RelationShip between tables(One-To-Many)*/
-	 public void searchTasksByTheirTimeLineID(int id) throws SQLException, ClassNotFoundException {
-		    ResultSet rs;
-			try {
-				  rs = this.displaySetOfAllTasks();
-				  System.out.println("Tasks belongs to the timeline with ID= "+id+" shows as following:");
-				  while (rs.next()) {
-					  if (rs.getInt("TimeLineID")==id){
-					     System.out.println(rs.getString("TaskUniqueID") + " " + rs.getString("TTitle")+ " " + rs.getString("TaskDesc")+" "+rs.getString("TaskStart")+" "+rs.getString("TaskEnd")+" Belongs to timeline number: "+rs.getString("TimeLineID"));
-					  }
-					  }
-				  
-			  } catch (Exception e) {
-				  e.printStackTrace();
-			  }
-	 }
 	 
 	 private void initialiseTasksTable() throws SQLException {
-		 if( !hasData ) {
-			 hasData = true;
+		 if( !hasTaskTable ) {
+			 hasTaskTable = true;
 			 // check for database table
 			 Statement TaskSt = con.createStatement();
 			 ResultSet Task = TaskSt.executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='TasksTable'");
 			 
 			 if( !Task.next()) {
-				 System.out.println("Building the Tasks Table:");
 				 // need to build the table
 				  Statement state2 = con.createStatement();
 				  state2.executeUpdate("create table TasksTable(id integer,"
@@ -178,17 +179,16 @@ public class ApplicationDB {
 	 }
 	 
 	 private void initialiseTimeLinesTable() throws SQLException {
-		 if( !hasData ) {
-			 hasData = true;
+		 if( !hasTimelineTable ) {
+			 hasTimelineTable = true;
 			 // check for database table
 			 Statement TimelineSt = con.createStatement();
 			 ResultSet TimeLine = TimelineSt.executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='TimeLinesTable'");
-			 
+			                  
 			// Statement TimelineSt = con.createStatement();
 			// ResultSet TimeLine = TimelineSt.executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='TimelinesTable'");
 			 
 			 if( !TimeLine.next()) {
-				 System.out.println("Building the TimeLine Table:");
 				 // need to build the table
 				  Statement state2 = con.createStatement();
 				  state2.executeUpdate("create table TimeLinesTable(id integer,"
@@ -197,5 +197,59 @@ public class ApplicationDB {
 			 
 		 }
 	 }
+         
+         
+         
+          public ResultSet getAllTaskofTheTimeline(long id) throws SQLException, ClassNotFoundException {
+		 if(con == null) {
+			 // get connection
+			 connectToDatabase();
+		 }
+                 
+                 int i=(int) id;
+		 Statement state = con.createStatement();
+		 ResultSet res = state.executeQuery("select * from TasksTable where TimelineID='"+i+"'");
+		 return res;
+	 }
+          
+          
+          
+          public void cleanTimelineTable() throws ClassNotFoundException, SQLException{
+             
+               if(con==null){
+                   connectToDatabase();
+               }
+               else{
+                   Statement state2 = con.createStatement();
+                   state2.executeUpdate("DELETE FROM TimeLinesTable");
+               
+               }
+               
+          
+          }
+          
+          
+          
+          public void cleanTaskTable() throws ClassNotFoundException, SQLException{
+             
+               if(con==null){
+                   connectToDatabase();
+               }
+               else{
+                   Statement state2 = con.createStatement();
+                   state2.executeUpdate("DELETE FROM TasksTable");
+               
+               }
+               
+          
+          }
+          
+          
+         public Connection getConnection() throws Exception{
+             if(con!=null)
+                return con;
+             else
+                 throw new Exception("There is no connection to get");
+         }
 	 
 }

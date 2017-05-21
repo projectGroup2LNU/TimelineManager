@@ -154,3 +154,43 @@
     -fx-opacity: 0.4;
     -fx-background-color: #1d1d1d;
 }
+
+.context-menu {
+  -fx-background-color: #1d1d1d;
+  -fx-text-fill: whitesmoke;
+}
+
+.menu-item .label {
+  -fx-text-fill: whitesmoke;
+}
+
+.menu-item:focused .label {
+  -fx-text-fill: #F28026;
+}
+
+.selection-bar{
+    -fx-background-color: #1d1d1d;
+}
+
+.menu-item:focused{
+    -fx-text-fill: #F28026;
+
+}
+
+.menu-item:focused {
+     
+     -fx-background-color: #1d1d1d;
+     -fx-text-fill: white;
+}
+
+.tooltip {
+    -fx-background: rgba(30,30,30);
+    -fx-text-fill: orange;
+    -fx-background-color: rgba(255,0,0,0.3);
+    -fx-background-radius: 6px;
+    -fx-background-insets: 0;
+    -fx-padding: 0.667em 0.75em 0.667em 0.75em; /* 10px */
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.5) , 10, 0.0 , 0 , 3 );
+    -fx-font-size: 0.85em;
+}
+

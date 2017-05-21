@@ -33,20 +33,17 @@ public class Timeline{
 		this.description =  new SimpleStringProperty(description);
 		this.startTime = startTime;
 		this.endTime = endTime;
-		
-		// Temp color
-		color = TimelineModel.red;
 	}
 	
 	/*timelineManager.model.Task*/
 	public void addTask(Task t){
                 if(t!=null)
-                    taskList.add(t);
+				{
+					taskList.add(t);
+				}
                 setTaskColor(t);	
 	}
-	public void editTask(Task t){
-		
-	}
+	
 	public void deleteTask(Task t){
 		taskList.remove(t);
 	}
