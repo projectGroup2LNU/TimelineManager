@@ -2,8 +2,7 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXDatePicker?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
@@ -76,22 +75,9 @@
                         </ScrollPane>
                      </children>
                   </VBox>
-
-                 <JFXButton fx:id="addTaskPlusButton" buttonType="RAISED" layoutX="24.0" layoutY="511.0" onAction="#openAddTaskWindow" prefHeight="65.0" prefWidth="59.0" styleClass="button-round" text="+" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="24.0">
-                     <padding>
-                        <Insets top="-10.0" />
-                     </padding>
-                     <cursor>
-                        <Cursor fx:constant="DEFAULT" />
-                     </cursor></JFXButton>
-                  <JFXButton fx:id="goLeftButton" buttonType="RAISED" layoutX="8.0" layoutY="183.0" onAction="#goLeft" styleClass="button-chooser" text="&lt;" AnchorPane.bottomAnchor="188.0" AnchorPane.leftAnchor="9.0">
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor></JFXButton>
-                  <JFXButton fx:id="goRightButton" buttonType="RAISED" layoutX="885.0" layoutY="182.0" onAction="#goRight" styleClass="button-chooser" text="&gt;" AnchorPane.bottomAnchor="188.0" AnchorPane.rightAnchor="29.0">
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor></JFXButton>
+                  <Button fx:id="addTaskPlusButton" mnemonicParsing="false" onAction="#openAddTaskWindow" styleClass="button-round" text="+" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" />
+                  <Button fx:id="goLeftButton" mnemonicParsing="false" onAction="#goLeft" styleClass="button-chooser" text="&lt;" AnchorPane.bottomAnchor="200.0" AnchorPane.leftAnchor="20.0" />
+                  <Button fx:id="goRightButton" mnemonicParsing="false" onAction="#goRight" styleClass="button-chooser" text="&gt;" AnchorPane.bottomAnchor="200.0" AnchorPane.rightAnchor="20.0" />
 
                    <!--
                  <JFXButton fx:id="addTaskPlusButton" buttonType="RAISED" layoutX="24.0" layoutY="511.0" onAction="#openAddTaskWindow" prefHeight="65.0" prefWidth="59.0" styleClass="button-round" text="+" AnchorPane.bottomAnchor="29.0" AnchorPane.leftAnchor="29.0" />
