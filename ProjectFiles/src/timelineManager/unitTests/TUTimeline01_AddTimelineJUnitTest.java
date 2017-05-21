@@ -22,7 +22,7 @@ import java.time.LocalDate;
 public class TUTimeline01_AddTimelineJUnitTest {
 	private ModelAccess modelAccess = new ModelAccess();
 	//private TimelineViewer timelineViewer = new TimelineViewer();
-	private AddTimelineController controller = new AddTimelineController(modelAccess, null);
+	private AddTimelineController controller = new AddTimelineController(modelAccess, null, null,null);
 	private String fxmlPath = "/timelineManager/view/AddTimelineView.fxml";
 	private ObservableList<Timeline> timelines;
 	

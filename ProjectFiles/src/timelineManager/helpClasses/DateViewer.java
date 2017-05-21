@@ -17,6 +17,7 @@ import java.time.LocalDate;
  */
 public class DateViewer
 {
+    
     private final int DAY_PIXEL_SIZE = 59;
     
     private Text[] dateClaendarText;
@@ -45,23 +46,19 @@ public class DateViewer
      * It instanciates all the object needed for later change the variables.
      * @param currentDate the constructor needs to know on which date to start the drawing.
      */
-    public DateViewer(LocalDate currentDate, GridPane inGrid)
+    public DateViewer(LocalDate currentDate)
     {
         this.currentDate = currentDate;
-        grid = inGrid;
-        grid.getColumnConstraints().setAll(new ColumnConstraints(DAY_PIXEL_SIZE,DAY_PIXEL_SIZE,DAY_PIXEL_SIZE));
-        grid.getRowConstraints().setAll(new RowConstraints(20,20,20));
-        
-        initializeCalendarView();
-        
     }
     
     /**
      * initializes the elements needed for showing dates, months and year.
      */
-    public void initializeCalendarView()
+    public void initializeCalendarView(GridPane inGrid)
     {
-        
+        grid = inGrid;
+        grid.getColumnConstraints().setAll(new ColumnConstraints(DAY_PIXEL_SIZE,DAY_PIXEL_SIZE,DAY_PIXEL_SIZE));
+        grid.getRowConstraints().setAll(new RowConstraints(20,20,20));
         dateClaendarText = new Text[daysInView];
         dayOfWeek = new Text[daysInView];
         dayRectangles = new Rectangle[daysInView];

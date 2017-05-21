@@ -24,8 +24,10 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TableView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import timelineManager.helpClasses.DateViewer;
 import timelineManager.helpClasses.TimelineViewer;
 import timelineManager.model.Task;
 import timelineManager.model.Timeline;
@@ -64,13 +66,16 @@ public class EditTimelineController extends AbstractController implements Initia
 	
 	LocalDate start,oldStart,end,oldEnd;
 	
+	TableView<Timeline> tableView;
+	
 	/**
 	 * Constructor which takes the model acess and timeline viewer as inputs.
 	 * @param modelAccess an access Class to the Model
 	 * @param timelineViewer TimelineView is printing the timelines to GUI
 	 */
-	public EditTimelineController(ModelAccess modelAccess, TimelineViewer timelineViewer) {
-		super(modelAccess, timelineViewer);
+	public EditTimelineController(ModelAccess modelAccess, TimelineViewer timelineViewer, DateViewer dateViewer, TableView<Timeline> timelineTable) {
+		super(modelAccess, timelineViewer, timelineTable, dateViewer);
+		this.tableView = timelineTable;
 	}
 	
 	public void editTimeline(ActionEvent e) throws SQLException, Exception{
@@ -140,8 +145,8 @@ public class EditTimelineController extends AbstractController implements Initia
 				timelineInChange.setStartTime(start);
 				timelineInChange.setEndTime(end);
 				editTimelinewithTasksInDB(timelineInChange);   // would be enough to only edit timeline in database in this case
-				timelineViewer.update(getModelAccess().timelineModel);
-				
+				getTimelineViewer().update(getModelAccess().timelineModel);
+				tableView.refresh();
 			}
 			// if at least a task is completely outside of new timeline dates
 			else if(!isInBoundries)
@@ -190,7 +195,7 @@ public class EditTimelineController extends AbstractController implements Initia
 						timelineInChange.deleteTask(task);
 					}
 					editTimelinewithTasksInDB(timelineInChange);
-					super.timelineViewer.update(getModelAccess().timelineModel);
+					super.getTimelineViewer().update(getModelAccess().timelineModel);
 					
 					
 				}
@@ -229,7 +234,7 @@ public class EditTimelineController extends AbstractController implements Initia
 					
 					editTimelinewithTasksInDB(timelineInChange);
 					
-					timelineViewer.update(getModelAccess().timelineModel);
+					getTimelineViewer().update(getModelAccess().timelineModel);
 				}
 			}
 			// If check is needed for JUnit tests
@@ -239,7 +244,6 @@ public class EditTimelineController extends AbstractController implements Initia
 				final Stage stage = (Stage) source.getScene().getWindow();
 				stage.close();
 			}
-			
 			
 		} catch (RuntimeException exception) {
 			if(!isTestMode) {
@@ -253,6 +257,7 @@ public class EditTimelineController extends AbstractController implements Initia
 				throw exception;
 			}
 		}
+		
 	}
 	
 	public void cancelTimeline(){

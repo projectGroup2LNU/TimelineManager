@@ -22,9 +22,11 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.TableView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import timelineManager.helpClasses.DateViewer;
 import timelineManager.helpClasses.TimelineViewer;
 import timelineManager.model.Task;
 import timelineManager.model.Timeline;
@@ -69,9 +71,9 @@ public class EditTaskController extends AbstractController implements Initializa
      * @param modelAccess conection to the model
      * @param timelineViewer logics for printing timelines in GUI
      */
-    public EditTaskController(ModelAccess modelAccess, TimelineViewer timelineViewer)
+    public EditTaskController(ModelAccess modelAccess, TimelineViewer timelineViewer, DateViewer dateViewer, TableView<Timeline> timelineTable)
     {
-        super(modelAccess, timelineViewer);
+        super(modelAccess, timelineViewer, timelineTable, dateViewer);
     }
     
     /**
@@ -101,7 +103,7 @@ public class EditTaskController extends AbstractController implements Initializa
             getModelAccess().database.addTask((int) taskInChange.getId(), title, description, start.toString(), end.toString(),timelineId );
             getModelAccess().database.getConnection().close();
             
-            timelineViewer.update(getModelAccess().timelineModel);
+            getTimelineViewer().update(getModelAccess().timelineModel);
             
         	// If check is needed for JUnit tests
     		if(!isTestMode) {
@@ -122,7 +124,7 @@ public class EditTaskController extends AbstractController implements Initializa
     			throw exception;
     		}
     	}
-        timelineViewer.update(getModelAccess().timelineModel);
+        getTimelineViewer().update(getModelAccess().timelineModel);
     }
     
     public void cancelTask(){

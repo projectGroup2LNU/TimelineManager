@@ -27,7 +27,7 @@ import java.time.LocalDate;
 
 public class TUTimeline02_EditTimelineJUnitTest {
 	private ModelAccess modelAccess = new ModelAccess();
-	private EditTimelineController controller = new EditTimelineController(modelAccess, null);
+	private EditTimelineController controller = new EditTimelineController(modelAccess, null, null, null);
 	private String fxmlPath = "/timelineManager/view/EditTimelineView.fxml";
 	
 	@Before

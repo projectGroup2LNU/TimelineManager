@@ -10,6 +10,8 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.control.TableView;
+import timelineManager.helpClasses.DateViewer;
 import timelineManager.helpClasses.TimelineViewer;
 import timelineManager.model.Task;
 import timelineManager.model.Timeline;
@@ -20,17 +22,19 @@ import timelineManager.model.Timeline;
  */
 public abstract class AbstractController {
     
+    private TableView<Timeline> timelineTable;
     private ModelAccess modelAccess;
-    TimelineViewer timelineViewer;
+    private TimelineViewer timelineViewer;
+    private DateViewer dateViewer;
     
-    public AbstractController(ModelAccess modelAccess, TimelineViewer timelineViewer){
+    public AbstractController(ModelAccess modelAccess, TimelineViewer timelineViewer,
+                              TableView<Timeline> timelineTable, DateViewer dateViewer){
         this.modelAccess=modelAccess;
         this.timelineViewer = timelineViewer;
+        this.timelineTable = timelineTable;
+        this.dateViewer = dateViewer;
     }
     
-    public ModelAccess getModelAccess(){
-        return modelAccess;
-    }
     
     protected void getDatabaseConnection(){
     
@@ -114,5 +118,33 @@ public abstract class AbstractController {
             
             }
         }
+    }
+    
+    // Gettes and Setters
+    
+    
+    public TableView<Timeline> getTimelineTable()
+    {
+        return timelineTable;
+    }
+    
+    public void setTimelineTable(TableView<Timeline> timelineTable)
+    {
+        this.timelineTable = timelineTable;
+    }
+    
+    public ModelAccess getModelAccess()
+    {
+        return modelAccess;
+    }
+    
+    public TimelineViewer getTimelineViewer()
+    {
+        return timelineViewer;
+    }
+    
+    public DateViewer getDateViewer()
+    {
+        return dateViewer;
     }
 }

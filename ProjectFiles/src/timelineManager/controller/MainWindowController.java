@@ -105,10 +105,11 @@ public class MainWindowController extends AbstractController implements Initiali
     //date of the day
     private LocalDate currentDate = LocalDate.now();
 
-    public MainWindowController(ModelAccess modelAccess, TimelineViewer timelineViewer) {
+    public MainWindowController(ModelAccess modelAccess, TimelineViewer timelineViewer, DateViewer dateViewer, TableView<Timeline> timelineTable) {
         
-        super(modelAccess, timelineViewer);
-        
+        super(modelAccess, timelineViewer, timelineTable, dateViewer);
+        this.dateViewer = dateViewer;
+        this.timelineTable = timelineTable;
         // This next rows is just for adding dummy Data.
      //   DummyCreator dc = new DummyCreator(super.getModelAccess());
     }
@@ -128,9 +129,7 @@ public class MainWindowController extends AbstractController implements Initiali
             if (KeyCode.ESCAPE == event.getCode() && stage.isFocused()==true) {
                 stage.close();
             }
-            
         });
-        
     }
     
     public void openAddTaskWindow(ActionEvent e){
@@ -157,7 +156,7 @@ public class MainWindowController extends AbstractController implements Initiali
         currentDate = currentDate.plus(7,ChronoUnit.DAYS);
         datePickerUpdate(currentDate);
         dateViewer.showDates(currentDate);
-        super.timelineViewer.update(currentDate, super.getModelAccess().timelineModel);
+        super.getTimelineViewer().update(currentDate, super.getModelAccess().timelineModel);
     }
     
     //to be connected to the left button, changing the date to a week back
@@ -165,7 +164,7 @@ public class MainWindowController extends AbstractController implements Initiali
         currentDate = currentDate.minus(7, ChronoUnit.DAYS);
         datePickerUpdate(currentDate);
         dateViewer.showDates(currentDate);
-        super.timelineViewer.update(currentDate, super.getModelAccess().timelineModel);
+        super.getTimelineViewer().update(currentDate, super.getModelAccess().timelineModel);
     }
     
     //to be connected to a reset button, that will change the date back to the actual date of the day
@@ -174,7 +173,7 @@ public class MainWindowController extends AbstractController implements Initiali
         datePickerUpdate(currentDate);
         
         dateViewer.showDates(currentDate);
-        super.timelineViewer.update(currentDate, super.getModelAccess().timelineModel);
+        super.getTimelineViewer().update(currentDate, super.getModelAccess().timelineModel);
         
     }
     
@@ -185,7 +184,7 @@ public class MainWindowController extends AbstractController implements Initiali
         currentDate= mainWindowDatePicker.getValue();
         datePickerUpdate(currentDate);
         dateViewer.showDates(currentDate);
-        super.timelineViewer.update(currentDate, super.getModelAccess().timelineModel);
+        super.getTimelineViewer().update(currentDate, super.getModelAccess().timelineModel);
     }
     
     
@@ -203,7 +202,7 @@ public class MainWindowController extends AbstractController implements Initiali
         timelineScrollPane.setFitToWidth(true);
         timelineScrollPane.setFitToHeight(true);
         datePickerUpdate(currentDate);
-        dateViewer = new DateViewer(currentDate, dateGrid);
+        dateViewer.initializeCalendarView(dateGrid);
         dateGrid.getColumnConstraints().setAll(new ColumnConstraints(DAY_PIXEL_SIZE,DAY_PIXEL_SIZE,DAY_PIXEL_SIZE));
         dateGrid.getRowConstraints().setAll(new RowConstraints(20,20,20));
         dateGrid.getRowConstraints().add(0, new RowConstraints(40,40,40));
@@ -291,11 +290,8 @@ public class MainWindowController extends AbstractController implements Initiali
                     Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
                 }
           }
-          
-       
-       
         
-        timelineViewer.timelineViewerInitialize(currentDate, timelineGrid, super.getModelAccess(), radioButtonAllTimelines, radioButtonSelectedTimeline);
+        getTimelineViewer().timelineViewerInitialize(currentDate, timelineGrid, super.getModelAccess(), radioButtonAllTimelines, radioButtonSelectedTimeline);
       
         // Think this is solved with resizeing and not needed anymore
        /* goLeft();  // this solves a bug with dates showing a small space if

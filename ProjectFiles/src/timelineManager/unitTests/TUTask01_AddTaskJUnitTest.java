@@ -24,7 +24,7 @@ import javafx.fxml.FXMLLoader;
 public class TUTask01_AddTaskJUnitTest {
 	private ModelAccess modelAccess = new ModelAccess();
 	//private TimelineViewer timelineViewer = new TimelineViewer();
-	private AddTaskController controller = new AddTaskController(modelAccess, null);
+	private AddTaskController controller = new AddTaskController(modelAccess, null, null, null);
 	private String fxmlPath = "/timelineManager/view/AddTaskView.fxml";
 	private ObservableList<Task> tasks;
 
