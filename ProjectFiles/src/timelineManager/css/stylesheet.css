@@ -30,39 +30,51 @@
     -fx-background-color: #D9D9D9;
 }
  .text-title {
-    -fx-font-family: "Tw Cen MT";
+    -fx-font-family: "Tahoma";
     -fx-font-size:25;
     -fx-fill:#FFF;
 }
-.radio-button {
+.radio-button{
     -fx-text-fill: #FFF;
-    -fx-font-family: "Tw Cen MT";
-    -fx-font-size:18;
+    -fx-font-family: "Tahoma";
+    -fx-font-size:  18px;
 }
+.radio-button .radio {
+    -fx-border-width: 1px;
+    -fx-border-color: #000;
+    -fx-background-color: #FFF;
+    -fx-border-radius: 15px;
+    -fx-padding: 4px;
+}
+.radio-button .dot {
+    -fx-background-radius: 10px;
+    -fx-padding: 6px;
+}
+
 .text-c1 {
     -fx-background-color: #D9D9D9;
 }
  .text-field-date {
     -fx-font-size: 13pt;
-    -fx-font-family: "Tw Cen MT";
+    -fx-font-family: "Tahoma";
     -jfx-default-color: #F28026;
 }
 /*small windows*/
 .text-field-title {
     -fx-font-size: 18pt;
-    -fx-font-family: "Tw Cen MT";
+    -fx-font-family: "Tahoma";
     -jfx-focus-color: #F28026;
     -jfx-unfocus-color: #000;
 }
 .text-field-description {
     -fx-font-size: 14pt;
-    -fx-font-family: "Tw Cen MT";
+    -fx-font-family: "Tahoma";
     -jfx-focus-color: #F28026;
     -jfx-unfocus-color: #000;
 }
 .text-field-login {
     -fx-font-size: 12pt;
-    -fx-font-family: "Tw Cen MT";
+    -fx-font-family: "Tahoma";
     -jfx-focus-color: #F28026;
     -jfx-unfocus-color: #000;
 }
@@ -71,7 +83,7 @@
     -fx-padding: 2px;
     -fx-border-width: 2;
     -fx-background-color: #F28026;
-    -fx-font-family: "Tw Cen MT";
+    -fx-font-family: "Tahoma";
     -fx-font-size: 16pt;
     -fx-text-fill: #FFF;
     -fx-background-insets: 0 0 0 0, 0, 1, 2;
@@ -95,8 +107,8 @@
 .button-round {
     -fx-padding:-10px;
     -fx-background-radius: 85px;
-    -fx-background-color: #D9D9D9;
-    -fx-font-family: "Tw Cen MT";
+    -fx-background-color: transparent;
+    -fx-font-family: "Tahoma";
     -fx-font-size: 85pt;
     -fx-text-fill: #F28026;
     -fx-text-weight:bold;
@@ -110,18 +122,18 @@
     
 }
 .button-round:hover {
-    -fx-background-color: #D9D9D9;
+    -fx-background-color: transparent;
     -fx-text-fill: #D9D9D9;
     -fx-cursor:hand;
 }
 .button-round:pressed{
-    -fx-background-color: #D9D9D9;
+    -fx-background-color: transparent;
     -fx-text-fill: #B6601D;
     -fx-cursor:CLOSED_hand;
 }
 .button-round:disabled{
     -fx-opacity: 0.4;
-    -fx-background-color: #D9D9D9;
+    -fx-background-color: transparent;
     -fx-text-fill: #7B7B7B;
 }
 
@@ -133,21 +145,21 @@
     -fx-max-height:250px;
     -fx-font-size: 85pt;
     -fx-text-fill: #FFF;
-    -fx-background-color: #D9D9D9;
+    -fx-background-color: transparent;
     -jfx-button-type:FLAT;
     -fx-position-shape: false;
     -fx-opacity: .4;
 }
 .button-chooser:hover {
-    -fx-background-color: #D9D9D9;
+    -fx-background-color: transparent;
     -fx-text-fill: #D9D9D9;
-    -fx-opacity: 0;
+    -fx-opacity: 1;
     -fx-cursor:hand;
 }
 .button-chooser:pressed, .button-chooser:default:hover:pressed{
-    -fx-background-color: #D9D9D9;
+    -fx-background-color: transparent;
     -fx-text-fill: F28026;
-    -fx-opacity: .8;
+    -fx-opacity: 1;
     -fx-cursor:CLOSED_hand;
 }
 .button-chooser:disabled, .button-chooser:default:disabled {
