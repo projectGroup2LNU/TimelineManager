@@ -15,13 +15,11 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.DateCell;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import timelineManager.helpClasses.DateViewer;
 import timelineManager.helpClasses.TimelineViewer;
 import timelineManager.model.Task;
 import timelineManager.model.Timeline;
@@ -62,8 +60,9 @@ public class AddTaskController extends AbstractController implements Initializab
      * that use the same technique
      * @param modelAccess uses the superClass to give same reference for the model to all controllers
      */
-    public AddTaskController(ModelAccess modelAccess, TimelineViewer timelineViewer) {
-        super(modelAccess, timelineViewer);
+    public AddTaskController(ModelAccess modelAccess, TimelineViewer timelineViewer,
+							 DateViewer dateViewer, TableView<Timeline> timelineTable) {
+        super(modelAccess, timelineViewer, timelineTable, dateViewer);
     }
     
     /**
@@ -91,7 +90,7 @@ public class AddTaskController extends AbstractController implements Initializab
     			// Closes the connection
     			getModelAccess().database.getConnection().close();
 
-    			super.timelineViewer.update(super.getModelAccess().timelineModel);
+    			super.getTimelineViewer().update(super.getModelAccess().timelineModel);
 
     			// Window closes itself after user clicks the Save button
     			final Node source = (Node) e.getSource();

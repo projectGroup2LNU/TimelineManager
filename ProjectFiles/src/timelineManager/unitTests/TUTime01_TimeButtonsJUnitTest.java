@@ -17,7 +17,7 @@ import java.time.LocalDate;
 public class TUTime01_TimeButtonsJUnitTest {
 	private ModelAccess modelAccess = new ModelAccess();
 	private TimelineViewer timelineViewer = new TimelineViewer();
-	private MainWindowController time = new MainWindowController(modelAccess, timelineViewer);
+	private MainWindowController time = new MainWindowController(modelAccess, timelineViewer, null, null);
 	private String fxmlPath = "/timelineManager/view/MainView.fxml";
 	
 	@Before

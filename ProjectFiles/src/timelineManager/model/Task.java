@@ -32,8 +32,8 @@ public class Task {
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.timeline = timeline;
-		
     }
+    
 	public Task(String title, String description, LocalDate startTime, LocalDate endTime, Color inputColor) {
 		this.id = counter++;
 		this.title = title;

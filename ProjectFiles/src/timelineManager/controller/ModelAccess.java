@@ -23,7 +23,6 @@ public class ModelAccess
     private Timeline selectedTimeline;
     public TimelineModel timelineModel=new TimelineModel();
     public ApplicationDB database=new ApplicationDB();
-
     
     public Timeline getSelectedTimeline(){
         return selectedTimeline;
@@ -44,7 +43,5 @@ public class ModelAccess
     public void setSelectedTask(Task task){
         selectedTask=task;
     }
-    
-    
     
 }

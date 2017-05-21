@@ -12,9 +12,11 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import timelineManager.helpClasses.DateViewer;
 import timelineManager.helpClasses.TimelineViewer;
 import timelineManager.model.Timeline;
 
@@ -50,8 +52,8 @@ public class AddTimelineController extends AbstractController{
     String desc = "";
     
 
-    public AddTimelineController(ModelAccess modelAccess, TimelineViewer timelineViewer) {
-        super(modelAccess, timelineViewer);
+    public AddTimelineController(ModelAccess modelAccess, TimelineViewer timelineViewer, DateViewer dateViewer, TableView<Timeline> timelineTable) {
+        super(modelAccess, timelineViewer, timelineTable, dateViewer);
     }
     
     public void addTheTimeline(ActionEvent e) throws ClassNotFoundException, SQLException, Exception {
@@ -67,12 +69,14 @@ public class AddTimelineController extends AbstractController{
 
     		// If check is needed for JUnit tests
     		if(!isTestMode) {
-    			super.timelineViewer.update(getModelAccess().timelineModel);
+    			super.getTimelineViewer().update(getModelAccess().timelineModel);
     			int id = (int) timeline.getId();
     			getDatabaseConnection();
     			getModelAccess().database.addTimeLine(id, title, desc, start.toString(), end.toString());
     			//closes the connection
     			getModelAccess().database.getConnection().close();
+				getTimelineViewer().update(timeline.getStartTime(), getModelAccess().timelineModel);
+    			getDateViewer().showDates(timeline.getStartTime());
 
     			// Window closes itself after user clicks the Save button
     			final Node source = (Node) e.getSource();
