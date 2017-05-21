@@ -61,13 +61,13 @@ public class MainWindowController extends AbstractController implements Initiali
     private JFXButton addTaskButton;
     
     @FXML
-    private JFXButton addTaskPlusButton;
+    private Button addTaskPlusButton;
     
     @FXML
-    private JFXButton goLeftButton;
+    private Button goLeftButton;
     
     @FXML
-    private JFXButton goRightButton;
+    private Button goRightButton;
     
     @FXML
     private GridPane dateGrid;

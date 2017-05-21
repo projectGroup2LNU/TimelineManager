@@ -123,7 +123,7 @@
 }
 .button-round:hover {
     -fx-background-color: transparent;
-    -fx-text-fill: #D9D9D9;
+    -fx-text-fill: #F6A668;
     -fx-cursor:hand;
 }
 .button-round:pressed{
@@ -152,7 +152,7 @@
 }
 .button-chooser:hover {
     -fx-background-color: transparent;
-    -fx-text-fill: #D9D9D9;
+    -fx-text-fill: #F6A668;
     -fx-opacity: 1;
     -fx-cursor:hand;
 }
