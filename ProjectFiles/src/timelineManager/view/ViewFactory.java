@@ -1,9 +1,12 @@
 package timelineManager.view;
 
 import java.io.IOException;
+import java.time.LocalDate;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
 import timelineManager.controller.AbstractController;
 import timelineManager.controller.AddTaskController;
@@ -12,7 +15,9 @@ import timelineManager.controller.EditTaskController;
 import timelineManager.controller.EditTimelineController;
 import timelineManager.controller.MainWindowController;
 import timelineManager.controller.ModelAccess;
+import timelineManager.helpClasses.DateViewer;
 import timelineManager.helpClasses.TimelineViewer;
+import timelineManager.model.Timeline;
 
 /**
  * This class is a helper class for loading the views from .fxml files.
@@ -25,6 +30,8 @@ public class ViewFactory {
     
     private ModelAccess modelAccess=new ModelAccess();
     private TimelineViewer timelineViewer = new TimelineViewer();
+    private TableView<Timeline> timelineTable = new TableView<>(modelAccess.timelineModel.timelineList);
+    private DateViewer dateViewer = new DateViewer(LocalDate.now());
     
     private AddTaskController addTaskController;
     private AddTimelineController addTimelineController;
@@ -41,20 +48,20 @@ public class ViewFactory {
     
     
      public Scene getMainScene(){
-	mainWindowController=new MainWindowController(modelAccess,timelineViewer);
+	mainWindowController=new MainWindowController(modelAccess,timelineViewer, dateViewer, timelineTable);
         return initilazeScene(MAIN_FXML, mainWindowController);
 		
 	}
     
      public Scene getAddTimelineScene(){
-        addTimelineController=new AddTimelineController(modelAccess,timelineViewer);
+        addTimelineController=new AddTimelineController(modelAccess,timelineViewer, dateViewer, timelineTable);
         return initilazeScene(ADD_TIMELINE_FXML, addTimelineController);
      
      
      }
 	
 	 public Scene getAddTaskScene(){
-         addTaskController=new AddTaskController(modelAccess,timelineViewer);
+         addTaskController=new AddTaskController(modelAccess,timelineViewer, dateViewer, timelineTable);
          return initilazeScene(ADD_TASK_FXML, addTaskController);
      
         }
@@ -62,14 +69,14 @@ public class ViewFactory {
          
          
     public Scene getEditTimelineScene(){
-	editTimelineController=new EditTimelineController(modelAccess,timelineViewer);
+	editTimelineController=new EditTimelineController(modelAccess,timelineViewer, dateViewer, timelineTable);
         return initilazeScene(EDIT_TIMELINE_FXML, editTimelineController);
 		
 	}
     
     
     public Scene getEditTaskScene(){
-         editTaskController=new EditTaskController(modelAccess,timelineViewer);
+         editTaskController=new EditTaskController(modelAccess,timelineViewer, dateViewer, timelineTable);
          return initilazeScene(EDIT_TASK_FXML, editTaskController);
     }
 
