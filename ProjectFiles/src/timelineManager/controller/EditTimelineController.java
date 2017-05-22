@@ -9,6 +9,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
+import com.sun.javafx.scene.control.skin.TableViewSkinBase;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -24,7 +25,9 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import timelineManager.helpClasses.DateViewer;
@@ -116,8 +119,8 @@ public class EditTimelineController extends AbstractController implements Initia
 				isDurationTheSame = true;
 			}
 			
-			// THIS PART SHOULD BE MOVED TO A "MOVE" FUNCTION
-            /*if(isDurationTheSame == true || taskList.isEmpty()){
+		/*	// THIS PART SHOULD BE MOVED TO A "MOVE" FUNCTION
+            if(isDurationTheSame == true || taskList.isEmpty()){
             	for(int i = 0; i < taskList.size(); i++){
             		LocalDate newStartforTask = taskList.get(i).getStartTime().plus(diffStart, DAYS);
             		taskList.get(i).setStartTime(newStartforTask);
@@ -125,19 +128,19 @@ public class EditTimelineController extends AbstractController implements Initia
             		taskList.get(i).setEndTime(newEndforTask);
             	}
 
-            	Timeline temp = new Timeline(title, desc, start, end);
+            	Timeline temp = new Timeline(title, description, start, end);
 
             	temp.taskList = taskList;
             	getModelAccess().timelineModel.timelineList.remove(indexOfTimeline);
             	getModelAccess().timelineModel.timelineList.add(temp);
             	
-                  editTimelinewithTasksInDB(temp,oldId);
+                  editTimelinewithTasksInDB(temp);
                   getModelAccess().setSelectedTimeline(temp);
-                  timelineViewer.update(getModelAccess().timelineModel);
-               */
+                  super.getTimelineViewer().update(getModelAccess().timelineModel);
+               }*/
 			
 			// if no tasks was affected by resize
-			if(!isCut)
+                    if(!isCut)
 			{
 				Timeline timelineInChange = getModelAccess().getSelectedTimeline();
 				timelineInChange.setTitle(title);
@@ -146,7 +149,8 @@ public class EditTimelineController extends AbstractController implements Initia
 				timelineInChange.setEndTime(end);
 				editTimelinewithTasksInDB(timelineInChange);   // would be enough to only edit timeline in database in this case
 				getTimelineViewer().update(getModelAccess().timelineModel);
-				tableView.refresh();
+                                 
+                              
 			}
 			// if at least a task is completely outside of new timeline dates
 			else if(!isInBoundries)
@@ -196,8 +200,7 @@ public class EditTimelineController extends AbstractController implements Initia
 					}
 					editTimelinewithTasksInDB(timelineInChange);
 					super.getTimelineViewer().update(getModelAccess().timelineModel);
-					
-					
+                                          
 				}
 				else if (result.get() == CANCEL) {
 				}
@@ -235,6 +238,8 @@ public class EditTimelineController extends AbstractController implements Initia
 					editTimelinewithTasksInDB(timelineInChange);
 					
 					getTimelineViewer().update(getModelAccess().timelineModel);
+                                         
+                                        
 				}
 			}
 			// If check is needed for JUnit tests
@@ -336,7 +341,7 @@ public class EditTimelineController extends AbstractController implements Initia
 			String Taskdesc=timeline.taskList.get(i).getDescription();
 			LocalDate Taskstart=timeline.taskList.get(i).getStartTime();
 			LocalDate Taskend=timeline.taskList.get(i).getEndTime();
-			getModelAccess().database.addTask((int)timeline.getId(), timeline.taskList.get(i).getTitle(), timeline.taskList.get(i).getDescription(), timeline.taskList.get(i).getStartTime().toString(), timeline.taskList.get(i).getEndTime().toString(), (int)timeline.taskList.get(i).getId());
+			getModelAccess().database.addTask((int)timeline.taskList.get(i).getId(), timeline.taskList.get(i).getTitle(), timeline.taskList.get(i).getDescription(), timeline.taskList.get(i).getStartTime().toString(), timeline.taskList.get(i).getEndTime().toString(),(int)timeline.getId() );
 		}
 		
 		//closes the connection

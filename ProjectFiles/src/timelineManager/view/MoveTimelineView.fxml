@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXDatePicker?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="350.0" styleClass="background" stylesheets="@../css/stylesheet.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <JFXTextField fx:id="titleField" labelFloat="true" layoutX="37.0" layoutY="22.0" prefHeight="29.0" prefWidth="284.0" promptText="Title" styleClass="text-field-title" />
+      <JFXDatePicker fx:id="startDate" defaultColor="BLACK" editable="false" layoutX="37.0" layoutY="250.0" prefHeight="29.0" prefWidth="292.0" promptText="Start Date" styleClass="text-field-date" />
+      <JFXDatePicker fx:id="endDate" defaultColor="BLACK" editable="false" layoutX="37.0" layoutY="288.0" prefHeight="29.0" prefWidth="292.0" promptText="End Date" styleClass="text-field-date" />
+      <JFXTextArea fx:id="descriptionField" labelFloat="true" layoutX="37.0" layoutY="94.0" prefHeight="126.0" prefWidth="284.0" promptText="Description" styleClass="text-field-description" />
+      <JFXButton fx:id="saveButton" buttonType="RAISED" layoutX="37.0" layoutY="358.0" onAction="#moveTimeline" prefHeight="17.0" prefWidth="113.0" text="Save" />
+      <JFXButton fx:id="cancelButton" buttonType="RAISED" layoutX="208.0" layoutY="358.0" onAction="#cancelTimeline" prefHeight="17.0" prefWidth="113.0" text="Cancel" />
+   </children>
+</AnchorPane>

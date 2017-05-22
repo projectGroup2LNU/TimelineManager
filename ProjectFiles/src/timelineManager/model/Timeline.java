@@ -88,4 +88,9 @@ public class Timeline{
 	public void setTaskColor(Task task){
             task.setColor(colorbar[taskList.indexOf(task)%4]);
         }
+        
+        public SimpleStringProperty titleProperty(){
+        
+        return title;
+        }
 }

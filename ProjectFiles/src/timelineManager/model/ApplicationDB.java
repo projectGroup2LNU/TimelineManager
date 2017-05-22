@@ -54,7 +54,7 @@ public class ApplicationDB {
                         preparedStatement.executeUpdate();
 	 
 	        } catch (SQLException e) {
-                     System.out.println("baba burda");    // TODO is this for test??
+                     System.out.println("test delete task");    // TODO is this for test??
 	            System.out.println(e.getMessage());
 	        }
 	    } 
