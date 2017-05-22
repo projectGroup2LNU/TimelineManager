@@ -215,11 +215,7 @@ public class TimelineViewer
                 } catch (Exception ex) {
                     Logger.getLogger(TimelineViewer.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            
-                
             }
-
-           
         });
         
         contextMenuTask.getItems().addAll(editTask, deleteTask);  // makes a menu when rightclicking a TaskRectangle
@@ -449,7 +445,10 @@ public class TimelineViewer
                         }
                     });
                 }
-                hPos++;  // makes a space in Vertical space to next timeline
+                Rectangle filler = new Rectangle(DAY_PIXEL_SIZE,20);
+                filler.setOpacity(0);
+                grid.add(filler,0,hPos++);
+                
             }
             // a filler to get space between last task and the bottom
             Rectangle filler = new Rectangle(DAY_PIXEL_SIZE,20);

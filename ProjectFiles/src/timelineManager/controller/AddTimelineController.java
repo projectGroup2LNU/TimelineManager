@@ -181,23 +181,48 @@ public class AddTimelineController extends AbstractController{
     
     private boolean errorCheck() {
     	boolean errorFound = true;
-    	
-    	if(title.trim().isEmpty()) {
-    		titleField.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
-    		titleField.setTooltip(new Tooltip("Please insert title"));
-    	} else if (start == null) {
-    		startDate.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
-    		startDate.setTooltip(new Tooltip("Select start date"));
-    	} else if (end == null) {
-    		endDate.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
-    		endDate.setTooltip(new Tooltip("Select end date"));
-    	} else if(end.isBefore(start)) {
-    		endDate.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
-    		endDate.setTooltip(new Tooltip("End date cannot be before start date"));
-    	} else {
-    		errorFound = false;
-    	}
+	
+		if(title.trim().isEmpty()) {
+			Tooltip tooltip = new Tooltip("Please insert title");
+			setTooltipStyle(tooltip);
+			titleField.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
+			titleField.setTooltip(tooltip);
+		
+		} else if (start == null) {
+			Tooltip tooltip = new Tooltip("Select start date");
+			setTooltipStyle(tooltip);
+			startDate.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
+			startDate.setTooltip(tooltip);
+		} else if (end == null) {
+			Tooltip tooltip = new Tooltip("Select end date");
+			setTooltipStyle(tooltip);
+			endDate.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
+			endDate.setTooltip(tooltip);
+		} else if(end.isBefore(start)) {
+			Tooltip tooltip = new Tooltip("End date cannot be before start date");
+			setTooltipStyle(tooltip);
+			endDate.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
+			endDate.setTooltip(tooltip);
+		} else {
+			errorFound = false;
+		}
     	
     	return errorFound;
     }
+	
+	/**
+	 * This method set style to red (error message) of the input tooltip
+	 * @param tooltip the Tooltip to be edited
+	 */
+	private void setTooltipStyle(Tooltip tooltip)
+	{
+		tooltip.setStyle("-fx-background: rgb(30,30,30);" +
+				"-fx-background-color: rgba(255,0,0,0.3);" +
+				"-fx-text-fill: orange;" +
+				"-fx-background-radius: 6px;" +
+				"-fx-background-insets: 0;" +
+				"-fx-padding: 0.667em 0.75em 0.667em 0.75em;" +
+				"-fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.5) , 10, 0.0 , 0 , 3 );" +
+				"-fx-font-size: 0.85em;");
+	}
 }

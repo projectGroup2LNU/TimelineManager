@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
+import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -177,6 +178,7 @@ public class AddTaskController extends AbstractController implements Initializab
     	return endDate;
     }
 	
+	
    
 	// Checks for any invalid or missing information and throws and exception if found
   /*  private void errorCheck() {
@@ -205,22 +207,34 @@ public class AddTaskController extends AbstractController implements Initializab
     }	*/
     
     // Private methods
-    
+    /*
+          This method checks if there is any errors in the inputs, if it is the fields will be marked
+          and a tooltip added to show what the user need to change
+     */
     private boolean errorCheck() {
     	boolean errorFound = true;
     	
     	if(title.trim().isEmpty()) {
+    		Tooltip tooltip = new Tooltip("Please insert title");
+    		setTooltipStyle(tooltip);
     		titleField.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
-    		titleField.setTooltip(new Tooltip("Please insert title"));
+    		titleField.setTooltip(tooltip);
+    		
     	} else if (start == null) {
+			Tooltip tooltip = new Tooltip("Select start date");
+			setTooltipStyle(tooltip);
     		startDate.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
-    		startDate.setTooltip(new Tooltip("Select start date"));
+    		startDate.setTooltip(tooltip);
     	} else if (end == null) {
+			Tooltip tooltip = new Tooltip("Select end date");
+			setTooltipStyle(tooltip);
     		endDate.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
-    		endDate.setTooltip(new Tooltip("Select end date"));
+    		endDate.setTooltip(tooltip);
     	} else if(end.isBefore(start)) {
+			Tooltip tooltip = new Tooltip("End date cannot be before start date");
+			setTooltipStyle(tooltip);
     		endDate.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
-    		endDate.setTooltip(new Tooltip("End date cannot be before start date"));
+    		endDate.setTooltip(tooltip);
     	} else {
     		errorFound = false;
     	}
@@ -251,4 +265,19 @@ public class AddTaskController extends AbstractController implements Initializab
 	 	startDate.setDayCellFactory(dayCellFactory);
 		endDate.setDayCellFactory(dayCellFactory);
     }
+	/**
+	 * This method set style to red (error message) of the input tooltip
+	 * @param tooltip the Tooltip to be edited
+	 */
+	private void setTooltipStyle(Tooltip tooltip)
+	{
+		tooltip.setStyle("-fx-background: rgb(30,30,30);" +
+				"-fx-background-color: rgba(255,0,0,0.3);" +
+				"-fx-text-fill: orange;" +
+				"-fx-background-radius: 6px;" +
+				"-fx-background-insets: 0;" +
+				"-fx-padding: 0.667em 0.75em 0.667em 0.75em;" +
+				"-fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.5) , 10, 0.0 , 0 , 3 );" +
+				"-fx-font-size: 0.85em;");
+	}
 }
