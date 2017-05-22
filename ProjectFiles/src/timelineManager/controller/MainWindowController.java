@@ -68,6 +68,9 @@ public class MainWindowController extends AbstractController implements Initiali
     
     @FXML
     private Button goRightButton;
+	
+    @FXML
+    private Button helpButton;
     
     @FXML
     private GridPane dateGrid;
