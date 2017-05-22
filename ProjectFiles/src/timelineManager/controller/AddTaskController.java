@@ -84,7 +84,7 @@ public class AddTaskController extends AbstractController implements Initializab
     		// If check is needed for JUnit tests
     		if(!isTestMode) {
     			getModelAccess().database.connectToDatabase();
-    			int id = (int) getModelAccess().getSelectedTimeline().getId();
+    			int id = (int) task.getTimeline().getId();
     			int tasksId = (int) task.getId();
     			getModelAccess().database.addTask(tasksId, title, desc, start.toString(), end.toString(), id);
 

@@ -74,7 +74,7 @@ public class EditTaskController extends AbstractController implements Initializa
     }
     
     /**
-     * This function edits an task.
+     * This function edits a task.
      * @param e actionEvent
      * @throws ClassNotFoundException
      * @throws SQLException
@@ -94,8 +94,13 @@ public class EditTaskController extends AbstractController implements Initializa
             taskInChange.setDescription(description);
             taskInChange.setStartTime(start);                                                                                                                                                                                                                           
             taskInChange.setEndTime(end);
+
+            int timelineId = (int)taskInChange.getTimeline().getId();
+            //
+            System.out.println(taskInChange.getId());
             getModelAccess().database.deleteTaskByTaskID((int) taskInChange.getId());
-            getModelAccess().database.addTask((int) taskInChange.getId(), title, description, start.toString(), end.toString(),(int)taskInChange.getTimeline().getId());
+            getModelAccess().database.addTask((int) taskInChange.getId(), title, description, start.toString(), end.toString(),timelineId );
+
             getModelAccess().database.getConnection().close();
             
             getTimelineViewer().update(getModelAccess().timelineModel);
