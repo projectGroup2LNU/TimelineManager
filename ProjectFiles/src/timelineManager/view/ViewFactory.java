@@ -15,6 +15,7 @@ import timelineManager.controller.EditTaskController;
 import timelineManager.controller.EditTimelineController;
 import timelineManager.controller.MainWindowController;
 import timelineManager.controller.ModelAccess;
+import timelineManager.controller.MoveTimelineController;
 import timelineManager.helpClasses.DateViewer;
 import timelineManager.helpClasses.TimelineViewer;
 import timelineManager.model.Timeline;
@@ -30,7 +31,7 @@ public class ViewFactory {
     
     private ModelAccess modelAccess=new ModelAccess();
     private TimelineViewer timelineViewer = new TimelineViewer();
-    private TableView<Timeline> timelineTable = new TableView<>(modelAccess.timelineModel.timelineList);
+    private TableView<Timeline> timelineTable = new TableView<>();
     private DateViewer dateViewer = new DateViewer(LocalDate.now());
     
     private AddTaskController addTaskController;
@@ -38,12 +39,14 @@ public class ViewFactory {
     private MainWindowController mainWindowController;
     private EditTimelineController editTimelineController;
     private EditTaskController editTaskController;
+    private MoveTimelineController moveTimelineController;
     
     private final String MAIN_FXML="/timelineManager/view/MainView.fxml";
     private final String ADD_TIMELINE_FXML="/timelineManager/view/AddTimelineView.fxml";
     private final String ADD_TASK_FXML="/timelineManager/view/AddTaskView.fxml";
     private final String EDIT_TIMELINE_FXML="/timelineManager/view/EditTimelineView.fxml";
     private final String EDIT_TASK_FXML="/timelineManager/view/EditTaskView.fxml";
+    private final String MOVE_TIMELINE_FXML="/timelineManager/view/MoveTimelineView.fxml";
     
     
     
@@ -71,6 +74,12 @@ public class ViewFactory {
     public Scene getEditTimelineScene(){
 	editTimelineController=new EditTimelineController(modelAccess,timelineViewer, dateViewer, timelineTable);
         return initilazeScene(EDIT_TIMELINE_FXML, editTimelineController);
+		
+	}
+    
+    public Scene getMoveTimelineScene(){
+	moveTimelineController=new MoveTimelineController(modelAccess,timelineViewer, timelineTable,dateViewer );
+        return initilazeScene(MOVE_TIMELINE_FXML, moveTimelineController);
 		
 	}
     

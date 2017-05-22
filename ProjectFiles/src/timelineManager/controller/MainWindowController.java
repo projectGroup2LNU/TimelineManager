@@ -216,7 +216,10 @@ public class MainWindowController extends AbstractController implements Initiali
        titleOfTable.setCellValueFactory(new PropertyValueFactory<Timeline, String>("title"));
 
        
+       
+       
        timelineTable.setItems(getModelAccess().timelineModel.timelineList);
+       
        
        timelineTable.setContextMenu(new ContextMenu(showDetails));
        
@@ -300,6 +303,17 @@ public class MainWindowController extends AbstractController implements Initiali
         goRight();
         goRight();
         goRight();*/
+       
+      /* timelineTable.setOnMouseClicked(e->{
+			Timeline timeline = timelineTable.getSelectionModel().getSelectedItem();
+			if(timeline != null){
+				getModelAccess().setSelectedTimeline(timeline);
+				
+			}
+		});
+       
+       */
+       
     }
     
     // getter for PixelWidth
