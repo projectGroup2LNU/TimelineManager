@@ -16,7 +16,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" prefHeight="620.0" prefWidth="120.0" styleClass="background" stylesheets="@../css/stylesheet.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" prefHeight="620.0" prefWidth="120.0" styleClass="background" stylesheets="@../css/stylesheet.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <AnchorPane prefHeight="600.0" prefWidth="199.0" styleClass="background-left" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -30,13 +30,13 @@
               </columns>
             </TableView>
             <Line endX="200.0" layoutY="300.0" />
-            <RadioButton fx:id="radioButtonAllTimelines" layoutX="20.0" layoutY="336.0" mnemonicParsing="false" scaleX="0.8" scaleY="0.8" selected="true" text="All Timelines">
+            <RadioButton fx:id="radioButtonAllTimelines" layoutX="20.0" layoutY="340.0" mnemonicParsing="false" scaleX="0.8" scaleY="0.8" selected="true" text="All Timelines">
                <toggleGroup>
                   <ToggleGroup fx:id="viewSettings" />
                </toggleGroup>
             </RadioButton>
             <RadioButton fx:id="radioButtonSelectedTimeline" layoutX="17.0" layoutY="361.0" mnemonicParsing="false" scaleX="0.8" scaleY="0.8" text="Selected Timeline" toggleGroup="$viewSettings" />
-            <Text layoutX="20.0" layoutY="323.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-title" text="View Settings" />
+            <Text layoutX="15.0" layoutY="326.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-title" text="View Settings" />
 
 
          </children>
@@ -78,7 +78,7 @@
                   <Button fx:id="addTaskPlusButton" mnemonicParsing="false" onAction="#openAddTaskWindow" styleClass="button-round" text="+" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" />
                   <Button fx:id="goLeftButton" mnemonicParsing="false" onAction="#goLeft" styleClass="button-chooser" text="&lt;" AnchorPane.bottomAnchor="200.0" AnchorPane.leftAnchor="20.0" />
                   <Button fx:id="goRightButton" mnemonicParsing="false" onAction="#goRight" styleClass="button-chooser" text="&gt;" AnchorPane.bottomAnchor="200.0" AnchorPane.rightAnchor="20.0" />
-                  <Button fx:id="helpButton" layoutX="904.0" layoutY="180.0" maxWidth="111.0" minHeight="145.0" minWidth="54.0" mnemonicParsing="false" prefHeight="145.0" prefWidth="111.0" styleClass="button-chooser" text="?" AnchorPane.bottomAnchor="-50.0" AnchorPane.rightAnchor="20.0" />
+                  <Button fx:id="helpButton" layoutX="904.0" layoutY="180.0" maxWidth="111.0" minHeight="145.0" minWidth="54.0" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" styleClass="button-help" text="?" AnchorPane.bottomAnchor="-15.0" AnchorPane.rightAnchor="0.0" />
 
                    <!--
                  <JFXButton fx:id="addTaskPlusButton" buttonType="RAISED" layoutX="24.0" layoutY="511.0" onAction="#openAddTaskWindow" prefHeight="65.0" prefWidth="59.0" styleClass="button-round" text="+" AnchorPane.bottomAnchor="29.0" AnchorPane.leftAnchor="29.0" />

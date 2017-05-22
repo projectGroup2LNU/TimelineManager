@@ -19,10 +19,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.DateCell;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -90,17 +87,15 @@ public class EditTaskController extends AbstractController implements Initializa
         end=endDate.getValue();
         
 
-        try {
-    		errorCheck(task); // Throws exception if there's any invalid or missing information
+        if(!errorCheck()){
              getDatabaseConnection();
             Task taskInChange= getModelAccess().getSelectedTask();
             taskInChange. setTitle(title);
             taskInChange.setDescription(description);
-            taskInChange.setStartTime(start);
+            taskInChange.setStartTime(start);                                                                                                                                                                                                                           
             taskInChange.setEndTime(end);
-            int timelineId = (int)taskInChange.getId();
-            getModelAccess().database.deleteTaskByTaskID((int) getModelAccess().timelineModel.timelineList.get(indexOfTimeline).taskList.get(indexOfTask).getId());
-            getModelAccess().database.addTask((int) taskInChange.getId(), title, description, start.toString(), end.toString(),timelineId );
+            getModelAccess().database.deleteTaskByTaskID((int) taskInChange.getId());
+            getModelAccess().database.addTask((int) taskInChange.getId(), title, description, start.toString(), end.toString(),(int)taskInChange.getTimeline().getId());
             getModelAccess().database.getConnection().close();
             
             getTimelineViewer().update(getModelAccess().timelineModel);
@@ -113,17 +108,9 @@ public class EditTaskController extends AbstractController implements Initializa
     			stage.close();
     		}
             
-        } catch (RuntimeException exception) {
-    		if(!isTestMode) {
-    			Alert alert = new Alert(Alert.AlertType.WARNING);
-    			alert.setTitle("Warning ");
-    			alert.setHeaderText(exception.getMessage());
-    			alert.initModality(Modality.APPLICATION_MODAL);
-    			alert.showAndWait();
-    		} else {
-    			throw exception;
-    		}
-    	}
+        }
+    		
+    	
         getTimelineViewer().update(getModelAccess().timelineModel);
     }
     
@@ -182,28 +169,50 @@ public class EditTaskController extends AbstractController implements Initializa
     
     // Private methods
     // Checks for any invalid or missing information and throws and exception if found
-    private void errorCheck(Task task) {
-    	boolean errorFound = true;
-    	String errorMessage = "";
-
-    	if(title.trim().isEmpty()){
-    		errorMessage = "Please select a title";
-    	} else if(start == null){
-    		errorMessage = "Please select start date";
-    	} else if(end == null) {
-    		errorMessage = "Please select end date";
-    	} else if(end.isBefore(start)) {
-    		errorMessage = "End date cannot be before start date";
-    	} else if(end.isAfter(task.getTimeline().getEndTime())) {
-    		errorMessage = "Task end date cannot be after timeline end date";
-    	} else if(start.isBefore(task.getTimeline().getStartTime())) {
-    		errorMessage = "Task start date cannot be before timeline start date";
-    	} else {
-    		errorFound = false;
-    	}
-
-    	if(errorFound) {
-    		throw new RuntimeException(errorMessage);
-    	}
-    }  
+    private boolean errorCheck() {
+        boolean errorFound = true;
+    
+        if(title.trim().isEmpty()) {
+            Tooltip tooltip = new Tooltip("Please insert title");
+            setTooltipStyle(tooltip);
+            titleField.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
+            titleField.setTooltip(tooltip);
+        
+        } else if (start == null) {
+            Tooltip tooltip = new Tooltip("Select start date");
+            setTooltipStyle(tooltip);
+            startDate.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
+            startDate.setTooltip(tooltip);
+        } else if (end == null) {
+            Tooltip tooltip = new Tooltip("Select end date");
+            setTooltipStyle(tooltip);
+            endDate.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
+            endDate.setTooltip(tooltip);
+        } else if(end.isBefore(start)) {
+            Tooltip tooltip = new Tooltip("End date cannot be before start date");
+            setTooltipStyle(tooltip);
+            endDate.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
+            endDate.setTooltip(tooltip);
+        } else {
+            errorFound = false;
+        }
+    
+        return errorFound;
+    }
+    
+    /**
+     * This method set style to red (error message) of the input tooltip
+     * @param tooltip the Tooltip to be edited
+     */
+    private void setTooltipStyle(Tooltip tooltip)
+    {
+        tooltip.setStyle("-fx-background: rgb(30,30,30);" +
+                "-fx-background-color: rgba(255,0,0,0.3);" +
+                "-fx-text-fill: orange;" +
+                "-fx-background-radius: 6px;" +
+                "-fx-background-insets: 0;" +
+                "-fx-padding: 0.667em 0.75em 0.667em 0.75em;" +
+                "-fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.5) , 10, 0.0 , 0 , 3 );" +
+                "-fx-font-size: 0.85em;");
+    }
 }
