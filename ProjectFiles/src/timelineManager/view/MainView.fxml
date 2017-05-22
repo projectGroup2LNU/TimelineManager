@@ -78,6 +78,7 @@
                   <Button fx:id="addTaskPlusButton" mnemonicParsing="false" onAction="#openAddTaskWindow" styleClass="button-round" text="+" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" />
                   <Button fx:id="goLeftButton" mnemonicParsing="false" onAction="#goLeft" styleClass="button-chooser" text="&lt;" AnchorPane.bottomAnchor="200.0" AnchorPane.leftAnchor="20.0" />
                   <Button fx:id="goRightButton" mnemonicParsing="false" onAction="#goRight" styleClass="button-chooser" text="&gt;" AnchorPane.bottomAnchor="200.0" AnchorPane.rightAnchor="20.0" />
+                  <Button fx:id="helpButton" layoutX="904.0" layoutY="180.0" maxWidth="111.0" minHeight="145.0" minWidth="54.0" mnemonicParsing="false" prefHeight="145.0" prefWidth="111.0" styleClass="button-chooser" text="?" AnchorPane.bottomAnchor="-50.0" AnchorPane.rightAnchor="20.0" />
 
                    <!--
                  <JFXButton fx:id="addTaskPlusButton" buttonType="RAISED" layoutX="24.0" layoutY="511.0" onAction="#openAddTaskWindow" prefHeight="65.0" prefWidth="59.0" styleClass="button-round" text="+" AnchorPane.bottomAnchor="29.0" AnchorPane.leftAnchor="29.0" />
