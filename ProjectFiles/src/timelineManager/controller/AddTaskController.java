@@ -219,22 +219,28 @@ public class AddTaskController extends AbstractController implements Initializab
     		setTooltipStyle(tooltip);
     		titleField.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
     		titleField.setTooltip(tooltip);
-    		
-    	} else if (start == null) {
-			Tooltip tooltip = new Tooltip("Select start date");
-			setTooltipStyle(tooltip);
-    		startDate.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
-    		startDate.setTooltip(tooltip);
-    	} else if (end == null) {
-			Tooltip tooltip = new Tooltip("Select end date");
-			setTooltipStyle(tooltip);
-    		endDate.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
-    		endDate.setTooltip(tooltip);
-    	} else if(end.isBefore(start)) {
-			Tooltip tooltip = new Tooltip("End date cannot be before start date");
-			setTooltipStyle(tooltip);
-    		endDate.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
-    		endDate.setTooltip(tooltip);
+    	}else if ((!title.isEmpty()) && (start == null)) {
+	  	titleField.setStyle("-fx-border-color: transparent;");
+		Tooltip tooltip = new Tooltip("Select start date");
+		setTooltipStyle(tooltip);
+		startDate.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
+		startDate.setTooltip(tooltip);
+	} else if ((!title.isEmpty()) && (start != null) && (end == null)) {
+		titleField.setStyle("-fx-border-color: transparent;");
+		startDate.setStyle("-fx-border-color: transparent;");
+		Tooltip tooltip = new Tooltip("Select end date");
+		setTooltipStyle(tooltip);
+		endDate.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
+		endDate.setTooltip(tooltip);
+	} else if((!title.isEmpty()) && (start != null) && (end!=null) && (end.isBefore(start))) {
+		titleField.setStyle("-fx-border-color: transparent;");
+		startDate.setStyle("-fx-border-color: transparent;");
+		endDate.setStyle("-fx-border-color: transparent;");
+		Tooltip tooltip = new Tooltip("End date cannot be before start date");
+		setTooltipStyle(tooltip);
+		endDate.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
+		endDate.setTooltip(tooltip);
+	
     	} else {
     		errorFound = false;
     	}
