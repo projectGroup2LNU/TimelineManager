@@ -119,7 +119,6 @@ public class TimelineViewer
             }
         });
         
-        
         moveTimeline.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override
@@ -178,7 +177,6 @@ public class TimelineViewer
         
         contextMenuTimeline.getItems().addAll(editTimeline, deleteTimeline,moveTimeline); // makes a menu when rightclicking a TimelineRectangle
         
-        
         // EventHandler for edit a task
         editTask.setOnAction(new EventHandler<ActionEvent>()
         {
@@ -205,7 +203,6 @@ public class TimelineViewer
                 int indexOfTimeline = modelAccess.timelineModel.timelineList.indexOf(modelAccess.getSelectedTimeline());
                 modelAccess.getSelectedTask().getTimeline().deleteTask(modelAccess.getSelectedTask());
                 update(timelineModel);
-                
                 
                 try {
             modelAccess.database.connectToDatabase();
@@ -266,7 +263,13 @@ public class TimelineViewer
             if(refRadioSelectedTimeline.isSelected())
             {
                 inputTimelines = new ArrayList<Timeline>();
-                inputTimelines.add(modelAccess.getSelectedTimeline());
+                if(modelAccess.getSelectedTimeline().getStartTime().isAfter(endDate) ||  // timeline is outside the view
+                   modelAccess.getSelectedTimeline().getEndTime().isBefore(startDate))
+                {}
+                else
+                {
+                    inputTimelines.add(modelAccess.getSelectedTimeline());
+                }
             }
             else
             {
@@ -278,6 +281,7 @@ public class TimelineViewer
                 LocalDate timelineStart = null;
                 LocalDate timelineEnd = null;
                 TimelineRectangle timelineRectangle = new TimelineRectangle(timeline);
+                
                 String tooltipTimelineString = timeline.getTitle() +
                         "\nfrom: " + timeline.getStartTime() +
                         " to: " + timeline.getEndTime() +
@@ -342,7 +346,6 @@ public class TimelineViewer
                 int timelineDuration = timelineStart.until(timelineEnd).getDays() + 1;
                 timelineRectangle.getRectangle().setWidth(timelineDuration * DAY_PIXEL_SIZE);
                 timelineRectangle.getText().setMaxWidth(timelineRectangle.getRectangle().getWidth()- 10);
-                timelineRectangle.setLayoutY(20);
                 timelineRectangle.setBottomAnchor(timelineRectangle.getText(), 0.0);
                 timelineRectangle.setTopAnchor(timelineRectangle.getText(), -1.0);
                 timelineRectangle.setLeftAnchor(timelineRectangle.getText(), 0.0);
@@ -355,23 +358,27 @@ public class TimelineViewer
                 timelineList.add(timelineRectangle);
                 
                 // adds the popup menu when rightclick the TimelineRectangle
-                timelineRectangle.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
+                timelineRectangle.getText().setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
                     
                     @Override
                     public void handle(ContextMenuEvent event) {
-                        
+                        modelAccess.setSelectedTimeline(timelineRectangle.getTimeline());
                         contextMenuTimeline.show(timelineRectangle, event.getScreenX(), event.getScreenY());
+                        update(currentDate,inputModel);
                     }
                 });
                 
-                // sets that if a timeline is clicked it will be the main timeline
-                timelineRectangle.setOnMouseClicked(event ->
+                // sets that if a timeline is leftclicked it will be the main timeline
+                timelineRectangle.setOnMousePressed(pressed ->
                 {
-                    modelAccess.setSelectedTimeline(timeline);
-                    tableView.getSelectionModel().select(timeline);    // Trying to add table view get selected at selection
-                    update(inputDate,inputModel);
+                    if(pressed.isPrimaryButtonDown())
+                    {
+                        modelAccess.setSelectedTimeline(timeline);
+                        tableView.getSelectionModel().select(timeline);    // Trying to add table view get selected at selection
+                        update(inputDate, inputModel);
+                    }
                 });
-                
+              
                 grid.add(timelineRectangle, startDate.until(timelineStart).getDays(), hPos++, timelineDuration, 1);
                 ArrayList<Task> tasksInView = inputModel.getTaskToDisplay(timeline,startDate,endDate);
                 
