@@ -38,6 +38,7 @@ public class TimelineViewer
     private final int taskHeight = 30;
     private LocalDate startDate;
     private LocalDate endDate;
+    TableView<Timeline> tableView;
     ArrayList<TimelineRectangle> timelineList = new ArrayList<>();
     ArrayList<TaskRectangle> taskList = new ArrayList<>();
     TimelineModel timelineModel;
@@ -57,9 +58,13 @@ public class TimelineViewer
     private final int DAY_PIXEL_SIZE = MainWindowController.DAY_PIXEL_SIZE;
     
     // empty constructor
-    public TimelineViewer()
+    
+    public TimelineViewer() {}
+    
+    // Constructor with TableView
+    public TimelineViewer(TableView<Timeline> tableView)
     {
-        
+        this.tableView = tableView;
     }
     
     /**
@@ -363,6 +368,7 @@ public class TimelineViewer
                 timelineRectangle.setOnMouseClicked(event ->
                 {
                     modelAccess.setSelectedTimeline(timeline);
+                    tableView.getSelectionModel().select(timeline);    // Trying to add table view get selected at selection
                     update(inputDate,inputModel);
                 });
                 
