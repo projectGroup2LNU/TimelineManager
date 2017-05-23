@@ -48,6 +48,7 @@ public class TimelineViewer
     
     MenuItem editTimeline = new MenuItem("Edit Timeline");
     MenuItem editTask = new MenuItem("Edit Task");
+    MenuItem moveTimeline=new MenuItem("Move Timeline with Tasks");
     MenuItem deleteTimeline = new MenuItem("Delete Timeline");
     MenuItem deleteTask = new MenuItem("Delete Task");
     RadioButton refRadioAllTimelines;
@@ -113,6 +114,23 @@ public class TimelineViewer
             }
         });
         
+        
+        moveTimeline.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                Scene scene = viewFactory.getMoveTimelineScene();
+                Stage stage = new Stage();
+                stage.centerOnScreen();
+                stage.setResizable(false);
+                stage.setTitle("Move Timeline");
+                stage.getIcons().add(new Image("file:../TimelineManager/ProjectFiles/src/timelineManager/resource/image/icon.png"));
+                stage.setScene(scene);
+                stage.show();
+            }
+        });
+        
         // EvenHandler for deleting a timeline
         deleteTimeline.setOnAction(new EventHandler<ActionEvent>()
         {
@@ -153,7 +171,7 @@ public class TimelineViewer
             }
         });
         
-        contextMenuTimeline.getItems().addAll(editTimeline, deleteTimeline); // makes a menu when rightclicking a TimelineRectangle
+        contextMenuTimeline.getItems().addAll(editTimeline, deleteTimeline,moveTimeline); // makes a menu when rightclicking a TimelineRectangle
         
         
         // EventHandler for edit a task
@@ -197,11 +215,7 @@ public class TimelineViewer
                 } catch (Exception ex) {
                     Logger.getLogger(TimelineViewer.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            
-                
             }
-
-           
         });
         
         contextMenuTask.getItems().addAll(editTask, deleteTask);  // makes a menu when rightclicking a TaskRectangle
@@ -431,7 +445,10 @@ public class TimelineViewer
                         }
                     });
                 }
-                hPos++;  // makes a space in Vertical space to next timeline
+                Rectangle filler = new Rectangle(DAY_PIXEL_SIZE,20);
+                filler.setOpacity(0);
+                grid.add(filler,0,hPos++);
+                
             }
             // a filler to get space between last task and the bottom
             Rectangle filler = new Rectangle(DAY_PIXEL_SIZE,20);

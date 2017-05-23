@@ -9,6 +9,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
+import com.sun.javafx.scene.control.skin.TableViewSkinBase;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -24,8 +25,9 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.stage.Modality;
+import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 import timelineManager.helpClasses.DateViewer;
 import timelineManager.helpClasses.TimelineViewer;
@@ -86,56 +88,36 @@ public class EditTimelineController extends AbstractController implements Initia
 		start = startDate.getValue();
 		end = endDate.getValue();
 		
-		// Tries to edit the timeline
-		try {
-			errorCheck(); // Throws exception if there's any invalid or missing information
+		
+		if(!errorCheck())
+		{
 			
 			ObservableList<Task> taskList = getModelAccess().getSelectedTimeline().taskList;
-			long diffStart =  DAYS.between(oldStart, start);
-			long diffEnd =  DAYS.between(oldEnd, end);
+			long diffStart = DAYS.between(oldStart, start);
+			long diffEnd = DAYS.between(oldEnd, end);
 			boolean isInBoundries = true;
-			boolean isDurationTheSame = false;
 			boolean isCut = false;
 			
 			
-			for(int k = 0;k<taskList.size();k++){
-				// tcheck if cutof part of tasks
-				if(taskList.get(k).getStartTime().isBefore(start)){
+			for(int k = 0; k < taskList.size(); k++)
+			{
+				// check if cut of part of tasks
+				if(taskList.get(k).getStartTime().isBefore(start))
+				{
 					isCut = true;
 				}
-				if(taskList.get(k).getEndTime().isAfter(end)){
+				if(taskList.get(k).getEndTime().isAfter(end))
+				{
 					isCut = true;
 				}
 				//Checks for any overlaps
-				if(taskList.get(k).getStartTime().isAfter(end) || taskList.get(k).getEndTime().isBefore(start) ){
+				if(taskList.get(k).getStartTime().isAfter(end) || taskList.get(k).getEndTime().isBefore(start))
+				{
 					isInBoundries = false;
 				}
 			}
 			
-			if(diffEnd == diffStart){
-				isDurationTheSame = true;
-			}
-			
-			// THIS PART SHOULD BE MOVED TO A "MOVE" FUNCTION
-            /*if(isDurationTheSame == true || taskList.isEmpty()){
-            	for(int i = 0; i < taskList.size(); i++){
-            		LocalDate newStartforTask = taskList.get(i).getStartTime().plus(diffStart, DAYS);
-            		taskList.get(i).setStartTime(newStartforTask);
-            		LocalDate newEndforTask = taskList.get(i).getEndTime().plus(diffEnd, DAYS);
-            		taskList.get(i).setEndTime(newEndforTask);
-            	}
 
-            	Timeline temp = new Timeline(title, desc, start, end);
-
-            	temp.taskList = taskList;
-            	getModelAccess().timelineModel.timelineList.remove(indexOfTimeline);
-            	getModelAccess().timelineModel.timelineList.add(temp);
-            	
-                  editTimelinewithTasksInDB(temp,oldId);
-                  getModelAccess().setSelectedTimeline(temp);
-                  timelineViewer.update(getModelAccess().timelineModel);
-               */
-			
 			// if no tasks was affected by resize
 			if(!isCut)
 			{
@@ -146,7 +128,8 @@ public class EditTimelineController extends AbstractController implements Initia
 				timelineInChange.setEndTime(end);
 				editTimelinewithTasksInDB(timelineInChange);   // would be enough to only edit timeline in database in this case
 				getTimelineViewer().update(getModelAccess().timelineModel);
-				tableView.refresh();
+                                 
+                              
 			}
 			// if at least a task is completely outside of new timeline dates
 			else if(!isInBoundries)
@@ -158,11 +141,12 @@ public class EditTimelineController extends AbstractController implements Initia
 				alert.setContentText("If you click delete, program will delete the task which completly will be out after your changes. \n If you dont want to loose any task please click cancel and manually edit tasks first!");
 				ButtonType DELETE = new ButtonType("Delete");
 				ButtonType CANCEL = new ButtonType("Cancel");
-				alert.getButtonTypes().setAll(DELETE,CANCEL);
+				alert.getButtonTypes().setAll(DELETE, CANCEL);
 				
 				Optional<ButtonType> result = alert.showAndWait();
 				
-				if (result.get() == DELETE){
+				if(result.get() == DELETE)
+				{
 					
 					Timeline timelineInChange = super.getModelAccess().getSelectedTimeline();
 					timelineInChange.setTitle(title);
@@ -176,8 +160,7 @@ public class EditTimelineController extends AbstractController implements Initia
 								|| timelineInChange.getEndTime().isBefore(timelineInChange.taskList.get(i).getStartTime()))
 						{
 							removeList.add(timelineInChange.taskList.get(i));
-						}
-						else
+						} else
 						{
 							if(taskList.get(i).getStartTime().isBefore(start))
 							{
@@ -196,13 +179,14 @@ public class EditTimelineController extends AbstractController implements Initia
 					}
 					editTimelinewithTasksInDB(timelineInChange);
 					super.getTimelineViewer().update(getModelAccess().timelineModel);
-					
-					
+
+                                          
 				}
 				else if (result.get() == CANCEL) {
+					
 				}
 			}
-			// if at least one task is party out of timeline dates.
+			// if at least one task is partly out of timeline dates.
 			else
 			{
 				Alert alert = new Alert(AlertType.CONFIRMATION);
@@ -211,23 +195,27 @@ public class EditTimelineController extends AbstractController implements Initia
 				alert.setContentText("Some tasks are partly outside of new dates!\nIf you continue, program will cut off the dates which don't match");
 				ButtonType EDIT = new ButtonType("Edit Anyway");
 				ButtonType CANCEL = new ButtonType("Cancel");
-				alert.getButtonTypes().setAll(EDIT,CANCEL);
+				alert.getButtonTypes().setAll(EDIT, CANCEL);
 				
 				Optional<ButtonType> result = alert.showAndWait();
 				
-				if(result.get() == EDIT){
+				if(result.get() == EDIT)
+				{
 					Timeline timelineInChange = getModelAccess().getSelectedTimeline();
 					timelineInChange.setTitle(title);
 					timelineInChange.setDescription(description);
 					timelineInChange.setStartTime(start);
 					timelineInChange.setEndTime(end);
 					
-					for(int i = 0; i < timelineInChange.taskList.size(); i++){
+					for(int i = 0; i < timelineInChange.taskList.size(); i++)
+					{
 						
-						if(timelineInChange.taskList.get(i).getStartTime().isBefore(start)){
+						if(timelineInChange.taskList.get(i).getStartTime().isBefore(start))
+						{
 							timelineInChange.taskList.get(i).setStartTime(start);
 						}
-						if(timelineInChange.taskList.get(i).getEndTime().isAfter(end)){
+						if(timelineInChange.taskList.get(i).getEndTime().isAfter(end))
+						{
 							timelineInChange.taskList.get(i).setEndTime(end);
 						}
 					}
@@ -235,26 +223,17 @@ public class EditTimelineController extends AbstractController implements Initia
 					editTimelinewithTasksInDB(timelineInChange);
 					
 					getTimelineViewer().update(getModelAccess().timelineModel);
+                                         
+                                        
 				}
 			}
 			// If check is needed for JUnit tests
-			if(!isTestMode) {
+			if(!isTestMode)
+			{
 				// // Window closes itself after user clicks the Save button
 				final Node source = (Node) e.getSource();
 				final Stage stage = (Stage) source.getScene().getWindow();
 				stage.close();
-			}
-			
-		} catch (RuntimeException exception) {
-			if(!isTestMode) {
-				exception.printStackTrace();
-				Alert alert = new Alert(Alert.AlertType.WARNING);
-				alert.setTitle("Warning ");
-				alert.setHeaderText(exception.getMessage());
-				alert.initModality(Modality.APPLICATION_MODAL);
-				alert.showAndWait();
-			} else {
-				throw exception;
 			}
 		}
 		
@@ -300,27 +279,51 @@ public class EditTimelineController extends AbstractController implements Initia
 		this.isTestMode = isTestMode;
 	}
 	
-	// Private methods
-	// Checks for any invalid or missing information and throws and exception if found
-	private void errorCheck() {
+	private boolean errorCheck() {
 		boolean errorFound = true;
-		String errorMessage = "";
 		
-		if(title.trim().isEmpty()){
-			errorMessage = "Please select a title";
-		} else if(start == null){
-			errorMessage = "Please select start date";
-		} else if(end == null) {
-			errorMessage = "Please select end date";
+		if(title.trim().isEmpty()) {
+			Tooltip tooltip = new Tooltip("Please insert title");
+			setTooltipStyle(tooltip);
+			titleField.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
+			titleField.setTooltip(tooltip);
+			
+		} else if (start == null) {
+			Tooltip tooltip = new Tooltip("Select start date");
+			setTooltipStyle(tooltip);
+			startDate.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
+			startDate.setTooltip(tooltip);
+		} else if (end == null) {
+			Tooltip tooltip = new Tooltip("Select end date");
+			setTooltipStyle(tooltip);
+			endDate.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
+			endDate.setTooltip(tooltip);
 		} else if(end.isBefore(start)) {
-			errorMessage = "End date cannot be before start date";
+			Tooltip tooltip = new Tooltip("End date cannot be before start date");
+			setTooltipStyle(tooltip);
+			endDate.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
+			endDate.setTooltip(tooltip);
 		} else {
 			errorFound = false;
 		}
 		
-		if(errorFound) {
-			throw new RuntimeException(errorMessage);
-		}
+		return errorFound;
+	}
+	
+	/**
+	 * This method set style to red (error message) of the input tooltip
+	 * @param tooltip the Tooltip to be edited
+	 */
+	private void setTooltipStyle(Tooltip tooltip)
+	{
+		tooltip.setStyle("-fx-background: rgb(30,30,30);" +
+				"-fx-background-color: rgba(255,0,0,0.3);" +
+				"-fx-text-fill: orange;" +
+				"-fx-background-radius: 6px;" +
+				"-fx-background-insets: 0;" +
+				"-fx-padding: 0.667em 0.75em 0.667em 0.75em;" +
+				"-fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.5) , 10, 0.0 , 0 , 3 );" +
+				"-fx-font-size: 0.85em;");
 	}
 	
 	protected void editTimelinewithTasksInDB(Timeline timeline) throws ClassNotFoundException, SQLException, Exception{
@@ -336,7 +339,7 @@ public class EditTimelineController extends AbstractController implements Initia
 			String Taskdesc=timeline.taskList.get(i).getDescription();
 			LocalDate Taskstart=timeline.taskList.get(i).getStartTime();
 			LocalDate Taskend=timeline.taskList.get(i).getEndTime();
-			getModelAccess().database.addTask((int)timeline.getId(), timeline.taskList.get(i).getTitle(), timeline.taskList.get(i).getDescription(), timeline.taskList.get(i).getStartTime().toString(), timeline.taskList.get(i).getEndTime().toString(), (int)timeline.taskList.get(i).getId());
+			getModelAccess().database.addTask((int)timeline.taskList.get(i).getId(), timeline.taskList.get(i).getTitle(), timeline.taskList.get(i).getDescription(), timeline.taskList.get(i).getStartTime().toString(), timeline.taskList.get(i).getEndTime().toString(),(int)timeline.getId() );
 		}
 		
 		//closes the connection
