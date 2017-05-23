@@ -168,6 +168,7 @@ public class MainWindowController extends AbstractController implements Initiali
         datePickerUpdate(currentDate);
         dateViewer.showDates(currentDate);
         super.getTimelineViewer().update(currentDate, super.getModelAccess().timelineModel);
+        
     }
     
     //to be connected to a reset button, that will change the date back to the actual date of the day
@@ -216,40 +217,19 @@ public class MainWindowController extends AbstractController implements Initiali
         timelineGrid.getRowConstraints().setAll(new RowConstraints(20,20,20));
         timelineGrid.getColumnConstraints().setAll(new ColumnConstraints(DAY_PIXEL_SIZE,DAY_PIXEL_SIZE,DAY_PIXEL_SIZE));
        
-       titleOfTable.setCellValueFactory(new PropertyValueFactory<Timeline, String>("title"));
-
+        titleOfTable.setCellValueFactory(new PropertyValueFactory<Timeline, String>("title"));
+        
+        timelineTable.setItems(getModelAccess().timelineModel.timelineList);
        
        
-       
-       timelineTable.setItems(getModelAccess().timelineModel.timelineList);
-       
-       
-       timelineTable.setContextMenu(new ContextMenu(showDetails));
+      // timelineTable.setContextMenu(new ContextMenu(showDetails));
        
        // disables the add task button if there is no timeline
        addTaskButton.disableProperty().bind(Bindings.isEmpty(getModelAccess().getTimelineModel().timelineList));
        addTaskPlusButton.disableProperty().bind(Bindings.isEmpty(getModelAccess().getTimelineModel().timelineList));
+        
        
-       //Button sets which timeline are we trying to add A Task
        /*
-        addTaskButton.setOnMouseClicked(e->{
-          Timeline selectedTimeline=timelineTable.getSelectionModel().getSelectedItem();
-          if(selectedTimeline!=null){
-              
-              getModelAccess().setSelectedTimeline(selectedTimeline);}
-       });
-        
-        
-       addTaskPlusButton.setOnMouseClicked(e->{
-          Timeline selectedTimeline=timelineTable.getSelectionModel().getSelectedItem();
-          if(selectedTimeline!=null){
-              
-              getModelAccess().setSelectedTimeline(selectedTimeline);}
-           
-       });
-        
-        */
-        
        showDetails.setOnAction(e->{
                     Timeline timeline=timelineTable.getSelectionModel().getSelectedItem();
                     Iterator iter=timeline.taskList.iterator();
@@ -257,8 +237,8 @@ public class MainWindowController extends AbstractController implements Initiali
                     Task task=(Task) iter.next();
                     System.out.println("Title of the task "+ task.getTitle());
                     }
-		});	
-       
+       });
+       */
        
        
        getDatabaseConnection();
@@ -266,57 +246,68 @@ public class MainWindowController extends AbstractController implements Initiali
                 populateTimelineModel();
                 
                 
-            } catch (SQLException ex) {
+            }
+            catch (SQLException ex) {
                 Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ClassNotFoundException ex) {
+            }
+            catch (ClassNotFoundException ex) {
                 Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
             }
            
             
-             try {
+            try {
             cleanDb();
-            } catch (ClassNotFoundException ex) {
+            }
+            catch (ClassNotFoundException ex) {
             Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SQLException ex) {
+            }
+            catch (SQLException ex) {
             Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
             }
             
             
             
-          try { 
+            try {
             reInititilizeTables();
-        } catch (ClassNotFoundException ex) {
+            }
+            catch (ClassNotFoundException ex) {
             Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
+            }
+            catch (SQLException ex) {
             Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
+            }
+            finally
+            {
                 try {
                     getModelAccess().database.getConnection().close();
-                } catch (Exception ex) {
+                }
+                catch (Exception ex) {
                     Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
                 }
-          }
+            }
         
-        getTimelineViewer().timelineViewerInitialize(currentDate, timelineGrid, super.getModelAccess(), radioButtonAllTimelines, radioButtonSelectedTimeline);
-      
-        // Think this is solved with resizeing and not needed anymore
-       /* goLeft();  // this solves a bug with dates showing a small space if
-        goLeft();   // not a view with to dates has been visible
-        goLeft();
-        goRight();
-        goRight();
-        goRight();*/
-       
-      /* timelineTable.setOnMouseClicked(e->{
-			Timeline timeline = timelineTable.getSelectionModel().getSelectedItem();
-			if(timeline != null){
-				getModelAccess().setSelectedTimeline(timeline);
-				
-			}
-		});
-       
-       */
-       
+            getTimelineViewer().timelineViewerInitialize(currentDate, timelineGrid, super.getModelAccess(), radioButtonAllTimelines, radioButtonSelectedTimeline);
+        
+            timelineTable.setOnMouseClicked(e->
+            {
+    
+                if(e.getClickCount() == 1)
+                {
+                    Timeline timeline = timelineTable.getSelectionModel().getSelectedItem();
+                    if(timeline != null)
+                    {
+                        getModelAccess().setSelectedTimeline(timeline);
+                    }
+                    super.getTimelineViewer().update(currentDate, super.getModelAccess().timelineModel);
+    
+                }
+                else if(e.getClickCount() == 2) {
+                    
+                    datePickerUpdate(timelineTable.getSelectionModel().getSelectedItem().getStartTime());
+                }
+		        });
+            
+            
     }
     
     // getter for PixelWidth

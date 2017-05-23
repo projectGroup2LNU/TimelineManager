@@ -86,9 +86,8 @@ public class EditTaskController extends AbstractController implements Initializa
         start=startDate.getValue();
         end=endDate.getValue();
         
-
         if(!errorCheck()){
-             getDatabaseConnection();
+            getDatabaseConnection();
             Task taskInChange= getModelAccess().getSelectedTask();
             taskInChange. setTitle(title);
             taskInChange.setDescription(description);
@@ -102,21 +101,18 @@ public class EditTaskController extends AbstractController implements Initializa
             getModelAccess().database.addTask((int) taskInChange.getId(), title, description, start.toString(), end.toString(),timelineId );
 
             getModelAccess().database.getConnection().close();
+
             
-            getTimelineViewer().update(getModelAccess().timelineModel);
-            
-        	// If check is needed for JUnit tests
-    		if(!isTestMode) {
-    			// Window closes itself after user clicks the Save button
-    			final Node source = (Node) e.getSource();
-    			final Stage stage = (Stage) source.getScene().getWindow();
-    			stage.close();
-    		}
-            
+            // If check is needed for JUnit tests
+            if(!isTestMode) {
+            	getTimelineViewer().update(getModelAccess().timelineModel);
+
+            	// Window closes itself after user clicks the Save button
+            	final Node source = (Node) e.getSource();
+            	final Stage stage = (Stage) source.getScene().getWindow();
+            	stage.close();
+            }
         }
-    		
-    	
-        getTimelineViewer().update(getModelAccess().timelineModel);
     }
     
     public void cancelTask(){
@@ -171,6 +167,24 @@ public class EditTaskController extends AbstractController implements Initializa
     public void setTestMode(boolean isTestMode){
     	this.isTestMode = isTestMode;
     }
+    
+    // Getters
+    public JFXTextField getTitleField() {
+    	return titleField;
+    }
+    
+    public JFXTextArea getDescField() {
+    	return descriptionField;
+    }
+    
+    public JFXDatePicker getStartDate() {
+    	return startDate;
+    }
+    
+    public JFXDatePicker getEndDate() {
+    	return endDate;
+    }
+	
     
     // Private methods
     // Checks for any invalid or missing information and throws and exception if found
