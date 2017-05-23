@@ -30,8 +30,9 @@ public class ViewFactory {
     public static ViewFactory defaultFactory=new ViewFactory();
     
     private ModelAccess modelAccess=new ModelAccess();
-    private TimelineViewer timelineViewer = new TimelineViewer();
     private TableView<Timeline> timelineTable = new TableView<>();
+    private TimelineViewer timelineViewer = new TimelineViewer(timelineTable);
+    
     private DateViewer dateViewer = new DateViewer(LocalDate.now());
     
     private AddTaskController addTaskController;
