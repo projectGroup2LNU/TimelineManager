@@ -156,6 +156,7 @@ public class MainWindowController extends AbstractController implements Initiali
     
     //to be connected to the right button, changing the date to a week ahead
     public void goRight(){
+        currentDate = dateViewer.getCurrentDate();
         currentDate = currentDate.plus(7,ChronoUnit.DAYS);
         datePickerUpdate(currentDate);
         dateViewer.showDates(currentDate);
@@ -164,6 +165,7 @@ public class MainWindowController extends AbstractController implements Initiali
     
     //to be connected to the left button, changing the date to a week back
     public void goLeft(){
+        currentDate = dateViewer.getCurrentDate();
         currentDate = currentDate.minus(7, ChronoUnit.DAYS);
         datePickerUpdate(currentDate);
         dateViewer.showDates(currentDate);
@@ -240,11 +242,9 @@ public class MainWindowController extends AbstractController implements Initiali
        });
        */
        
-       
        getDatabaseConnection();
             try {
                 populateTimelineModel();
-                
                 
             }
             catch (SQLException ex) {
@@ -253,7 +253,6 @@ public class MainWindowController extends AbstractController implements Initiali
             catch (ClassNotFoundException ex) {
                 Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
             }
-           
             
             try {
             cleanDb();
@@ -305,7 +304,7 @@ public class MainWindowController extends AbstractController implements Initiali
                     
                     datePickerUpdate(timelineTable.getSelectionModel().getSelectedItem().getStartTime());
                 }
-		        });
+            });
             
             
     }
