@@ -235,7 +235,11 @@ public class TimelineViewer
         });
     }
     
-    // this calls other update function with previous inputs, not to be used if date is changed on screen
+    /**
+     * this method calls other update function with previous input date,
+     * not to be used if date is changed on screen
+     * @param inputModel input model
+     */
     public void update(TimelineModel inputModel)
     {
         update(currentDate,inputModel);
