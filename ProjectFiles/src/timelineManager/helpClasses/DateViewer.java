@@ -134,6 +134,7 @@ public class DateViewer
      */
     public void showDates(LocalDate inputDate)
     {
+        currentDate = inputDate;
         inputDate= inputDate.minusDays(4);
         for(int i = 0; i < 17; i++)
         {
@@ -216,4 +217,8 @@ public class DateViewer
         return 0;
     }
     
+    public LocalDate getCurrentDate()
+    {
+        return currentDate;
+    }
 }
