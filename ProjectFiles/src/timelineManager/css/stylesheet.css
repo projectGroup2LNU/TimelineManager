@@ -1,7 +1,7 @@
 /* 
  * TIME AND DATE ICON image galleries
  * imageKB.com Java Program 
- * http://baccaymaryann.tk/calendar-icon-flat/
+ * http://transpanish.biz/translation_blog/translation-events-in-october/
  */
 /* #F28026:orange 
  * #F6A668:light orange 
@@ -15,7 +15,7 @@
  * 5. #FFF white
  */
 /*
- *updated by xingchenLu 2017-05-17.
+ *updated by xingchenLu 2017-05-23.
  */
 /*left side*/
 .datebar {
@@ -31,13 +31,13 @@
 }
  .text-title {
     -fx-font-family: "Tahoma";
-    -fx-font-size:14;
+    -fx-font-size:18px;
     -fx-fill:#FFF;
 }
 .radio-button{
     -fx-text-fill: #FFF;
     -fx-font-family: "Tahoma";
-    -fx-font-size:  14px;
+    -fx-font-size:  18px;
 }
 .radio-button .radio {
     -fx-border-width: 1px;
@@ -47,17 +47,54 @@
     -fx-padding: 4px;
 }
 .radio-button .dot {
-    -fx-background-radius: 10px;
-    -fx-padding: 3px;
+    -fx-background-radius: 15px;
+    -fx-padding: 6px;
+}
+/*table view*/
+.table-view{
+    -fx-background-color: #D9D9D9;
+    -fx-opacity: .8;
+}
+.table-view .column-header-background{
+    -fx-background-color: #F28026;
+    -fx-border-color: #B6601D;
+}
+.table-view .column-header-background .label{
+    -fx-background-color: transparent;
+    -fx-text-fill: #FFF;
+    -fx-font-family: "Tahoma";
 }
 
-.text-c1 {
-    -fx-background-color: #D9D9D9;
+.table-view .column-header {
+    -fx-background-color: transparent;
 }
- .text-field-date {
+
+.table-view .table-cell{
+    -fx-font-family: "Tahoma";
+}
+.table-view .table-cell:selected{
+    -fx-border-color: #F6A668;
+}
+.table-row-cell:hover{
+    -fx-background-color: #F6A668;
+}
+.table-row-cell:selected {
+    -fx-border-color: #B6601D;
+    -fx-background-color: #F28026;
+    -fx-text-fill: #FFF;
+}
+ .date-picker {
     -fx-font-size: 13pt;
     -fx-font-family: "Tahoma";
     -jfx-default-color: #F28026;
+    -fx-pref-height: 30px;
+    -fx-pref-width:170px;
+}
+.date-picker > .arrow-button{
+    -fx-padding: 3px 3px 3px 3px;
+}
+.date-picker > .arrow-button > .arrow{
+    -fx-padding: 4px;
 }
 /*small windows*/
 .text-field-title {
@@ -78,10 +115,17 @@
     -jfx-focus-color: #F28026;
     -jfx-unfocus-color: #000;
 }
-/*right side*/
+.button-window {
+    -fx-pref-width:130px;
+}
+.button-left{
+    -fx-pref-width:170px;
+}
+
 .button {
     -fx-padding: 2px;
     -fx-border-width: 2;
+    -fx-pref-height: 30px;
     -fx-background-color: #F28026;
     -fx-font-family: "Tahoma";
     -fx-font-size: 16pt;
@@ -103,7 +147,7 @@
     -fx-opacity: 0.4;
     -fx-background-color: #1d1d1d;
 }
-
+/*right side*/
 .button-round {
     -fx-padding:-10px;
     -fx-background-radius: 85px;

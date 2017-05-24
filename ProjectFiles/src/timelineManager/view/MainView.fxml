@@ -18,25 +18,25 @@
 
 <AnchorPane id="AnchorPane" prefHeight="620.0" prefWidth="120.0" styleClass="background" stylesheets="@../css/stylesheet.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <AnchorPane prefHeight="600.0" prefWidth="199.0" styleClass="background-left" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="200.0" styleClass="background-left" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <JFXDatePicker fx:id="mainWindowDatePicker" defaultColor="#d9d9d9" editable="false" layoutX="20.0" layoutY="90.0" onAction="#setDate" prefHeight="33.0" prefWidth="177.0" promptText="Go to Date" showWeekNumbers="true" styleClass="text-field-date" />
-            <JFXButton fx:id="todaysDateButton" buttonType="RAISED" layoutX="14.0" layoutY="30.0" onAction="#resetDate" prefHeight="27.0" prefWidth="164.0" text="Today" />
-            <JFXButton fx:id="addTimelineButton" buttonType="RAISED" layoutX="14.0" layoutY="186.0" onAction="#openAddTimelineWindow" prefHeight="27.0" prefWidth="164.0" text="Add Timeline" />
-              <JFXButton fx:id="addTaskButton" buttonType="RAISED" layoutX="14.0" layoutY="240.0" onAction="#openAddTaskWindow" prefHeight="27.0" prefWidth="164.0" text="Add Task" />
-            <TableView fx:id="timelineTable" layoutY="410.0" prefHeight="201.0" prefWidth="200.0" styleClass="text-c1">
+            <JFXDatePicker fx:id="mainWindowDatePicker" defaultColor="#d9d9d9" editable="false" layoutX="20.0" layoutY="90.0" onAction="#setDate" prefHeight="33.0" prefWidth="177.0" promptText="Go to Date" showWeekNumbers="true" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="80.0" />
+            <JFXButton fx:id="todaysDateButton" buttonType="RAISED" layoutX="14.0" layoutY="30.0" onAction="#resetDate" prefHeight="30.0" prefWidth="165.0" styleClass="button-left" text="Today" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="25.0" />
+            <JFXButton fx:id="addTimelineButton" buttonType="RAISED" layoutX="14.0" layoutY="186.0" onAction="#openAddTimelineWindow" prefHeight="27.0" prefWidth="164.0" styleClass="button-left" text="Add Timeline" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="200.0" />
+              <JFXButton fx:id="addTaskButton" buttonType="RAISED" layoutX="14.0" layoutY="240.0" onAction="#openAddTaskWindow" prefHeight="27.0" prefWidth="164.0" styleClass="button-left" text="Add Task" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="250.0" />
+            <TableView fx:id="timelineTable" layoutY="410.0" prefHeight="201.0" prefWidth="200.0">
               <columns>
-                <TableColumn fx:id="titleOfTable" prefWidth="199.0" text="Timelines" />
+                <TableColumn fx:id="titleOfTable" prefWidth="200.0" text="Timelines" />
               </columns>
             </TableView>
-            <Line endX="200.0" layoutY="300.0" />
-            <RadioButton fx:id="radioButtonAllTimelines" layoutX="20.0" layoutY="340.0" mnemonicParsing="false" scaleX="0.8" scaleY="0.8" selected="true" text="All Timelines">
+            <Line endX="200.0" layoutY="300.0" AnchorPane.topAnchor="300.0" />
+            <RadioButton fx:id="radioButtonAllTimelines" layoutX="20.0" layoutY="340.0" mnemonicParsing="false" scaleX="0.8" scaleY="0.8" selected="true" text="All Timelines" AnchorPane.leftAnchor="20.0">
                <toggleGroup>
                   <ToggleGroup fx:id="viewSettings" />
                </toggleGroup>
             </RadioButton>
-            <RadioButton fx:id="radioButtonSelectedTimeline" layoutX="17.0" layoutY="361.0" mnemonicParsing="false" scaleX="0.8" scaleY="0.8" text="Selected Timeline" toggleGroup="$viewSettings" />
-            <Text layoutX="15.0" layoutY="326.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-title" text="View Settings" />
+            <RadioButton fx:id="radioButtonSelectedTimeline" layoutX="17.0" layoutY="361.0" mnemonicParsing="false" scaleX="0.8" scaleY="0.8" text="Selected Timeline" toggleGroup="$viewSettings" AnchorPane.leftAnchor="16.0" />
+            <Text layoutX="15.0" layoutY="326.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-title" text="View Settings" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="310.0" />
 
 
          </children>
