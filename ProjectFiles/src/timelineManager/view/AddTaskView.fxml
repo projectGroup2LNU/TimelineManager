@@ -6,9 +6,9 @@
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="420.0" prefWidth="350.0" styleClass="background" stylesheets="@../css/stylesheet.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" prefHeight="420.0" prefWidth="350.0" styleClass="background" stylesheets="@../css/stylesheet.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <JFXTextField fx:id="titleField" labelFloat="true" layoutX="37.0" layoutY="22.0" prefHeight="30.0" prefWidth="300.0" promptText="Title" styleClass="text-field-title" AnchorPane.bottomAnchor="370.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="25.0" />
+      <JFXTextField fx:id="titleField" labelFloat="true" layoutX="37.0" layoutY="22.0" prefHeight="30.0" prefWidth="300.0" promptText="Title" styleClass="text-field-title" AnchorPane.leftAnchor="25.0" AnchorPane.topAnchor="25.0" />
       <JFXDatePicker fx:id="startDate" defaultColor="#000706" editable="false" layoutX="37.0" layoutY="250.0" prefHeight="30.0" prefWidth="300.0" promptText="Start Date" styleClass="text-field-date" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="255.0" />
       <JFXDatePicker fx:id="endDate" defaultColor="BLACK" editable="false" layoutX="37.0" layoutY="288.0" prefHeight="30.0" prefWidth="300.0" promptText="End Date" styleClass="text-field-date" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="300.0" />
       <JFXTextArea fx:id="descriptionField" labelFloat="true" layoutX="14.0" layoutY="99.0" prefHeight="150.0" prefWidth="300.0" promptText="Description" styleClass="text-field-description" AnchorPane.leftAnchor="25.0" AnchorPane.topAnchor="90.0" />
