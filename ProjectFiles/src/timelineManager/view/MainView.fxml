@@ -20,7 +20,7 @@
    <children>
       <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="200.0" styleClass="background-left" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <JFXDatePicker fx:id="mainWindowDatePicker" defaultColor="#d9d9d9" editable="false" layoutX="20.0" layoutY="90.0" onAction="#setDate" prefHeight="33.0" prefWidth="177.0" promptText="Go to Date" showWeekNumbers="true" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="80.0" />
+            <JFXDatePicker id="mainDate" fx:id="mainWindowDatePicker" defaultColor="#d9d9d9" editable="false" layoutX="20.0" layoutY="90.0" onAction="#setDate" prefHeight="31.0" prefWidth="170.0" promptText="Go to Date" showWeekNumbers="true" style="-fx-pref-width: 170px;" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="80.0" />
             <JFXButton fx:id="todaysDateButton" buttonType="RAISED" layoutX="14.0" layoutY="30.0" onAction="#resetDate" prefHeight="30.0" prefWidth="165.0" styleClass="button-left" text="Today" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="25.0" />
             <JFXButton fx:id="addTimelineButton" buttonType="RAISED" layoutX="14.0" layoutY="186.0" onAction="#openAddTimelineWindow" prefHeight="27.0" prefWidth="164.0" styleClass="button-left" text="Add Timeline" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="200.0" />
               <JFXButton fx:id="addTaskButton" buttonType="RAISED" layoutX="14.0" layoutY="240.0" onAction="#openAddTaskWindow" prefHeight="27.0" prefWidth="164.0" styleClass="button-left" text="Add Task" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="250.0" />
