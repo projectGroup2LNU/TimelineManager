@@ -154,6 +154,25 @@ public class MainWindowController extends AbstractController implements Initiali
     }
     
     
+    public void openHelpWindow(ActionEvent e){
+        
+        Scene scene = viewFactory.getHelpScene();
+        Stage stage=new Stage();
+        stage.centerOnScreen();
+        stage.setResizable(false);
+        stage.setTitle("Help");
+        stage.getIcons().add(new Image("file:../TimelineManager/ProjectFiles/src/timelineManager/resource/image/icon.png"));
+        stage.setScene(scene);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.show();
+        stage.addEventHandler(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
+            if (KeyCode.ESCAPE == event.getCode() && stage.isFocused()==true) {
+                stage.close();
+            }
+        });
+    }
+    
+    
     //to be connected to the right button, changing the date to a week ahead
     public void goRight(){
         currentDate = dateViewer.getCurrentDate();
