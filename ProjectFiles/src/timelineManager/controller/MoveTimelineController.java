@@ -23,9 +23,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.DateCell;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import timelineManager.helpClasses.DateViewer;
 import timelineManager.helpClasses.TimelineViewer;
 import timelineManager.model.Task;
@@ -210,6 +213,13 @@ public class MoveTimelineController extends AbstractController implements Initia
 		endDate.setValue(getModelAccess().getSelectedTimeline().getEndTime());
                 titleField.setDisable(true);
                 descriptionField.setDisable(true);
+                long duration=DAYS.between(oldStart, oldEnd);
+                
+               startDate.valueProperty().addListener((ov, oldValue, newValue) -> {
+                    endDate.setValue(newValue.plusDays(duration) );
+                });
+               
+               
 		
 	}
 	
@@ -236,5 +246,27 @@ public class MoveTimelineController extends AbstractController implements Initia
 		stage.close();
 	}
 
+        private void disableDates() {
+    	Callback<DatePicker, DateCell> dayCellFactory;
+    	
+		LocalDate newStart=startDate.getValue();
+    	
+        dayCellFactory = new Callback<DatePicker, DateCell>() {
+        	public DateCell call(final DatePicker datePicker) {
+        		return new DateCell() {
+        			@Override public void updateItem(LocalDate item, boolean empty) {
+        				super.updateItem(item, empty);
+        				
+        				if(item.isBefore(newStart)) {
+        					setDisable(true);
+        				}
+        			}
+        		};
+        	}
+        };
+        	
+	 	
+		endDate.setDayCellFactory(dayCellFactory);
+    }
     
 }

@@ -13,6 +13,7 @@ import timelineManager.controller.AddTaskController;
 import timelineManager.controller.AddTimelineController;
 import timelineManager.controller.EditTaskController;
 import timelineManager.controller.EditTimelineController;
+import timelineManager.controller.HelpManualController;
 import timelineManager.controller.MainWindowController;
 import timelineManager.controller.ModelAccess;
 import timelineManager.controller.MoveTimelineController;
@@ -41,6 +42,7 @@ public class ViewFactory {
     private EditTimelineController editTimelineController;
     private EditTaskController editTaskController;
     private MoveTimelineController moveTimelineController;
+    private HelpManualController   helpManualController;
     
     private final String MAIN_FXML="/timelineManager/view/MainView.fxml";
     private final String ADD_TIMELINE_FXML="/timelineManager/view/AddTimelineView.fxml";
@@ -48,7 +50,7 @@ public class ViewFactory {
     private final String EDIT_TIMELINE_FXML="/timelineManager/view/EditTimelineView.fxml";
     private final String EDIT_TASK_FXML="/timelineManager/view/EditTaskView.fxml";
     private final String MOVE_TIMELINE_FXML="/timelineManager/view/MoveTimelineView.fxml";
-    
+    private final String HELP_MANUAL_FXML="/timelineManager/view/HelpView.fxml";
     
     
      public Scene getMainScene(){
@@ -81,6 +83,12 @@ public class ViewFactory {
     public Scene getMoveTimelineScene(){
 	moveTimelineController=new MoveTimelineController(modelAccess,timelineViewer, timelineTable,dateViewer );
         return initilazeScene(MOVE_TIMELINE_FXML, moveTimelineController);
+		
+	}
+    
+    public Scene getHelpScene(){
+	helpManualController=new HelpManualController(modelAccess,timelineViewer, timelineTable,dateViewer );
+        return initilazeScene(HELP_MANUAL_FXML, helpManualController);
 		
 	}
     
