@@ -88,7 +88,7 @@
     -fx-font-family: "Tahoma";
     -jfx-default-color: #F28026;
     -fx-pref-height: 30px;
-    -fx-pref-width:170px;
+    -fx-pref-width:284px;
 }
 .date-picker > .arrow-button{
     -fx-padding: 3px 3px 3px 3px;
