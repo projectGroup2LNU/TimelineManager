@@ -73,9 +73,8 @@ public class MoveTimelineController extends AbstractController implements Initia
 
    
     public void moveTimeline(ActionEvent e) throws SQLException, Exception{
-        
-        
-                oldStart = LocalDate.from(getModelAccess().getSelectedTimeline().getStartTime());
+    	
+        oldStart = LocalDate.from(getModelAccess().getSelectedTimeline().getStartTime());
 		oldEnd = LocalDate.from(getModelAccess().getSelectedTimeline().getEndTime());
 		title = getModelAccess().getSelectedTimeline().getTitle();
 		description = getModelAccess().getSelectedTimeline().getDescription();
@@ -219,7 +218,10 @@ public class MoveTimelineController extends AbstractController implements Initia
                     endDate.setValue(newValue.plusDays(duration) );
                 });
                
-               
+               endDate.valueProperty().addListener((ov, oldValue, newValue) -> {
+               	startDate.setValue(newValue
+				.minusDays(duration));
+			   });
 		
 	}
 	
