@@ -10,6 +10,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
+import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -112,6 +113,7 @@ public class MainWindowController extends AbstractController implements Initiali
         super(modelAccess, timelineViewer, timelineTable, dateViewer);
         this.dateViewer = dateViewer;
         this.timelineTable = timelineTable;
+       
     }
     
     /**
@@ -133,7 +135,9 @@ public class MainWindowController extends AbstractController implements Initiali
             if (KeyCode.ESCAPE == event.getCode() && stage.isFocused()==true) {
                 stage.close();
             }
+            
         });
+   
     }
     
     /**
@@ -235,11 +239,15 @@ public class MainWindowController extends AbstractController implements Initiali
     }
     
     
+    
+    
    
     
     @Override
     public void initialize(URL location, ResourceBundle resources)
     {
+        
+        
         timelineScrollPane.setFitToWidth(true);
         timelineScrollPane.setFitToHeight(true);
         datePickerUpdate(currentDate);
@@ -259,6 +267,7 @@ public class MainWindowController extends AbstractController implements Initiali
         // disables the add task button if there is no timeline
         addTaskButton.disableProperty().bind(Bindings.isEmpty(getModelAccess().getTimelineModel().timelineList));
         addTaskPlusButton.disableProperty().bind(Bindings.isEmpty(getModelAccess().getTimelineModel().timelineList));
+        
         
         getDatabaseConnection();
         try {
@@ -320,6 +329,21 @@ public class MainWindowController extends AbstractController implements Initiali
                 datePickerUpdate(timelineTable.getSelectionModel().getSelectedItem().getStartTime());
             }
         });
+        
+        
+ 
+        getModelAccess().timelineModel.timelineList.addListener(new ListChangeListener<Timeline>() {
+            @Override
+            public void onChanged(Change<? extends Timeline> c) {
+                while (c.next()) {
+                    if(c.wasAdded()){
+                        datePickerUpdate(getModelAccess().timelineModel.timelineList.get(getModelAccess().timelineModel.timelineList.size()-1).getStartTime());
+                    }
+                }
+            }
+        });
+        
+        
     }
     
     // getters
