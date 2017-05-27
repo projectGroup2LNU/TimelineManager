@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package timelineManager.controller;
 
 import java.sql.ResultSet;
@@ -17,8 +12,9 @@ import timelineManager.model.Task;
 import timelineManager.model.Timeline;
 
 /**
- *
- * @author beysimeryalmaz
+ * This class is an abstract controller which is a parent to all controllers
+ * in the timeline manager application. Since it holds a ModelAcess, TimelineViewer and DateViewer
+ * all inherited classes will have the access to the same variables.
  */
 public abstract class AbstractController {
     
@@ -27,6 +23,13 @@ public abstract class AbstractController {
     private TimelineViewer timelineViewer;
     private DateViewer dateViewer;
     
+    /**
+     * Constructor for the Abstract Controller
+     * @param modelAccess The model access of the Timeline Manager
+     * @param timelineViewer The timelineViewer that shows all Timelines and tasks on the main window
+     * @param timelineTable The timelineTable which shows all timelines as a list on the main window
+     * @param dateViewer The dateviewer that shows all dates in the main window
+     */
     public AbstractController(ModelAccess modelAccess, TimelineViewer timelineViewer,
                               TableView<Timeline> timelineTable, DateViewer dateViewer){
         this.modelAccess=modelAccess;
@@ -35,7 +38,9 @@ public abstract class AbstractController {
         this.dateViewer = dateViewer;
     }
     
-    
+    /**
+     * This function creates a connection to the database.
+     */
     protected void getDatabaseConnection(){
     
          try {
@@ -47,6 +52,12 @@ public abstract class AbstractController {
         }
     }
     
+    /**
+     * This function read all timelines and tasks from the database and add
+     * them to the model in the running system.
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     */
     protected void populateTimelineModel() throws SQLException, ClassNotFoundException{
     
         ResultSet rSet=modelAccess.database.displaySetOfAllTimeLines();
@@ -84,13 +95,23 @@ public abstract class AbstractController {
             }
         }
     }
-
+    
+    /**
+     * This function removes all data from the database
+     * @throws ClassNotFoundException
+     * @throws SQLException
+     */
     protected void cleanDb() throws ClassNotFoundException, SQLException{
        
         getModelAccess().database.cleanTimelineTable();
         getModelAccess().database.cleanTaskTable();
     }
-
+    
+    /**
+     * This function recreates the Tables in the database.
+     * @throws ClassNotFoundException
+     * @throws SQLException
+     */
     protected void reInititilizeTables() throws ClassNotFoundException, SQLException{
         String title,desc,start,end;
         int id,tmListSize,taskListSize,tasksId;
