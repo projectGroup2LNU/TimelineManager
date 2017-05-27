@@ -12,6 +12,7 @@ import javafx.scene.Node;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
+
 import timelineManager.helpClasses.DateViewer;
 import timelineManager.helpClasses.TimelineViewer;
 import timelineManager.model.Timeline;
@@ -87,6 +88,7 @@ public class AddTimelineController extends AbstractController{
 				getModelAccess().database.getConnection().close();
 				getTimelineViewer().update(timeline.getStartTime(), getModelAccess().timelineModel);
 				getDateViewer().showDates(timeline.getStartTime());
+                               
 				
 				// Window closes itself after user clicks the Save button
 				final Node source = (Node) e.getSource();
