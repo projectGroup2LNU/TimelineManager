@@ -1,15 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package timelineManager.controller;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
-import com.sun.javafx.scene.control.skin.TableViewSkinBase;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -25,7 +19,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
@@ -71,10 +64,14 @@ public class EditTimelineController extends AbstractController implements Initia
 	TableView<Timeline> tableView;
 	
 	/**
-	 * Constructor which takes the model acess and timeline viewer as inputs.
-	 * @param modelAccess an access Class to the Model
-	 * @param timelineViewer TimelineView is printing the timelines to GUI
+	 * Constructor that makes access to the Model, TimelineViewer, DaveViewer and TimelineTable
+	 * @param modelAccess The model access of the Timeline Manager
+	 * @param timelineViewer The timelineViewer that shows all Timelines and tasks on the main window
+	 * @param timelineTable The timelineTable which shows all timelines as a list on the main window
+	 * @param dateViewer The dateviewer that shows all dates in the main window
+	 *
 	 */
+	
 	public EditTimelineController(ModelAccess modelAccess, TimelineViewer timelineViewer, DateViewer dateViewer, TableView<Timeline> timelineTable) {
 		super(modelAccess, timelineViewer, timelineTable, dateViewer);
 		this.tableView = timelineTable;
@@ -117,7 +114,7 @@ public class EditTimelineController extends AbstractController implements Initia
 				}
 			}
 			
-
+			
 			// if no tasks was affected by resize
 			if(!isCut)
 			{
@@ -128,8 +125,8 @@ public class EditTimelineController extends AbstractController implements Initia
 				timelineInChange.setEndTime(end);
 				editTimelinewithTasksInDB(timelineInChange);   // would be enough to only edit timeline in database in this case
 				getTimelineViewer().update(getModelAccess().timelineModel);
-                                 
-                              
+				
+				
 			}
 			// if at least a task is completely outside of new timeline dates
 			else if(!isInBoundries)
@@ -179,8 +176,8 @@ public class EditTimelineController extends AbstractController implements Initia
 					}
 					editTimelinewithTasksInDB(timelineInChange);
 					super.getTimelineViewer().update(getModelAccess().timelineModel);
-
-                                          
+					
+					
 				}
 				else if (result.get() == CANCEL) {
 					
@@ -223,8 +220,8 @@ public class EditTimelineController extends AbstractController implements Initia
 					editTimelinewithTasksInDB(timelineInChange);
 					
 					getTimelineViewer().update(getModelAccess().timelineModel);
-                                         
-                                        
+					
+					
 				}
 			}
 			// If check is needed for JUnit tests
@@ -288,7 +285,7 @@ public class EditTimelineController extends AbstractController implements Initia
 			titleField.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
 			titleField.setTooltip(tooltip);
 		} else if ((!title.isEmpty()) && (start == null)) {
-	  		titleField.setStyle("-fx-border-color: transparent;");
+			titleField.setStyle("-fx-border-color: transparent;");
 			Tooltip tooltip = new Tooltip("Select start date");
 			setTooltipStyle(tooltip);
 			startDate.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
@@ -308,7 +305,7 @@ public class EditTimelineController extends AbstractController implements Initia
 			setTooltipStyle(tooltip);
 			endDate.setStyle("-fx-border-color: orangered;"+"-fx-border-width: 3;");
 			endDate.setTooltip(tooltip);
-
+			
 		} else {
 			errorFound = false;
 		}

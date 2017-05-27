@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package timelineManager.controller;
 
 import com.jfoenix.controls.JFXButton;
@@ -13,8 +8,6 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import static java.time.temporal.ChronoUnit.DAYS;
-import java.util.ArrayList;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -22,7 +15,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableView;
@@ -35,13 +27,12 @@ import timelineManager.model.Task;
 import timelineManager.model.Timeline;
 
 /**
- *
+ * This class moves the timeline and all tasks in the timeline x many days forward or backward.
  * @author beysimeryalmaz
  */
 public class MoveTimelineController extends AbstractController implements Initializable {
-    
-    
-        @FXML
+	
+	@FXML
 	private JFXTextField titleField;
 	
 	@FXML
@@ -58,23 +49,35 @@ public class MoveTimelineController extends AbstractController implements Initia
 	
 	@FXML
 	private JFXButton cancelButton;
-        
-        private boolean isTestMode = false; // Used for JUnit tests
-        
-        int indexOfTimeline,oldId;
+	
+	private boolean isTestMode = false; // Used for JUnit tests
+	
+	int indexOfTimeline,oldId;
 	
 	String title,description;
 	
 	LocalDate start,oldStart,end,oldEnd;
-    
-    public MoveTimelineController(ModelAccess modelAccess, TimelineViewer timelineViewer, TableView<Timeline> timelineTable, DateViewer dateViewer) {
-        super(modelAccess, timelineViewer, timelineTable, dateViewer);
-    }
-
-   
-    public void moveTimeline(ActionEvent e) throws SQLException, Exception{
-    	
-        oldStart = LocalDate.from(getModelAccess().getSelectedTimeline().getStartTime());
+	
+	/**
+	 * Constructor that makes access to the Model, TimelineViewer, DaveViewer and TimelineTable
+	 * @param modelAccess The model access of the Timeline Manager
+	 * @param timelineViewer The timelineViewer that shows all Timelines and tasks on the main window
+	 * @param timelineTable The timelineTable which shows all timelines as a list on the main window
+	 * @param dateViewer The dateviewer that shows all dates in the main window
+	 */
+	public MoveTimelineController(ModelAccess modelAccess, TimelineViewer timelineViewer, TableView<Timeline> timelineTable, DateViewer dateViewer) {
+		super(modelAccess, timelineViewer, timelineTable, dateViewer);
+	}
+	
+	/**
+	 * Moves the timeline according to the inputs given by the user.
+	 * @param e
+	 * @throws SQLException
+	 * @throws Exception
+	 */
+	public void moveTimeline(ActionEvent e) throws SQLException, Exception{
+		
+		oldStart = LocalDate.from(getModelAccess().getSelectedTimeline().getStartTime());
 		oldEnd = LocalDate.from(getModelAccess().getSelectedTimeline().getEndTime());
 		title = getModelAccess().getSelectedTimeline().getTitle();
 		description = getModelAccess().getSelectedTimeline().getDescription();
@@ -96,40 +99,37 @@ public class MoveTimelineController extends AbstractController implements Initia
 				isDurationTheSame = true;
 			}
 			
+			if(isDurationTheSame == true || taskList.isEmpty()){
+				for(int i = 0; i < taskList.size(); i++){
+					LocalDate newStartforTask = taskList.get(i).getStartTime().plus(diffStart, DAYS);
+					taskList.get(i).setStartTime(newStartforTask);
+					LocalDate newEndforTask = taskList.get(i).getEndTime().plus(diffEnd, DAYS);
+					taskList.get(i).setEndTime(newEndforTask);
+				}
+				
+				Timeline temp = super.getModelAccess().getSelectedTimeline();
+				temp.setTitle(title);
+				temp.setDescription(description);
+				temp.setStartTime(start);
+				temp.setEndTime(end);
+				
+				temp.taskList = taskList;
+				
+				getModelAccess().setSelectedTimeline(temp);
+				editTimelinewithTasksInDB(temp);
+				
+				super.getTimelineViewer().update(getModelAccess().timelineModel);
+			}
 			
-            if(isDurationTheSame == true || taskList.isEmpty()){
-            	for(int i = 0; i < taskList.size(); i++){
-            		LocalDate newStartforTask = taskList.get(i).getStartTime().plus(diffStart, DAYS);
-            		taskList.get(i).setStartTime(newStartforTask);
-            		LocalDate newEndforTask = taskList.get(i).getEndTime().plus(diffEnd, DAYS);
-            		taskList.get(i).setEndTime(newEndforTask);
-            	}
-
-            	Timeline temp = super.getModelAccess().getSelectedTimeline();
-		temp.setTitle(title);
-		temp.setDescription(description);
-		temp.setStartTime(start);
-		temp.setEndTime(end);
-
-            	temp.taskList = taskList;
-            	
-            	getModelAccess().setSelectedTimeline(temp);
-                 editTimelinewithTasksInDB(temp);
-                  
-                  super.getTimelineViewer().update(getModelAccess().timelineModel);
-               }
-            
-            else{
-                Alert alert=new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Moving Edit");
-		alert.setHeaderText("Move Error");
-		alert.setContentText("Duration should remain same when moving the timeline with its tasks\n Please set correct dates!");
-                alert.initModality(Modality.APPLICATION_MODAL);
-		alert.showAndWait();
-          }
+			else{
+				Alert alert=new Alert(Alert.AlertType.WARNING);
+				alert.setTitle("Moving Edit");
+				alert.setHeaderText("Move Error");
+				alert.setContentText("Duration should remain same when moving the timeline with its tasks\n Please set correct dates!");
+				alert.initModality(Modality.APPLICATION_MODAL);
+				alert.showAndWait();
+			}
 			
-			// if no tasks was affected by resize
-                    
 			// If check is needed for JUnit tests
 			if(!isTestMode) {
 				// // Window closes itself after user clicks the Save button
@@ -146,39 +146,39 @@ public class MoveTimelineController extends AbstractController implements Initia
 				alert.setHeaderText(exception.getMessage());
 				alert.initModality(Modality.APPLICATION_MODAL);
 				alert.showAndWait();
-			} else {
+			}
+			else {
 				throw exception;
 			}
 		}
-    
-    
-    
-    
-    
-    }
 
-
-        private void errorCheck() {
-                        boolean errorFound = true;
-                        String errorMessage = "";
-
-                        if(start == null){
-                                errorMessage = "Please select start date";
-                        } else if(end == null) {
-                                errorMessage = "Please select end date";
-                        } else if(end.isBefore(start)) {
-                                errorMessage = "End date cannot be before start date";
-                        } else {
-                                errorFound = false;
-                        }
-
-                        if(errorFound) {
-                                throw new RuntimeException(errorMessage);
-                        }
-                }   
-        
-        
-        protected void editTimelinewithTasksInDB(Timeline timeline) throws ClassNotFoundException, SQLException, Exception{
+	}
+	
+	
+	private void errorCheck() {
+		boolean errorFound = true;
+		String errorMessage = "";
+		
+		if(start == null){
+			errorMessage = "Please select start date";
+		}
+		else if(end == null) {
+			errorMessage = "Please select end date";
+		}
+		else if(end.isBefore(start)) {
+			errorMessage = "End date cannot be before start date";
+		}
+		else {
+			errorFound = false;
+		}
+		
+		if(errorFound) {
+			throw new RuntimeException(errorMessage);
+		}
+	}
+	
+	
+	protected void editTimelinewithTasksInDB(Timeline timeline) throws ClassNotFoundException, SQLException, Exception{
 		//Connects to Db
 		getModelAccess().database.connectToDatabase();
 		
@@ -197,9 +197,9 @@ public class MoveTimelineController extends AbstractController implements Initia
 		//closes the connection
 		getModelAccess().database.getConnection().close();
 	}
-        
-        
-        @Override
+	
+	
+	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		getModelAccess().getSelectedTimeline();
 		oldId=(int) getModelAccess().getSelectedTimeline().getId();
@@ -210,18 +210,18 @@ public class MoveTimelineController extends AbstractController implements Initia
 		descriptionField.setText(getModelAccess().getSelectedTimeline().getDescription());
 		startDate.setValue(getModelAccess().getSelectedTimeline().getStartTime());
 		endDate.setValue(getModelAccess().getSelectedTimeline().getEndTime());
-                titleField.setDisable(true);
-                descriptionField.setDisable(true);
-                long duration=DAYS.between(oldStart, oldEnd);
-                
-               startDate.valueProperty().addListener((ov, oldValue, newValue) -> {
-                    endDate.setValue(newValue.plusDays(duration) );
-                });
-               
-               endDate.valueProperty().addListener((ov, oldValue, newValue) -> {
-               	startDate.setValue(newValue
-				.minusDays(duration));
-			   });
+		titleField.setDisable(true);
+		descriptionField.setDisable(true);
+		long duration=DAYS.between(oldStart, oldEnd);
+		
+		startDate.valueProperty().addListener((ov, oldValue, newValue) -> {
+			endDate.setValue(newValue.plusDays(duration) );
+		});
+		
+		endDate.valueProperty().addListener((ov, oldValue, newValue) -> {
+			startDate.setValue(newValue
+					.minusDays(duration));
+		});
 		
 	}
 	
@@ -241,34 +241,34 @@ public class MoveTimelineController extends AbstractController implements Initia
 	public void setDescription(String description) {
 		descriptionField.setText(description);
 	}
-        
-        
-        public void cancelTimeline(){
+	
+	
+	public void cancelTimeline(){
 		Stage stage = (Stage) cancelButton.getScene().getWindow();
 		stage.close();
 	}
-
-        private void disableDates() {
-    	Callback<DatePicker, DateCell> dayCellFactory;
-    	
+	
+	private void disableDates() {
+		Callback<DatePicker, DateCell> dayCellFactory;
+		
 		LocalDate newStart=startDate.getValue();
-    	
-        dayCellFactory = new Callback<DatePicker, DateCell>() {
-        	public DateCell call(final DatePicker datePicker) {
-        		return new DateCell() {
-        			@Override public void updateItem(LocalDate item, boolean empty) {
-        				super.updateItem(item, empty);
-        				
-        				if(item.isBefore(newStart)) {
-        					setDisable(true);
-        				}
-        			}
-        		};
-        	}
-        };
-        	
-	 	
+		
+		dayCellFactory = new Callback<DatePicker, DateCell>() {
+			public DateCell call(final DatePicker datePicker) {
+				return new DateCell() {
+					@Override public void updateItem(LocalDate item, boolean empty) {
+						super.updateItem(item, empty);
+						
+						if(item.isBefore(newStart)) {
+							setDisable(true);
+						}
+					}
+				};
+			}
+		};
+		
+		
 		endDate.setDayCellFactory(dayCellFactory);
-    }
-    
+	}
+	
 }

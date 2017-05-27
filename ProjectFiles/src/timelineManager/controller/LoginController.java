@@ -7,6 +7,10 @@ import javafx.fxml.FXML;
 
 import com.jfoenix.controls.JFXPasswordField;
 
+/**
+ * This is a login controller for the login .fxml
+ * this class are to be implemented later.
+ */
 public class LoginController {
 	
 	@FXML

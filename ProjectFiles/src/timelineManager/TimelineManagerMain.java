@@ -12,17 +12,14 @@ import javafx.stage.Stage;
 import timelineManager.view.ViewFactory;
 
 /**
+ * The main class of Timeline Manager. It calles the viewFactory
+ * and sets the legal window sizes of the application.
  *
- * @author beysimeryalmaz
  */
 public class TimelineManagerMain extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        //Parent root = FXMLLoader.load(getClass().getResource("/timelineManager/view/MainView.fxml"));
-        
-        //Scene scene = new Scene(root);
-    	
         ViewFactory viewFactory=ViewFactory.defaultFactory;
         Scene scene = viewFactory.getMainScene();
         stage.setMaxWidth(1200);
@@ -31,7 +28,6 @@ public class TimelineManagerMain extends Application {
         stage.setMaxHeight(640);
         stage.setResizable(true);
         stage.setTitle("Group 2 Timeline Manager Project");
-       // "file:./TimelineManager/ProjectFiles/src/timelineManager/resource/image/icon.png"
         stage.getIcons().add(new Image("file:../TimelineManager/ProjectFiles/src/timelineManager/resource/image/icon.png"));
         stage.setScene(scene);
         stage.show();

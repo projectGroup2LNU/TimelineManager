@@ -2,17 +2,14 @@ package timelineManager.controller;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDatePicker;
-
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.Iterator;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -29,11 +26,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.layout.AnchorPane;
 import timelineManager.helpClasses.DateViewer;
-import timelineManager.helpClasses.DummyCreator;
 import timelineManager.helpClasses.TimelineViewer;
-import timelineManager.model.Task;
 import timelineManager.model.Timeline;
-import timelineManager.model.TimelineModel;
 import timelineManager.view.ViewFactory;
 
 /**
@@ -44,7 +38,7 @@ import timelineManager.view.ViewFactory;
 public class MainWindowController extends AbstractController implements Initializable{
     @FXML
     private TableView<Timeline> timelineTable;
-
+    
     @FXML
     private TableColumn<Timeline, String> titleOfTable;
     
@@ -68,7 +62,7 @@ public class MainWindowController extends AbstractController implements Initiali
     
     @FXML
     private Button goRightButton;
-	
+    
     @FXML
     private Button helpButton;
     
@@ -102,23 +96,30 @@ public class MainWindowController extends AbstractController implements Initiali
     
     ViewFactory viewFactory=ViewFactory.defaultFactory;
     
-    //TimelineModel timelineModel = new TimelineModel();
-    
-    
-    //date of the day
+    //date of the current day
     private LocalDate currentDate = LocalDate.now();
-
+    
+    /**
+     * Constructor that makes access to the Model, TimelineViewer, DaveViewer and TimelineTable
+     * It also sets local variable timelineTable and dateViewer from the input.
+     * @param modelAccess The model access of the Timeline Manager
+     * @param timelineViewer The timelineViewer that shows all Timelines and tasks on the main window
+     * @param timelineTable The timelineTable which shows all timelines as a list on the main window
+     * @param dateViewer The dateviewer that shows all dates in the main window
+     */
     public MainWindowController(ModelAccess modelAccess, TimelineViewer timelineViewer, DateViewer dateViewer, TableView<Timeline> timelineTable) {
         
         super(modelAccess, timelineViewer, timelineTable, dateViewer);
         this.dateViewer = dateViewer;
         this.timelineTable = timelineTable;
-        // This next rows is just for adding dummy Data.
-     //   DummyCreator dc = new DummyCreator(super.getModelAccess());
     }
     
+    /**
+     * Opens a new window for adding a new Timeline
+     * @param e
+     */
     public void openAddTimelineWindow(ActionEvent e){
-       
+        
         Scene scene = viewFactory. getAddTimelineScene();
         Stage stage=new Stage();
         stage.centerOnScreen();
@@ -135,6 +136,10 @@ public class MainWindowController extends AbstractController implements Initiali
         });
     }
     
+    /**
+     * Open a new window for adding a new task in the active timeline
+     * @param e
+     */
     public void openAddTaskWindow(ActionEvent e){
         
         Scene scene = viewFactory. getAddTaskScene();
@@ -153,7 +158,10 @@ public class MainWindowController extends AbstractController implements Initiali
         });
     }
     
-    
+    /**
+     * Opens the help / manual window
+     * @param e
+     */
     public void openHelpWindow(ActionEvent e){
         
         Scene scene = viewFactory.getHelpScene();
@@ -182,7 +190,10 @@ public class MainWindowController extends AbstractController implements Initiali
         super.getTimelineViewer().update(currentDate, super.getModelAccess().timelineModel);
     }
     
-    //to be connected to the left button, changing the date to a week back
+    /**
+     * method for change the view on week previous in time.
+     * This is intended for the go left button in the month view.
+     */
     public void goLeft(){
         currentDate = dateViewer.getCurrentDate();
         currentDate = currentDate.minus(7, ChronoUnit.DAYS);
@@ -192,7 +203,10 @@ public class MainWindowController extends AbstractController implements Initiali
         
     }
     
-    //to be connected to a reset button, that will change the date back to the actual date of the day
+    /**
+     * Sets the view to the current day.
+     * This are to be connected to the "Today" button.
+     */
     public void resetDate(){
         currentDate = LocalDate.now();
         datePickerUpdate(currentDate);
@@ -202,8 +216,8 @@ public class MainWindowController extends AbstractController implements Initiali
         
     }
     
-    /* to be connected to the choicebox where the user chooses the year, month, day.
-     *  By doing so the current date will become the one he chose.
+    /**
+     * This function takes the date from the datepicker and set the view to that date.
      */
     public void setDate(){
         currentDate= mainWindowDatePicker.getValue();
@@ -212,14 +226,16 @@ public class MainWindowController extends AbstractController implements Initiali
         super.getTimelineViewer().update(currentDate, super.getModelAccess().timelineModel);
     }
     
-    
+    /**
+     * This function updates the date of the datepicker, are to be used when other buttons affect the time than the datepicker.
+     * @param inputDate the date to set the date picker
+     */
     public void datePickerUpdate(LocalDate inputDate){
-    	mainWindowDatePicker.setValue(inputDate);
+        mainWindowDatePicker.setValue(inputDate);
     }
     
-    public LocalDate getCurrentDate() {
-        return currentDate;
-    }
+    
+   
     
     @Override
     public void initialize(URL location, ResourceBundle resources)
@@ -237,112 +253,92 @@ public class MainWindowController extends AbstractController implements Initiali
         timelineScrollPane.setMinWidth(1000);
         timelineGrid.getRowConstraints().setAll(new RowConstraints(20,20,20));
         timelineGrid.getColumnConstraints().setAll(new ColumnConstraints(DAY_PIXEL_SIZE,DAY_PIXEL_SIZE,DAY_PIXEL_SIZE));
-       
         titleOfTable.setCellValueFactory(new PropertyValueFactory<Timeline, String>("title"));
-        
         timelineTable.setItems(getModelAccess().timelineModel.timelineList);
-       
-       
-      // timelineTable.setContextMenu(new ContextMenu(showDetails));
-       
-       // disables the add task button if there is no timeline
-       addTaskButton.disableProperty().bind(Bindings.isEmpty(getModelAccess().getTimelineModel().timelineList));
-       addTaskPlusButton.disableProperty().bind(Bindings.isEmpty(getModelAccess().getTimelineModel().timelineList));
         
-       
-       /*
-       showDetails.setOnAction(e->{
-                    Timeline timeline=timelineTable.getSelectionModel().getSelectedItem();
-                    Iterator iter=timeline.taskList.iterator();
-                    while(iter.hasNext()){
-                    Task task=(Task) iter.next();
-                    System.out.println("Title of the task "+ task.getTitle());
-                    }
-       });
-       */
-       
-       getDatabaseConnection();
+        // disables the add task button if there is no timeline
+        addTaskButton.disableProperty().bind(Bindings.isEmpty(getModelAccess().getTimelineModel().timelineList));
+        addTaskPlusButton.disableProperty().bind(Bindings.isEmpty(getModelAccess().getTimelineModel().timelineList));
+        
+        getDatabaseConnection();
+        try {
+            populateTimelineModel();
+            
+        }
+        catch (SQLException ex) {
+            Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (ClassNotFoundException ex) {
+            Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        try {
+            cleanDb();
+        }
+        catch (ClassNotFoundException ex) {
+            Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (SQLException ex) {
+            Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        try {
+            reInititilizeTables();
+        }
+        catch (ClassNotFoundException ex) {
+            Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (SQLException ex) {
+            Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        finally
+        {
             try {
-                populateTimelineModel();
+                getModelAccess().database.getConnection().close();
+            }
+            catch (Exception ex) {
+                Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        getTimelineViewer().timelineViewerInitialize(currentDate, timelineGrid, super.getModelAccess(), radioButtonAllTimelines, radioButtonSelectedTimeline);
+        
+        timelineTable.setOnMouseClicked(e->
+        {
+            if(e.getClickCount() == 1)
+            {
+                Timeline timeline = timelineTable.getSelectionModel().getSelectedItem();
+                if(timeline != null)
+                {
+                    getModelAccess().setSelectedTimeline(timeline);
+                }
+                super.getTimelineViewer().update(currentDate, super.getModelAccess().timelineModel);
                 
             }
-            catch (SQLException ex) {
-                Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
+            else if(e.getClickCount() == 2) {
+                
+                datePickerUpdate(timelineTable.getSelectionModel().getSelectedItem().getStartTime());
             }
-            catch (ClassNotFoundException ex) {
-                Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-            try {
-            cleanDb();
-            }
-            catch (ClassNotFoundException ex) {
-            Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            catch (SQLException ex) {
-            Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-            
-            
-            try {
-            reInititilizeTables();
-            }
-            catch (ClassNotFoundException ex) {
-            Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            catch (SQLException ex) {
-            Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            finally
-            {
-                try {
-                    getModelAccess().database.getConnection().close();
-                }
-                catch (Exception ex) {
-                    Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        
-            getTimelineViewer().timelineViewerInitialize(currentDate, timelineGrid, super.getModelAccess(), radioButtonAllTimelines, radioButtonSelectedTimeline);
-        
-            timelineTable.setOnMouseClicked(e->
-            {
-    
-                if(e.getClickCount() == 1)
-                {
-                    Timeline timeline = timelineTable.getSelectionModel().getSelectedItem();
-                    if(timeline != null)
-                    {
-                        getModelAccess().setSelectedTimeline(timeline);
-                    }
-                    super.getTimelineViewer().update(currentDate, super.getModelAccess().timelineModel);
-    
-                }
-                else if(e.getClickCount() == 2) {
-                    
-                    datePickerUpdate(timelineTable.getSelectionModel().getSelectedItem().getStartTime());
-                }
-            });
-            
-            
+        });
     }
     
-    // getter for PixelWidth
+    // getters
     public int getPixelDayWidth()
     {
         return DAY_PIXEL_SIZE;
     }
     
-    // getters for radiobuttons
     public RadioButton getRadioButtonAllTimelines()
     {
         return radioButtonAllTimelines;
     }
-   
+    
     public RadioButton getRadioButtonSelectedTimeline()
     {
         return radioButtonSelectedTimeline;
     }
+    
+    public LocalDate getCurrentDate() {
+        return currentDate;
+    }
 }
-
