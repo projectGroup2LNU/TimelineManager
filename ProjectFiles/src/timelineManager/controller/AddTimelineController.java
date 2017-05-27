@@ -6,15 +6,11 @@ import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
 import java.sql.SQLException;
 import java.time.LocalDate;
-
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import timelineManager.helpClasses.DateViewer;
 import timelineManager.helpClasses.TimelineViewer;

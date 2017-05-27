@@ -14,7 +14,6 @@ import timelineManager.view.ViewFactory;
 /**
  * The main class of Timeline Manager. It calles the viewFactory
  * and sets the legal window sizes of the application.
- *
  */
 public class TimelineManagerMain extends Application {
     
