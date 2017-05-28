@@ -1,0 +1,6 @@
+timelineManager
+timelineManager.controller
+timelineManager.helpClasses
+timelineManager.model
+timelineManager.unitTests
+timelineManager.view
